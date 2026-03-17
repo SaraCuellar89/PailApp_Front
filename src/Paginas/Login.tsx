@@ -1,20 +1,25 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../Componentes/Header";
 import Formu_Inicio from "../Componentes/Formu_Inicio";
-import estilos_global from "../estilos_global";
+import estilos_global, { colores } from "../estilos_global";
 
 export default function Login({ navigation }: any) {
   return (
-    <View style={[estilos_global.fondo_2, { flex: 1 }]}>
-      
-      <Header title="Iniciar sesión" onBack={() => navigation.goBack()}/>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
+      <View style={[estilos_global.fondo_2, { flex: 1 }]}>
+        
+        <View style={{backgroundColor: colores.color_2}}>
+          <Header title="Iniciar Sesión" onBack={() => navigation.goBack()} /> 
+        </View> 
 
-      <Formu_Inicio
-        onRegisterPress={() => navigation.navigate("Registro")}
-        onChatBot={() => navigation.navigate("Chatbot")}
-      />
+        <Formu_Inicio
+          onRegisterPress={() => navigation.navigate("Registro")}
+          onChatBot={() => navigation.navigate("Chatbot")}
+        />
 
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }

@@ -1,8 +1,10 @@
+// Estilos de los formularios de inicio de sesion y registro de usuario
+
 import { StyleSheet, Dimensions } from "react-native";
 
 const { height, width } = Dimensions.get('window');
 
-const estilo_formu_inicio_sesion = StyleSheet.create({
+const estilo_formu_inicio_sesion_css = StyleSheet.create({
     content: {
         flex: 1,
         alignItems: "center",
@@ -68,4 +70,4 @@ const estilo_formu_inicio_sesion = StyleSheet.create({
     },
 });
 
-export default estilo_formu_inicio_sesion;
+export default estilo_formu_inicio_sesion_css;

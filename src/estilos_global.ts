@@ -5,6 +5,7 @@ export const colores = {
   color_2: '#FFF8D4',
   color_3: '#FFFFFF',
   color_4: '#000000',
+  color_5: '#FFE979',
 };
 
 const estilos_global = StyleSheet.create({
@@ -26,7 +27,6 @@ const estilos_global = StyleSheet.create({
     },
 
     btn_1: {
-        width: '50%',
         backgroundColor: colores.color_4,
         padding: 10,
         borderRadius: 10,
@@ -35,7 +35,17 @@ const estilos_global = StyleSheet.create({
         color: colores.color_3,
         fontSize: 16,
         textAlign: 'center'
-    }
+    },
+
+    sombra_contenedor: {
+        borderWidth: 1,
+        borderColor: "black",
+        shadowColor: "#000000",
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 1,
+        shadowRadius: 6,
+        elevation: 8,
+    },
   
 });
 
