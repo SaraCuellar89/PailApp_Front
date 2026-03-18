@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, TouchableOpacity, TextInput, Image } from "react-native";
 import Texto from "./Texto";
 import estilo_formu_inicio_sesion_css from "./css/formu_inicio_sesion_css"
-import estilos_global from "../estilos_global";
+import estilos_global, { colores } from "../estilos_global";
 
 
 type Props = {
@@ -48,7 +48,11 @@ const Formu_Registro = ({ avatar, onAbrirAvatares  }: Props) => {
           ) : 
           (
             <TouchableOpacity onPress={onAbrirAvatares}>
-              <Texto>Elegir</Texto>
+              <Image
+                source={require('../Img/icono-usuario.png')}
+                style={{ width: 80, height: 80, borderRadius: 40 }}
+                resizeMode="contain"
+              />
             </TouchableOpacity>
           )}
 

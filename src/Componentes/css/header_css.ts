@@ -25,9 +25,14 @@ const header_css = StyleSheet.create({
         fontSize: 20,
         fontFamily: "JetBrainsMono_700Bold"
     },
-    icon: {
-        width: 50,
-        height: 50,
+    contenedor_icono: {
+        position: "absolute",
+        right: 20,
+        justifyContent: 'center',
+    },
+    icono: {
+        width: 40,
+        height: 40,
     },
 });
 

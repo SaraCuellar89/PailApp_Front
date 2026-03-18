@@ -16,7 +16,11 @@ export default function Registro({ navigation }: any) {
     <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
 
       <View style={{backgroundColor: colores.color_2}}>
-        <Header title="Crear cuenta" onBack={() => navigation.goBack()} /> 
+        <Header 
+          title="Crear cuenta" 
+          onBack={() => navigation.goBack()} 
+          icono={null}
+        /> 
       </View> 
 
       <KeyboardAvoidingView

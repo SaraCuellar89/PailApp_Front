@@ -3,7 +3,7 @@ import { View, Text, ScrollView } from "react-native";
 import { useRecetas } from "../context/RecetasContext";
 import PlatoPerfilCard from "../Componentes/PlatoPerfilCard";
 import ModalConfirmacion2 from "../Componentes/ModalConfirmacion2";
-import Header2 from "../Componentes/Header2";
+import Header2 from "../Componentes/Header_pailapp";
 
 export default function MisPlatosPerfil({ navigation }: any) {
 

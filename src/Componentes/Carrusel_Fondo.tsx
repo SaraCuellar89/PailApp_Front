@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, Image, useWindowDimensions, View } from 'react-native';
 
 const imagenes = [
-    require('../Img/prueba_1.jpg'),
-    require('../Img/prueba_2.jpg'),
-    require('../Img/prueba_3.jpg'),
+    require('../Img/robot_1.png'),
+    require('../Img/robot_2.png'),
+    require('../Img/robot_3.png'),
 ];
 
 const Carrusel_Fondo = () => {

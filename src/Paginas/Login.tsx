@@ -11,7 +11,11 @@ export default function Login({ navigation }: any) {
       <View style={[estilos_global.fondo_2, { flex: 1 }]}>
         
         <View style={{backgroundColor: colores.color_2}}>
-          <Header title="Iniciar Sesión" onBack={() => navigation.goBack()} /> 
+          <Header 
+            title="Iniciar Sesión" 
+            onBack={() => navigation.goBack()} 
+            icono={null}  
+          /> 
         </View> 
 
         <Formu_Inicio

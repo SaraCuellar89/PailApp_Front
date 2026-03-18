@@ -62,7 +62,7 @@ const Formu_Inicio = ({ onRegisterPress, onChatBot }: Props) => {
 
         {/* --- Boton para enviar el Formulario --- */}
 
-        <TouchableOpacity style={estilos_global.btn_1}>
+        <TouchableOpacity style={estilos_global.btn_1} onPress={() => navigation.navigate('Chatbot')}>
          <Texto style={estilos_global.texto_btn_1}>Entrar</Texto> 
         </TouchableOpacity>
 
