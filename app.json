@@ -35,7 +35,8 @@
     },
     "plugins": [
       "expo-build-properties",
-      "expo-font"
+      "expo-font",
+      "expo-speech-recognition"
     ]
   }
 }

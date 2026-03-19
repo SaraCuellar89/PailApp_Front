@@ -1,42 +1,29 @@
 import React from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Header_pailapp from "../../Componentes/Header_pailapp";
 import Navbar from "../../Componentes/Navbar";
-import ChatBotPrincipal from "../../Componentes/Chatbot/ChatbotPrincipal"
+import ChatBotPrincipal from "../../Componentes/Chatbot/ChatbotPrincipal";
 import { SafeAreaView } from "react-native-safe-area-context";
 import estilos_global, { colores } from "../../estilos_global";
 
 export default function ChatbotPrincipal({ navigation }: any) {
-  return(
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#000000" }}>
       <View style={[estilos_global.fondo_2, { flex: 1 }]}>
-
-        <View style={{backgroundColor: colores.color_2}}>
-          <Header_pailapp/>
-        </View> 
-
-        <ScrollView
-          style={{ flex: 1, backgroundColor: '#000000' }}
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={true}
-          keyboardShouldPersistTaps="handled"
-        >
-        
-        <View style={styles.container}>
-
-            <ChatBotPrincipal/>
-
+        <View style={{ backgroundColor: colores.color_2 }}>
+          <Header_pailapp />
         </View>
 
-        </ScrollView>
+        <View style={styles.container}>
+          <ChatBotPrincipal />
+        </View>
 
-        <View style={{backgroundColor: colores.color_2}}>
+        <View style={{ backgroundColor: colores.color_2 }}>
           <Navbar navigation={navigation} />
-        </View> 
-
+        </View>
       </View>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
