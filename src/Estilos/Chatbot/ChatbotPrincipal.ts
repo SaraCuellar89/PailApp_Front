@@ -3,7 +3,6 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    minHeight: "100%",
     alignItems: "center",
     paddingTop: 40,
   },
@@ -21,8 +20,8 @@ export const styles = StyleSheet.create({
   },
 
   robot: {
-    width: 320,
-    height: 320,
+    width: 300,
+    height: 300,
   },
 
   inputContainer: {

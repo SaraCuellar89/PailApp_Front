@@ -1,42 +1,60 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { styles } from "../Estilos/Filtros";
+import { estilos_filtros } from "./css/filtros_css";
+
 
 export default function Filtros({ filtro, setFiltro }: any) {
   return (
-    <View style={styles.container}>
+    <View style={estilos_filtros.container}>
       
       <TouchableOpacity
         style={[
-          styles.boton,
-          filtro === "recientes" && styles.botonActivo,
+          estilos_filtros.boton,
+          filtro === "populares" && estilos_filtros.botonActivo,
         ]}
-        onPress={() => setFiltro("recientes")}
+        onPress={() => setFiltro("populares")}
       >
         <Text
           style={[
-            styles.texto,
-            filtro === "recientes" && styles.textoActivo,
+            estilos_filtros.texto,
+            filtro === "populares" && estilos_filtros.texto,
           ]}
         >
-          Recientes
+          Populares
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[
-          styles.boton,
-          filtro === "antiguas" && styles.botonActivo,
+          estilos_filtros.boton,
+          filtro === "antiguas" && estilos_filtros.botonActivo,
         ]}
         onPress={() => setFiltro("antiguas")}
       >
         <Text
           style={[
-            styles.texto,
-            filtro === "antiguas" && styles.textoActivo,
+            estilos_filtros.texto,
+            filtro === "antiguas" && estilos_filtros.texto,
           ]}
         >
           Antiguas
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[
+          estilos_filtros.boton,
+          filtro === "recientes" && estilos_filtros.botonActivo,
+        ]}
+        onPress={() => setFiltro("recientes")}
+      >
+        <Text
+          style={[
+            estilos_filtros.texto,
+            filtro === "recientes" && estilos_filtros.texto,
+          ]}
+        >
+          Recientes
         </Text>
       </TouchableOpacity>
 

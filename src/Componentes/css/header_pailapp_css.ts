@@ -3,7 +3,7 @@ import { colores } from "../../estilos_global";
 
 export const estilos_header_pailapp = StyleSheet.create({
     contenedor: {
-      padding: 16,
+      padding: 18,
       flexDirection: "row",
       alignItems: "center",
       alignContent: "center",
@@ -18,7 +18,7 @@ export const estilos_header_pailapp = StyleSheet.create({
       fontFamily: "JetBrainsMono_700Bold"
     },
     icono: {
-      width: 40,
-      height: 40,
+      width: 30,
+      height: 30,
     }
 });

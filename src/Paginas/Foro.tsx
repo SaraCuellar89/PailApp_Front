@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import Filtros from "../Componentes/Filtros";
-import ListaPublicaciones from "../Componentes/ListaPublicaciones";
 import BotonAgregar from "../Componentes/BotonAgregar";
 import Notificacion from "../Componentes/Notificacion";
 import Header from "../Componentes/Header";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { colores } from "../estilos_global";
+import PublicacionCard from "../Componentes/PublicacionCard";
+import estilos_foro from "./css/foro_css";
 
 export default function Foro({ navigation, route }: any) {
   const [filtro, setFiltro] = useState<"recientes" | "antiguas">("recientes");
@@ -20,32 +23,49 @@ export default function Foro({ navigation, route }: any) {
   
 
   return (
-    <View style={styles.container}>
-      {mostrarNoti && (
-        <Notificacion
-        mensaje={mensajeNoti}
-        onFinish={() => setMostrarNoti(false)}
-        />
-)}
 
-      <Header title="Publicaciones" onBack={() => navigation.goBack()} />
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
+    
+      <View style={{backgroundColor: colores.color_2}}>
+        <Header 
+          title="Foro" 
+          onBack={() => navigation.goBack()} 
+          icono={null}
+        /> 
+      </View> 
 
-      <Filtros filtro={filtro} setFiltro={setFiltro} />
+      <ScrollView
+        style={{ flex: 1, backgroundColor: '#000000' }}
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={true}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={estilos_foro.contenedor}>
 
-      <ListaPublicaciones
-        filtro={filtro}
-        navigation={navigation}
-        onGuardar={(mensaje: string) => {
-          setMensajeNoti(mensaje);
-          setMostrarNoti(true);
-        }}
-      />
+          {mostrarNoti && (
+            <Notificacion
+              mensaje={mensajeNoti}
+              onFinish={() => setMostrarNoti(false)}
+            />
+          )}
 
+          <View style={estilos_foro.contenedor_filtros}>
+            <Filtros filtro={filtro} setFiltro={setFiltro} />
+          </View>
+
+          <View style={estilos_foro.contenedor_publicaciones}>
+            <PublicacionCard/>
+            <PublicacionCard/>
+          </View>
+
+        </View>
+
+    </ScrollView>
+
+    <View style={{backgroundColor: colores.color_2}}>
       <BotonAgregar onPress={() => navigation.navigate("SubirReceta")} />
-    </View>
+    </View> 
+
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#EDE4C7" },
-});

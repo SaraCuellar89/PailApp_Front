@@ -1,85 +1,99 @@
-import React from "react";
-import { View, Text, Image, TouchableOpacity, } from "react-native";
-import { useForo } from "../context/ForoContext";
-import { Ionicons as Icon } from "@expo/vector-icons";
-import { styles } from "../Estilos/PublicacionCard";
+import React, { useState } from "react";
+import { View, Image, TouchableOpacity, } from "react-native";
+import Texto from "./Texto";
+import estilos_publicacion_card from "./css/publicacion_card_css";
 
-export default function PublicacionCard({ publicacion, onGuardar, navigation }: any) {
-  const { toggleGuardar } = useForo();
+export default function PublicacionCard({ }: any) {
 
-const handleGuardar = () => {
-  const estabaGuardada = publicacion.guardado;
-
-  toggleGuardar(publicacion.id);
-
-  if (estabaGuardada) {
-    onGuardar("Receta eliminada");
-  } else {
-    onGuardar("Receta guardada");
-  }
-};
-
-const { toggleLikePublicacion } = useForo();
+  const [corazon, setCorazon] = useState(false);
+  const [guardar, setGuardar] = useState(false);
 
   return (
-    <TouchableOpacity
-    activeOpacity={0.9}
-    onPress={() =>
-      navigation.navigate("DetallePublicacion", {
-        publicacion,
-      })
-    }
-  >
-    <View style={styles.card}>
-      <Text style={styles.titulo}>{publicacion.titulo}</Text>
+    <TouchableOpacity style={estilos_publicacion_card.contenedor}>
+      <Texto style={estilos_publicacion_card.titulo}>Titulo</Texto>
 
-      <Text style={styles.descripcion}>
-        {publicacion.descripcion}
-      </Text>
+      <Texto style={estilos_publicacion_card.descripcion}>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque et metus vitae Aliquam, ullamcorper
+      </Texto>
 
-      {publicacion.imagen ? (
-        <Image source={publicacion.imagen} style={styles.img} />
-      ) : null}
+      <Image
+        source={require("../Img/pasta.jpg")}
+        style={estilos_publicacion_card.img_publicacion}
+      />
 
-      <View style={styles.infoExtra}>
-        {publicacion.tiempo ? (
-          <Text style={styles.extraText}>⏱ {publicacion.tiempo} min</Text>
-        ) : null}
-
-        {publicacion.dificultad ? (
-          <Text style={styles.extraText}>🔥 {publicacion.dificultad}</Text>
-        ) : null}
-      </View>
-
-      <Text style={styles.fecha}>
-        {publicacion.fecha.toLocaleString()}
-      </Text>
-
-      <View style={styles.actions}>
-        <View style={styles.leftActions}>
-          <TouchableOpacity
-  onPress={() => toggleLikePublicacion(publicacion.id)}
->
-  <Icon
-    name={publicacion.likedByUserr ? "heart" : "heart-outline"}
-    size={22}
-    color={publicacion.likedByUserr ? "red" : "black"}
-  />
-</TouchableOpacity>
-
-<Text>{publicacion.likes}</Text>
-          <Text style={[styles.iconText, { marginLeft: 15 }]}>
-            💬 {publicacion.comentarios}
-          </Text>
+      <View style={estilos_publicacion_card.contenedor_especificaciones}>
+        <View style={estilos_publicacion_card.dificultad}>
+          <Texto style={estilos_publicacion_card.texto_pequeno}>Facil</Texto>
         </View>
 
-        <TouchableOpacity onPress={handleGuardar}>
-          <Text style={styles.iconText}>
-            {publicacion.guardado ? "🔖" : "📑"}
-          </Text>
+        <View style={estilos_publicacion_card.tiempo}>
+          <Image
+            source={require("../Img/icono-tiempo.png")}
+            style={estilos_publicacion_card.icono_tiempo}
+            resizeMode="contain"
+          />
+
+          <Texto style={estilos_publicacion_card.texto_pequeno}>30 min</Texto>
+        </View>
+      </View>
+
+      <View style={estilos_publicacion_card.contenedor_interacciones}>
+        <View style={estilos_publicacion_card.caja_interacciones}>
+          <View style={estilos_publicacion_card.interacciones}>
+            <TouchableOpacity onPress={() => setCorazon(!corazon)}>
+              {corazon === false ? 
+              (
+                <Image
+                  source={require("../Img/icono-corazon.png")}
+                  style={estilos_publicacion_card.iconos}
+                  resizeMode="contain"
+                />
+              ) :
+              (
+                <Image
+                  source={require("../Img/icono-corazon-relleno.png")}
+                  style={estilos_publicacion_card.iconos}
+                  resizeMode="contain"
+                />
+              )}
+            </TouchableOpacity>
+
+            <Texto style={estilos_publicacion_card.texto_interacciones}>4</Texto>
+          </View>
+
+          <View style={estilos_publicacion_card.interacciones}>
+            <View>
+              <Image
+                source={require("../Img/icono-comentarios.png")}
+                style={estilos_publicacion_card.iconos}
+                resizeMode="contain"
+              />
+            </View>
+
+            <Texto style={estilos_publicacion_card.texto_interacciones}>4</Texto>
+          </View>
+        </View>
+
+        <TouchableOpacity onPress={() => setGuardar(!guardar)}>
+          {guardar === false ?
+          (
+            <Image
+              source={require("../Img/icono-guardar.png")}
+              style={estilos_publicacion_card.iconos}
+              resizeMode="contain"
+            />
+          ) : 
+          (
+            <Image
+              source={require("../Img/icono-guardar-relleno.png")}
+              style={estilos_publicacion_card.iconos}
+              resizeMode="contain"
+            />
+          )}
         </TouchableOpacity>
       </View>
-    </View>
+
+      <Texto style={estilos_publicacion_card.fecha}>7/02/2025</Texto>
     </TouchableOpacity>
   );
 }

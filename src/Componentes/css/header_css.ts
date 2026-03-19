@@ -4,7 +4,7 @@ const { height, width } = Dimensions.get('window');
 
 const header_css = StyleSheet.create({
     contenedor: {
-        padding: 22,
+        padding: 20,
         alignItems: "center",
         alignContent: "center",
         justifyContent: "center",
