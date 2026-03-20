@@ -1,88 +1,111 @@
 import React, { useState } from "react";
-import { View,TextInput,TouchableOpacity,Text,ScrollView, } from "react-native";
-import { useForo } from "../context/ForoContext";
-import { styles } from "../Estilos/FormSubirReceta";
+import { View,TextInput,TouchableOpacity, Image } from "react-native";
+import { estilos_formu_subir_receta } from "./css/formu_subir_receta_css";
+import Texto from "./Texto";
+import estilos_global from "../estilos_global";
 
 export default function FormSubirReceta({ navigation }: any) {
-  const { agregarPublicacion } = useForo();
 
-  const [titulo, setTitulo] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [ingredientes, setIngredientes] = useState("");
-  const [tiempo, setTiempo] = useState("");
-  const [dificultad, setDificultad] = useState("");
+  const [ingredientes, setIngredientes] = useState([""]);
+  
+  const agregar_ingredientes = () => {
+    setIngredientes([...ingredientes, ""]);
+  };
 
-    const subir = () => {
-      if (!titulo || !descripcion) return;
-    
-      agregarPublicacion({
-        titulo,
-        descripcion,
-        imagen: "",
-        ingredientes,
-        tiempo,
-        dificultad,
-      });
-  
-      setTitulo("");
-      setDescripcion("");
-      setIngredientes("");
-      setTiempo("");
-      setDificultad("");
-  
-      navigation.navigate("Foro", {
-        notificacion: "Receta publicada",
-      });
-    };
+  const actualizar_ingrediente = (texto: string, index: number) => {
+    const nuevo = [...ingredientes];
+    nuevo[index] = texto;
+    setIngredientes(nuevo);
+  };
+
+  const eliminar_ingrediente = (index: number) => {
+    const nuevo = [...ingredientes];  
+    nuevo.splice(index, 1);           
+    setIngredientes(nuevo);           
+  };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.card}>
+    <View style={estilos_formu_subir_receta.contenedor}>
 
-        <TextInput
-          placeholder="Título"
-          style={styles.input}
-          value={titulo}
-          onChangeText={setTitulo}
+      <View style={estilos_formu_subir_receta.caja_input}>
+        <Texto style={estilos_formu_subir_receta.label}>Titulo Plato</Texto>
+        <TextInput 
+          style={estilos_formu_subir_receta.input}
+          placeholder="Ej: Arroz Paisa"
+          placeholderTextColor={"grey"}
         />
-
-        <TextInput
-          placeholder="Descripción"
-          style={[styles.input, styles.textArea]}
-          multiline
-          value={descripcion}
-          onChangeText={setDescripcion}
+      </View> 
+      
+      <View style={estilos_formu_subir_receta.caja_input}>
+        <Texto style={estilos_formu_subir_receta.label}>Imagen</Texto>
+        <TextInput 
+          style={estilos_formu_subir_receta.input}
         />
+      </View> 
 
-        <TextInput
-          placeholder="Ingredientes (uno por línea)"
-          style={[styles.input, styles.textArea]}
-          multiline
-          value={ingredientes}
-          onChangeText={setIngredientes}
-        />
+      <View style={estilos_formu_subir_receta.caja_input}>
+        <Texto style={estilos_formu_subir_receta.label}>Ingredientes</Texto>
+        
+        {ingredientes.map((ingrediente, index) => (
+          <View style={estilos_formu_subir_receta.caja_ingredientes}>
+            <TextInput
+              key={index}
+              style={estilos_formu_subir_receta.input_ingrediente}
+              placeholder="Ej: 2 tazas de arroz"
+              placeholderTextColor={"grey"}
+              value={ingrediente}
+              onChangeText={(texto) => actualizar_ingrediente(texto, index)}
+            />
 
-        <TextInput
-          placeholder="Tiempo aproximado (min)"
-          style={styles.input}
-          keyboardType="numeric"
-          value={tiempo}
-          onChangeText={setTiempo}
-        />
+            <TouchableOpacity 
+              onPress={() => eliminar_ingrediente(index)}
+              disabled={index === 0} 
+              style={{ opacity: index === 0 ? 0.3 : 1 }}
+            >
+              <Image
+                source={require("../Img/icono-x.png")}
+                style={estilos_formu_subir_receta.icono_mas}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
 
-        <TextInput
-          placeholder="Dificultad (Fácil, Media, Difícil)"
-          style={styles.input}
-          value={dificultad}
-          onChangeText={setDificultad}
-        />
+          </View>
+        ))}
 
-        <TouchableOpacity style={styles.boton} onPress={subir}>
-          <Text style={styles.botonTexto}>Publicar</Text>
+        <TouchableOpacity onPress={agregar_ingredientes}>
+          <Image
+            source={require("../Img/icono-mas.png")}
+            style={estilos_formu_subir_receta.icono_mas}
+            resizeMode="contain"
+          />
         </TouchableOpacity>
+      </View> 
 
+      <View style={estilos_formu_subir_receta.caja_input}>
+        <Texto style={estilos_formu_subir_receta.label}>Tiempo aprox. de preparación</Texto>
+        <TextInput 
+          style={estilos_formu_subir_receta.input}
+          placeholder="Ej: 90 (min)"
+          placeholderTextColor={"grey"}
+        />
+      </View> 
+
+      <View style={estilos_formu_subir_receta.caja_input}>
+        <Texto style={estilos_formu_subir_receta.label}>Dificultad</Texto>
+        <TextInput 
+          style={estilos_formu_subir_receta.input}
+          placeholder="Ej: Facil"
+          placeholderTextColor={"grey"}
+        />
       </View>
-    </ScrollView>
+
+      <View style={estilos_formu_subir_receta.caja_boton}>
+        <TouchableOpacity style={[estilos_global.btn_1, estilos_formu_subir_receta.boton]}>
+          <Texto style={estilos_global.texto_btn_1}>Siguiente</Texto>
+        </TouchableOpacity>
+      </View>
+
+    </View>
   );
 }
 

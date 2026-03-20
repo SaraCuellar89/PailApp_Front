@@ -11,7 +11,7 @@ import estilos_foro from "./css/foro_css";
 
 export default function Foro({ navigation, route }: any) {
   const [filtro, setFiltro] = useState<"recientes" | "antiguas">("recientes");
-  const [mostrarNoti, setMostrarNoti] = useState(false);
+  const [mostrarNoti, setMostrarNoti] = useState(true);
   const [mensajeNoti, setMensajeNoti] = useState("");
 
   useEffect(() => {
@@ -42,12 +42,13 @@ export default function Foro({ navigation, route }: any) {
       >
         <View style={estilos_foro.contenedor}>
 
-          {mostrarNoti && (
+          {/* {mostrarNoti && (
             <Notificacion
+              mensaje="Receta Guardada"
               mensaje={mensajeNoti}
               onFinish={() => setMostrarNoti(false)}
             />
-          )}
+          )} */}
 
           <View style={estilos_foro.contenedor_filtros}>
             <Filtros filtro={filtro} setFiltro={setFiltro} />

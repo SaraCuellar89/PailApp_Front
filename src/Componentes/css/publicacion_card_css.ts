@@ -4,8 +4,6 @@ import { colores } from "../../estilos_global";
 const { height, width } = Dimensions.get('window');
 
 const estilos_publicacion_card = StyleSheet.create({
-
-    // --------- Estilo de pantalla de carga ---------
     contenedor: {
         justifyContent: "center",
         alignItems: "center",
@@ -21,7 +19,7 @@ const estilos_publicacion_card = StyleSheet.create({
     },
     descripcion: {
         width: '100%',
-        fontSize: 12,
+        fontSize: 14,
     },
     img_publicacion: {
         width: '100%',

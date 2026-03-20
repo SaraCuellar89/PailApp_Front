@@ -22,10 +22,26 @@ import MisPlatosPerfil from './src/Paginas/MisPlatosPerfil';
 import Configuracion from './src/Paginas/Configuracion';
 import EditarPerfil from './src/Paginas/EditarPerfil';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Carga: undefined;
+  Inicio: undefined;
+  Login: undefined;
+  Registro: undefined;
+  Chatbot: undefined;
+  ChatbotVoz: undefined;
+  Chatbot_Conversacion: undefined;
+  Foro: undefined;
+  SubirReceta: undefined;
+  DetallePublicacion: undefined;
+  MisPlatos: undefined;
+  MisPlatosPerfil: undefined;
+  Configuracion: undefined;
+  EditarPerfil: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>(); 
 
 // Funcion para cargar la tipografia de la aplicacion
-
 export default function App() {
   const [fuentes_cargadas] = useFonts({
     JetBrainsMono_400Regular,

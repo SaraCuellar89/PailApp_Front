@@ -7,9 +7,11 @@ export const estilos_boton_agregar = StyleSheet.create({
     backgroundColor: colores.color_1,
     alignItems: "center",
     borderTopStartRadius: 10,
-    borderTopEndRadius: 10
+    borderTopEndRadius: 10,
+    paddingVertical: 10
   },
-  texto: {
-    fontSize: 40,
+  icon: {
+    width: 40,
+    height: 40,
   },
 });

@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import { View, Image, TouchableOpacity, } from "react-native";
+import type { RootStackParamList } from "../../App";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
 import Texto from "./Texto";
 import estilos_publicacion_card from "./css/publicacion_card_css";
 
-export default function PublicacionCard({ }: any) {
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+export default function PublicacionCard() {
+
+  const navigation = useNavigation<NavigationProp>();
 
   const [corazon, setCorazon] = useState(false);
   const [guardar, setGuardar] = useState(false);
 
   return (
-    <TouchableOpacity style={estilos_publicacion_card.contenedor}>
+    <TouchableOpacity style={estilos_publicacion_card.contenedor} onPress={() => navigation.navigate('DetallePublicacion')}>
       <Texto style={estilos_publicacion_card.titulo}>Titulo</Texto>
 
       <Texto style={estilos_publicacion_card.descripcion}>
