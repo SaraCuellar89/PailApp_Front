@@ -17,11 +17,13 @@ import { useRoute } from "@react-navigation/native";
 import { createAudioPlayer, setAudioModeAsync } from "expo-audio";
 import * as FileSystem from "expo-file-system/legacy";
 import { API_BASE_URL } from "../../../config/api";
+import ChatbotVoz from "./ChatbotVoz";
 import { styles } from "../../Estilos/Chatbot/ChatbotPrincipal";
 
 let speechRecognitionModule: any = null;
 
 try {
+  // Se carga de forma segura porque este modulo puede no existir en algunas builds.
   speechRecognitionModule = require("expo-speech-recognition").ExpoSpeechRecognitionModule;
 } catch {
   speechRecognitionModule = null;
@@ -45,10 +47,13 @@ const createMessage = (
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
 
-const formatTranscript = (transcript: string) =>
-  transcript.trim() || "Empieza a hablar, te estoy escuchando...";
+type ChatbotPrincipalProps = {
+  initialVoiceMode?: boolean;
+};
 
-export default function ChatbotPrincipal() {
+export default function ChatbotPrincipal({
+  initialVoiceMode = false,
+}: ChatbotPrincipalProps) {
   const route = useRoute<any>();
   const { width, height } = useWindowDimensions();
   const scrollRef = useRef<ScrollView | null>(null);
@@ -61,7 +66,7 @@ export default function ChatbotPrincipal() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [focusProgress, setFocusProgress] = useState(0);
-  const [voiceMode, setVoiceMode] = useState(false);
+  const [voiceMode, setVoiceMode] = useState(initialVoiceMode);
   const [isListening, setIsListening] = useState(false);
   const [liveTranscript, setLiveTranscript] = useState("");
   const [speechError, setSpeechError] = useState("");
@@ -72,6 +77,7 @@ export default function ChatbotPrincipal() {
     ),
   ]);
 
+  // El robot crece cuando se activa voz o cuando el usuario lo arrastra hacia arriba.
   const expandedMode = voiceMode || focusProgress > 0.82;
   const robotSize = useMemo(() => {
     const compactBase = Math.min(width * 0.42, 190);
@@ -92,6 +98,7 @@ export default function ChatbotPrincipal() {
   const chatOpacity = clamp(1 - focusProgress * 1.35, 0, 1);
   const speechRecognitionAvailable = Boolean(speechRecognitionModule);
 
+  // Estas utilidades permiten actualizar el mensaje del asistente mientras llega el stream.
   const replaceMessageContent = (id: string, content: string) => {
     setMessages((prev) =>
       prev.map((msg) => (msg.id === id ? { ...msg, content } : msg)),
@@ -111,6 +118,7 @@ export default function ChatbotPrincipal() {
     if (!soundRef.current) return;
 
     try {
+      // Se limpia el reproductor anterior para evitar audios superpuestos.
       soundRef.current.pause();
       soundRef.current.remove();
     } catch {}
@@ -124,6 +132,7 @@ export default function ChatbotPrincipal() {
 
     await stopAudio();
 
+    // Convierte la respuesta del asistente a voz llamando el endpoint TTS del backend.
     const response = await fetch(`${API_BASE_URL}/api/tts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -152,6 +161,7 @@ export default function ChatbotPrincipal() {
   };
 
   const playAudioFromUri = async (audioUri: string) => {
+    // Siempre se reinicia el reproductor para que el audio empiece desde cero.
     await stopAudio();
 
     const sound = createAudioPlayer({ uri: audioUri });
@@ -167,6 +177,7 @@ export default function ChatbotPrincipal() {
   };
 
   const requestChatNonStream = async (mensaje: string) => {
+    // Fallback: se usa si el stream falla o no esta disponible.
     const response = await fetch(`${API_BASE_URL}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -196,6 +207,7 @@ export default function ChatbotPrincipal() {
     assistantId: string,
     onFirstChunk?: () => void,
   ) => {
+    // Intenta mostrar la respuesta del asistente en tiempo real.
     const response = await fetch(`${API_BASE_URL}/api/chat/stream`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -310,6 +322,7 @@ export default function ChatbotPrincipal() {
       return;
     }
 
+    // Al entrar en modo voz se vacia la transcripcion previa y se inicia el reconocimiento.
     setVoiceMode(true);
     setLiveTranscript("");
     speechRecognitionModule.start({
@@ -322,6 +335,7 @@ export default function ChatbotPrincipal() {
   };
 
   const toggleVoiceMode = () => {
+    // El mismo boton abre o cierra el modo voz segun el estado actual.
     if (voiceMode) {
       if (isListening) {
         stopListening();
@@ -349,6 +363,7 @@ export default function ChatbotPrincipal() {
     const userMessage = createMessage("user", mensaje);
     const assistantPlaceholder = createMessage("assistant", "");
 
+    // Se agrega un placeholder vacio del asistente para rellenarlo con stream o fallback.
     setMessages((prev) => [...prev, userMessage, assistantPlaceholder]);
     setInput("");
     setLiveTranscript("");
@@ -358,6 +373,7 @@ export default function ChatbotPrincipal() {
       let respuestaFinal = "";
 
       try {
+        // Si el backend soporta streaming, el texto aparece progresivamente en pantalla.
         respuestaFinal = await requestChatStream(
           mensaje,
           assistantPlaceholder.id,
@@ -365,6 +381,7 @@ export default function ChatbotPrincipal() {
           setLoading(false),
         );
       } catch {
+        // Si el stream falla, se pide la respuesta completa de forma tradicional.
         respuestaFinal = await requestChatNonStream(mensaje);
         replaceMessageContent(assistantPlaceholder.id, respuestaFinal);
       }
@@ -386,6 +403,7 @@ export default function ChatbotPrincipal() {
     let startValue = focusProgress;
 
     return PanResponder.create({
+      // El gesto vertical controla la transicion entre chat compacto y robot expandido.
       onStartShouldSetPanResponder: () => !voiceMode,
       onMoveShouldSetPanResponder: (_, gestureState) =>
         !voiceMode && Math.abs(gestureState.dy) > Math.abs(gestureState.dx),
@@ -405,6 +423,7 @@ export default function ChatbotPrincipal() {
   }, [focusProgress, voiceMode]);
 
   useEffect(() => {
+    // Permite reproducir audio aunque el telefono este en modo silencio.
     setAudioModeAsync({
       playsInSilentMode: true,
       shouldPlayInBackground: false,
@@ -412,6 +431,7 @@ export default function ChatbotPrincipal() {
   }, []);
 
   useEffect(() => {
+    // Si la pantalla recibe un mensaje inicial por navegacion, lo envia una sola vez.
     const initialMessage = initialMessageRef.current;
     if (!initialMessage) return;
     initialMessageRef.current = null;
@@ -419,12 +439,22 @@ export default function ChatbotPrincipal() {
   }, []);
 
   useEffect(() => {
+    if (!initialVoiceMode || !speechRecognitionAvailable) return;
+    startListening().catch(() => {
+      setIsListening(false);
+      setSpeechError("No fue posible iniciar el microfono.");
+    });
+  }, [initialVoiceMode, speechRecognitionAvailable]);
+
+  useEffect(() => {
+    // Mantiene visible el ultimo mensaje cada vez que cambia la conversacion.
     scrollRef.current?.scrollToEnd({ animated: true });
   }, [messages, loading]);
 
   useEffect(() => {
     if (!speechRecognitionModule) return;
 
+    // Sincroniza el estado de React con los eventos nativos del reconocimiento de voz.
     const subscriptions: NativeEventSubscription[] = [
       speechRecognitionModule.addListener("start", () => {
         setIsListening(true);
@@ -458,6 +488,7 @@ export default function ChatbotPrincipal() {
 
   useEffect(() => {
     return () => {
+      // Limpieza final para no dejar audio vivo al salir de la pantalla.
       stopAudio();
     };
   }, []);
@@ -469,99 +500,130 @@ export default function ChatbotPrincipal() {
       keyboardVerticalOffset={Platform.OS === "ios" ? 32 : 72}
     >
       <View style={styles.content}>
-        <View
-          style={[
-            styles.robotGestureArea,
-            expandedMode && styles.robotGestureAreaExpanded,
-          ]}
-          {...robotPanResponder.panHandlers}
-        >
-          <Text style={[styles.gestureHint, expandedMode && styles.hiddenHint]}>
-            {voiceMode
-              ? "Habla y veras tu mensaje en vivo"
-              : "Desliza el personaje hacia arriba o abajo"}
-          </Text>
-
-          <Image
-            source={require("../../Img/robotito1.png")}
-            style={[
-              styles.robot,
-              expandedMode && styles.robotExpanded,
-              voiceMode && styles.robotVoiceMode,
-              { width: robotSize, height: robotSize * 0.78 },
-            ]}
-            resizeMode="contain"
-          />
-        </View>
-
         {voiceMode ? (
-          <View style={styles.voicePanel}>
-            <Text style={styles.voiceStatus}>
-              {isListening ? "Escuchando..." : "Microfono listo"}
-            </Text>
-            <Text style={styles.voiceTranscript}>
-              {formatTranscript(liveTranscript)}
-            </Text>
-            {speechError ? (
-              <Text style={styles.voiceError}>{speechError}</Text>
-            ) : null}
-          </View>
+          // La vista de voz vive en un componente aparte para mantener separada esa experiencia.
+          <ChatbotVoz
+            expandedMode={expandedMode}
+            voiceMode={voiceMode}
+            isListening={isListening}
+            liveTranscript={liveTranscript}
+            speechError={speechError}
+            robotSize={robotSize}
+            panHandlers={robotPanResponder.panHandlers}
+          />
         ) : !chatHidden ? (
-          <View style={[styles.chatBox, { width: chatWidth, opacity: chatOpacity }]}>
-            <ScrollView
-              ref={scrollRef}
-              style={styles.scroll}
-              contentContainerStyle={styles.chatContent}
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={false}
+          <>
+            <View
+              style={[
+                styles.robotGestureArea,
+                expandedMode && styles.robotGestureAreaExpanded,
+              ]}
+              {...robotPanResponder.panHandlers}
             >
-              {messages.map((message) =>
-                message.content ? (
+              {/* El robot funciona como elemento visual y tambien como zona gestual. */}
+              <Text
+                style={[styles.gestureHint, expandedMode && styles.hiddenHint]}
+              >
+                Desliza el personaje hacia arriba o abajo
+              </Text>
+
+              <Image
+                source={require("../../Img/robotito1.png")}
+                style={[
+                  styles.robot,
+                  expandedMode && styles.robotExpanded,
+                  { width: robotSize, height: robotSize * 0.78 },
+                ]}
+                resizeMode="contain"
+              />
+            </View>
+
+            {/* El chat se va ocultando a medida que el robot ocupa mas espacio. */}
+            <View
+              style={[styles.chatBox, { width: chatWidth, opacity: chatOpacity }]}
+            >
+              <ScrollView
+                ref={scrollRef}
+                style={styles.scroll}
+                contentContainerStyle={styles.chatContent}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
+              >
+                {messages.map((message) =>
+                  message.content ? (
+                    <View
+                      key={message.id}
+                      style={[
+                        styles.bubble,
+                        message.role === "user"
+                          ? styles.userBubble
+                          : styles.botBubble,
+                      ]}
+                    >
+                      <Text style={styles.bubbleText}>{message.content}</Text>
+                      {message.role === "assistant" &&
+                      lastSpokenMessageIdRef.current === message.id ? (
+                        <TouchableOpacity
+                          style={styles.replayButton}
+                          onPress={() => replayLastAudio().catch(() => {})}
+                          disabled={loading}
+                        >
+                          <Text
+                            style={[
+                              styles.replayButtonText,
+                              loading && styles.iconDisabled,
+                            ]}
+                          >
+                            Repetir audio
+                          </Text>
+                        </TouchableOpacity>
+                      ) : null}
+                    </View>
+                  ) : null,
+                )}
+
+                {loading && (
                   <View
-                    key={message.id}
                     style={[
                       styles.bubble,
-                      message.role === "user"
-                        ? styles.userBubble
-                        : styles.botBubble,
+                      styles.botBubble,
+                      styles.loadingBubble,
                     ]}
                   >
-                    <Text style={styles.bubbleText}>{message.content}</Text>
-                    {message.role === "assistant" &&
-                    lastSpokenMessageIdRef.current === message.id ? (
-                      <TouchableOpacity
-                        style={styles.replayButton}
-                        onPress={() => replayLastAudio().catch(() => {})}
-                        disabled={loading}
-                      >
-                        <Text
-                          style={[
-                            styles.replayButtonText,
-                            loading && styles.iconDisabled,
-                          ]}
-                        >
-                          Repetir audio
-                        </Text>
-                      </TouchableOpacity>
-                    ) : null}
+                    <ActivityIndicator size="small" color="#000" />
+                    <Text style={styles.loadingText}>Pensando...</Text>
                   </View>
-                ) : null,
-              )}
+                )}
+              </ScrollView>
+            </View>
+          </>
+        ) : (
+          <View
+            style={[
+              styles.robotGestureArea,
+              expandedMode && styles.robotGestureAreaExpanded,
+            ]}
+            {...robotPanResponder.panHandlers}
+          >
+            <Text style={[styles.gestureHint, expandedMode && styles.hiddenHint]}>
+              Desliza el personaje hacia arriba o abajo
+            </Text>
 
-              {loading && (
-                <View
-                  style={[styles.bubble, styles.botBubble, styles.loadingBubble]}
-                >
-                  <ActivityIndicator size="small" color="#000" />
-                  <Text style={styles.loadingText}>Pensando...</Text>
-                </View>
-              )}
-            </ScrollView>
+            <Image
+              source={require("../../Img/robotito1.png")}
+              style={[
+                styles.robot,
+                expandedMode && styles.robotExpanded,
+                { width: robotSize, height: robotSize * 0.78 },
+              ]}
+              resizeMode="contain"
+            />
           </View>
-        ) : null}
+        )}
       </View>
 
       <View style={styles.inputContainer}>
+        {/* El input sirve tanto para escribir como para reflejar la transcripcion detectada. */}
         <TextInput
           style={[styles.input, voiceMode && styles.inputVoiceMode]}
           placeholder={voiceMode ? "Tu voz aparecera aqui..." : "Escribe tu mensaje..."}

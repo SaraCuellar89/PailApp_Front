@@ -6,7 +6,15 @@ import ChatBotPrincipal from "../../Componentes/Chatbot/ChatbotPrincipal";
 import { SafeAreaView } from "react-native-safe-area-context";
 import estilos_global, { colores } from "../../estilos_global";
 
-export default function ChatbotPrincipal({ navigation }: any) {
+type ChatbotPageProps = {
+  navigation: any;
+  initialVoiceMode?: boolean;
+};
+
+export default function ChatbotPrincipal({
+  navigation,
+  initialVoiceMode = false,
+}: ChatbotPageProps) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#000000" }}>
       <View style={[estilos_global.fondo_2, { flex: 1 }]}>
@@ -15,7 +23,7 @@ export default function ChatbotPrincipal({ navigation }: any) {
         </View>
 
         <View style={styles.container}>
-          <ChatBotPrincipal />
+          <ChatBotPrincipal initialVoiceMode={initialVoiceMode} />
         </View>
 
         <View style={{ backgroundColor: colores.color_2 }}>

@@ -12,8 +12,7 @@ import Inicio from './src/Paginas/Inicio';
 import Login from './src/Paginas/Login';
 import Registro from './src/Paginas/Registro';
 import ChatbotPrincipal from './src/Paginas/Chatbot/Chatbot';
-import ChatVoz from './src/Paginas/Chatbot/Chatbot_Voz';
-import Chatbot_Conversacion from './src/Paginas/Chatbot/Chatbot_Conversacion';
+import ChatbotVoz from './src/Paginas/Chatbot/Chatbot_Voz';
 import Foro from './src/Paginas/Foro';
 import SubirReceta from './src/Paginas/SubirReceta';
 import DetallePublicacion from './src/Paginas/Publicaciones';
@@ -42,14 +41,16 @@ export default function App() {
     <RecetasProvider>
       <ForoProvider>
         <NavigationContainer>
-          <Stack.Navigator id="main" screenOptions={{ headerShown: false }}>
+          <Stack.Navigator
+            id="main"
+            screenOptions={{ headerShown: false }}
+          >
             <Stack.Screen name="Carga" component={Carga} />
             <Stack.Screen name="Inicio" component={Inicio} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Registro" component={Registro} />
             <Stack.Screen name="Chatbot" component={ChatbotPrincipal} />
-            <Stack.Screen name="ChatbotVoz" component={ChatVoz} />
-            <Stack.Screen name="Chatbot_Conversacion" component={Chatbot_Conversacion} />
+            <Stack.Screen name="ChatbotVoz" component={ChatbotVoz} />
             <Stack.Screen name="Foro" component={Foro} />
             <Stack.Screen name="SubirReceta" component={SubirReceta} />
             <Stack.Screen name="DetallePublicacion" component={DetallePublicacion} options={{ headerShown: false}} />

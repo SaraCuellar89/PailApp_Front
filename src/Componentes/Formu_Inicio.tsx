@@ -62,7 +62,7 @@ const Formu_Inicio = ({ onRegisterPress, onChatBot }: Props) => {
 
         {/* --- Boton para enviar el Formulario --- */}
 
-        <TouchableOpacity style={estilos_global.btn_1} onPress={() => navigation.navigate('Chatbot')}>
+        <TouchableOpacity style={estilos_global.btn_1} onPress={onChatBot}>
          <Texto style={estilos_global.texto_btn_1}>Entrar</Texto> 
         </TouchableOpacity>
 
@@ -77,7 +77,7 @@ const Formu_Inicio = ({ onRegisterPress, onChatBot }: Props) => {
       {/* --- Boton para ir a la pantalla de registro --- */}
 
       <Texto style={estilo_formu_inicio_sesion_css.register}>
-        ¿No tienes cuenta? <Texto style={{ fontFamily : "JetBrainsMono_700Bold" }} onPress={() => navigation.navigate('Registro')}>Crea Una</Texto>
+        ¿No tienes cuenta? <Texto style={{ fontFamily : "JetBrainsMono_700Bold" }} onPress={onRegisterPress}>Crea Una</Texto>
       </Texto>
     </View>
   );

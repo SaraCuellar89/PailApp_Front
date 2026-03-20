@@ -20,7 +20,7 @@ export default function Login({ navigation }: any) {
 
         <Formu_Inicio
           onRegisterPress={() => navigation.navigate("Registro")}
-          onChatBot={() => navigation.navigate("Chatbot")}
+          onChatBot={() => navigation.navigate("ChatbotVoz")}
         />
 
       </View>

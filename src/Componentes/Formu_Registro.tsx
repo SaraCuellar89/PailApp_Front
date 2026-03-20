@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, TextInput, Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Texto from "./Texto";
 import estilo_formu_inicio_sesion_css from "./css/formu_inicio_sesion_css"
 import estilos_global, { colores } from "../estilos_global";
@@ -11,6 +13,7 @@ type Props = {
 }
 
 const Formu_Registro = ({ avatar, onAbrirAvatares  }: Props) => {
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   const [mostrar_contrasena, setMostrar_contrasena] = useState(false);
   const [mostrar_confirmar_contrasena, setMostrar_confirmar_contrasena] = useState(false);
@@ -115,7 +118,10 @@ const Formu_Registro = ({ avatar, onAbrirAvatares  }: Props) => {
 
         {/* --- Boton para enviar el Formulario --- */}
 
-        <TouchableOpacity style={estilos_global.btn_1}>
+        <TouchableOpacity
+          style={estilos_global.btn_1}
+          onPress={() => navigation.navigate("ChatbotVoz")}
+        >
          <Texto style={estilos_global.texto_btn_1}>Registrarse</Texto> 
         </TouchableOpacity>
 
