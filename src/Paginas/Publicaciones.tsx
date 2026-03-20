@@ -7,6 +7,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import PublicacionCard from "../Componentes/PublicacionCard";
 import Comentarios from "../Componentes/Comentarios";
 import Formu_Comentario from "../Componentes/Formu_Comentario";
+import estilos_publicaciones from "./css/publicaciones_css";
+import ModalConfirmacion from "../Componentes/ModalConfirmacion";
 
 export default function DetallePublicacion({ route, navigation }: any) {
 
@@ -33,7 +35,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
           keyboardShouldPersistTaps="handled"
         >
 
-          <View style={styles.container}>
+          <View style={estilos_publicaciones.container}>
 
             <PublicacionCard/>
 
@@ -44,7 +46,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
 
         </ScrollView>
 
-      <View style={[{backgroundColor: colores.color_2}, styles.caja_formu_comentario]}>
+      <View style={[{backgroundColor: colores.color_2}, estilos_publicaciones.caja_formu_comentario]}>
         <Formu_Comentario/>
       </View> 
 
@@ -53,15 +55,3 @@ export default function DetallePublicacion({ route, navigation }: any) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: "#EDE4C7",
-    padding: 20,
-    gap: 20
-  },
-  caja_formu_comentario: {
-    paddingHorizontal: 20
-  }
-});

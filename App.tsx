@@ -21,6 +21,7 @@ import MisPlatoss from './src/Paginas/MisPlatoss';
 import MisPlatosPerfil from './src/Paginas/MisPlatosPerfil';
 import Configuracion from './src/Paginas/Configuracion';
 import EditarPerfil from './src/Paginas/EditarPerfil';
+import Descripcion from './src/Paginas/Descripcion';
 
 export type RootStackParamList = {
   Carga: undefined;
@@ -32,6 +33,7 @@ export type RootStackParamList = {
   Chatbot_Conversacion: undefined;
   Foro: undefined;
   SubirReceta: undefined;
+  Descripcion: undefined;
   DetallePublicacion: undefined;
   MisPlatos: undefined;
   MisPlatosPerfil: undefined;
@@ -68,6 +70,7 @@ export default function App() {
             <Stack.Screen name="Chatbot_Conversacion" component={Chatbot_Conversacion} />
             <Stack.Screen name="Foro" component={Foro} />
             <Stack.Screen name="SubirReceta" component={SubirReceta} />
+            <Stack.Screen name="Descripcion" component={Descripcion} />
             <Stack.Screen name="DetallePublicacion" component={DetallePublicacion} options={{ headerShown: false}} />
             <Stack.Screen name="MisPlatos" component={MisPlatoss} options={{ headerShown: false }} />
             <Stack.Screen name="MisPlatosPerfil" component={MisPlatosPerfil} />

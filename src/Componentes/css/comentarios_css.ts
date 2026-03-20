@@ -13,6 +13,11 @@ export const estilos_comentarios = StyleSheet.create({
     contenedor_info: {
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "space-between"
+    },
+    caja_info: {
+        flexDirection: "row",
+        alignItems: "center",
         gap: 10
     },
     foto_usuario: {
@@ -20,6 +25,10 @@ export const estilos_comentarios = StyleSheet.create({
         height: 35,
         borderWidth: 1,
         borderRadius: 40
+    },
+    icono_puntos: {
+        width: 35,
+        height: 35,
     },
     nombre_usuario:{
         fontSize: 12,

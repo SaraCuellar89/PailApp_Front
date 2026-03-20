@@ -31,7 +31,7 @@ export default function SubirReceta({ navigation }: any) {
 
         <View style={styles.container}>
 
-          <FormSubirReceta navigation={navigation} />
+          <FormSubirReceta navigation={() => navigation.navigate("Descripcion")} />
 
         </View>
 
