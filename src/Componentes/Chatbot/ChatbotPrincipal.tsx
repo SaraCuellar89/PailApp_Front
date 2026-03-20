@@ -14,7 +14,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import { Audio } from "expo-av";
+import { createAudioPlayer, setAudioModeAsync } from "expo-audio";
 import * as FileSystem from "expo-file-system/legacy";
 import { API_BASE_URL } from "../../../config/api";
 import { styles } from "../../Estilos/Chatbot/ChatbotPrincipal";
@@ -52,7 +52,9 @@ export default function ChatbotPrincipal() {
   const route = useRoute<any>();
   const { width, height } = useWindowDimensions();
   const scrollRef = useRef<ScrollView | null>(null);
-  const soundRef = useRef<Audio.Sound | null>(null);
+  const soundRef = useRef<ReturnType<typeof createAudioPlayer> | null>(null);
+  const lastAudioUriRef = useRef<string | null>(null);
+  const lastSpokenMessageIdRef = useRef<string | null>(null);
   const initialMessageRef = useRef<string | null>(
     route.params?.mensajeInicial?.trim() || null,
   );
@@ -109,8 +111,8 @@ export default function ChatbotPrincipal() {
     if (!soundRef.current) return;
 
     try {
-      await soundRef.current.stopAsync();
-      await soundRef.current.unloadAsync();
+      soundRef.current.pause();
+      soundRef.current.remove();
     } catch {}
 
     soundRef.current = null;
@@ -145,12 +147,23 @@ export default function ChatbotPrincipal() {
       encoding: FileSystem.EncodingType.Base64,
     });
 
-    const { sound } = await Audio.Sound.createAsync(
-      { uri: fileUri },
-      { shouldPlay: true },
-    );
+    lastAudioUriRef.current = fileUri;
+    await playAudioFromUri(fileUri);
+  };
 
+  const playAudioFromUri = async (audioUri: string) => {
+    await stopAudio();
+
+    const sound = createAudioPlayer({ uri: audioUri });
+    sound.play();
     soundRef.current = sound;
+  };
+
+  const replayLastAudio = async () => {
+    const lastAudioUri = lastAudioUriRef.current;
+    if (!lastAudioUri || loading) return;
+
+    await playAudioFromUri(lastAudioUri);
   };
 
   const requestChatNonStream = async (mensaje: string) => {
@@ -357,6 +370,7 @@ export default function ChatbotPrincipal() {
       }
 
       await speakText(respuestaFinal);
+      lastSpokenMessageIdRef.current = assistantPlaceholder.id;
     } catch (error: any) {
       replaceMessageContent(
         assistantPlaceholder.id,
@@ -391,9 +405,9 @@ export default function ChatbotPrincipal() {
   }, [focusProgress, voiceMode]);
 
   useEffect(() => {
-    Audio.setAudioModeAsync({
-      playsInSilentModeIOS: true,
-      staysActiveInBackground: false,
+    setAudioModeAsync({
+      playsInSilentMode: true,
+      shouldPlayInBackground: false,
     }).catch(() => {});
   }, []);
 
@@ -513,6 +527,23 @@ export default function ChatbotPrincipal() {
                     ]}
                   >
                     <Text style={styles.bubbleText}>{message.content}</Text>
+                    {message.role === "assistant" &&
+                    lastSpokenMessageIdRef.current === message.id ? (
+                      <TouchableOpacity
+                        style={styles.replayButton}
+                        onPress={() => replayLastAudio().catch(() => {})}
+                        disabled={loading}
+                      >
+                        <Text
+                          style={[
+                            styles.replayButtonText,
+                            loading && styles.iconDisabled,
+                          ]}
+                        >
+                          Repetir audio
+                        </Text>
+                      </TouchableOpacity>
+                    ) : null}
                   </View>
                 ) : null,
               )}

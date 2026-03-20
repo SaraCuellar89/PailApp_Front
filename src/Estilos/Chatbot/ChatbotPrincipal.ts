@@ -81,6 +81,19 @@ export const styles = StyleSheet.create({
     lineHeight: 20,
     marginBottom: 2,
   },
+  replayButton: {
+    alignSelf: "flex-start",
+    marginTop: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 999,
+    backgroundColor: "#E8DFC0",
+  },
+  replayButtonText: {
+    color: "#3D3122",
+    fontSize: 12,
+    fontWeight: "700",
+  },
   loadingBubble: {
     flexDirection: "row",
     alignItems: "center",
