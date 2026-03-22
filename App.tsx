@@ -18,10 +18,11 @@ import Foro from './src/Paginas/Foro';
 import SubirReceta from './src/Paginas/SubirReceta';
 import DetallePublicacion from './src/Paginas/Publicaciones';
 import MisPlatoss from './src/Paginas/MisPlatoss';
-import MisPlatosPerfil from './src/Paginas/MisPlatosPerfil';
+import Perfil from './src/Paginas/Perfil';
 import Configuracion from './src/Paginas/Configuracion';
 import EditarPerfil from './src/Paginas/EditarPerfil';
 import Descripcion from './src/Paginas/Descripcion';
+
 
 export type RootStackParamList = {
   Carga: undefined;
@@ -36,7 +37,7 @@ export type RootStackParamList = {
   Descripcion: undefined;
   DetallePublicacion: undefined;
   MisPlatos: undefined;
-  MisPlatosPerfil: undefined;
+  Perfil: undefined;
   Configuracion: undefined;
   EditarPerfil: undefined;
 };
@@ -73,7 +74,7 @@ export default function App() {
             <Stack.Screen name="Descripcion" component={Descripcion} />
             <Stack.Screen name="DetallePublicacion" component={DetallePublicacion} options={{ headerShown: false}} />
             <Stack.Screen name="MisPlatos" component={MisPlatoss} options={{ headerShown: false }} />
-            <Stack.Screen name="MisPlatosPerfil" component={MisPlatosPerfil} />
+            <Stack.Screen name="Perfil" component={Perfil} />
             <Stack.Screen name="Configuracion" component={Configuracion} />
             <Stack.Screen name="EditarPerfil" component={EditarPerfil} />
           </Stack.Navigator>

@@ -30,7 +30,6 @@ export default function Foro({ navigation, route }: any) {
         <Header 
           title="Foro" 
           onBack={() => navigation.goBack()} 
-          icono={null}
         /> 
       </View> 
 

@@ -12,6 +12,7 @@ import ModalConfirmacion from "../Componentes/ModalConfirmacion";
 
 export default function DetallePublicacion({ route, navigation }: any) {
 
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
 
@@ -19,7 +20,6 @@ export default function DetallePublicacion({ route, navigation }: any) {
         <Header 
           title="Foro" 
           onBack={() => navigation.goBack()} 
-          icono={null}
         /> 
       </View>
 

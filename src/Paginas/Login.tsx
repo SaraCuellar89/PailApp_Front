@@ -14,7 +14,6 @@ export default function Login({ navigation }: any) {
           <Header 
             title="Iniciar Sesión" 
             onBack={() => navigation.goBack()} 
-            icono={null}  
           /> 
         </View> 
 

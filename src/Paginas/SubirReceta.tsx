@@ -13,7 +13,6 @@ export default function SubirReceta({ navigation }: any) {
         <Header 
           title="¡Sube un plato!" 
           onBack={() => navigation.goBack()} 
-          icono={null}
         /> 
       </View>
 

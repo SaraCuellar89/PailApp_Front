@@ -1,16 +1,28 @@
-import React, { useState } from "react";
-import { Image, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Image, TextInput, TouchableOpacity, View } from "react-native";
 import Texto from "./Texto";
 import { estilos_comentarios } from "./css/comentarios_css";
 import Formu_Comentario from "./Formu_Comentario";
 import Respuestas from "./Respuestas";
 import Opciones from "./Opciones";
+import estilos_global from "../estilos_global";
 
 const Comentarios = () => {
 
     const [formu_respuesta, setFormu_respuesta] = useState(false);
     const [caja_respuestas, setCaja_respuestas] = useState(false);
+
+
+    // Opciones y funciones para editar un comentario
     const [caja_opciones, setCaja_opciones] = useState(false);
+    const [editar, setEditar] = useState(false);
+
+    useEffect(() => {
+        if (editar) {
+            setCaja_opciones(false);
+        }
+    }, [editar]);
+    
 
     return(
         <View style={estilos_comentarios.contenedor}>
@@ -39,12 +51,37 @@ const Comentarios = () => {
                 null
             ): 
             (
-                <Opciones/>
+                <Opciones
+                    editar={editar}
+                    setEditar={setEditar}
+                />
             )}
 
-            <Texto style={estilos_comentarios.texto}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque et metus vitae Aliquam, ullamcorper tristique Aliquam Lorem ipsum dolor sit amet, consectetur.
-            </Texto>
+            {editar === false ?
+            (
+                <Texto style={estilos_comentarios.texto}>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque et metus vitae Aliquam, ullamcorper tristique Aliquam Lorem ipsum dolor sit amet, consectetur.
+                </Texto>
+            ) : 
+            (
+                <View>
+                    <TextInput
+                        style={estilos_comentarios.input_editar}
+                        multiline={true}
+                        numberOfLines={4}        
+                        textAlignVertical="top"
+                    />
+                    
+                    <View style={estilos_comentarios.caja_btn_editar}>
+                        <TouchableOpacity style={estilos_global.btn_1}>
+                            <Texto style={estilos_global.texto_btn_1}>Cancelar</Texto>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={estilos_global.btn_1}>
+                            <Texto style={estilos_global.texto_btn_1}>Guardar</Texto>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            )}
 
             <View style={estilos_comentarios.contenedor_respuestas}>
                 <TouchableOpacity onPress={() => setFormu_respuesta(!formu_respuesta)}>

@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Image, TouchableOpacity, View } from "react-native";
 import Texto from "./Texto";
 import { estilos_opciones } from "./css/opciones_css";
 
-const Opciones = () => {
+const Opciones = ({editar, setEditar}: any) => {
+
     return(
         <View style={estilos_opciones.contenedor}>
-            <TouchableOpacity style={estilos_opciones.caja_opcion}>
+            <TouchableOpacity style={estilos_opciones.caja_opcion} onPress={() =>setEditar(!editar)}>
                 <Image
                     source={require("../Img/icono-editar.png")}
                     style={estilos_opciones.iconos}

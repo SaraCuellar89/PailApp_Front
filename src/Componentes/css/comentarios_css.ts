@@ -57,5 +57,20 @@ export const estilos_comentarios = StyleSheet.create({
     // Estilos de las respuestas
     contenedor_componente_respuestas: {
         margin: 10
+    },
+
+    // Estilos de editar comentario o respuesta
+    input_editar: {
+        flex: 1,
+        borderWidth: 1,
+        borderTopWidth: 1,
+        borderRadius: 10,
+        backgroundColor: colores.color_3,
+        color: colores.color_4
+    },
+    caja_btn_editar: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 20
     }
 });

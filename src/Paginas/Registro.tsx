@@ -19,7 +19,6 @@ export default function Registro({ navigation }: any) {
         <Header 
           title="Crear cuenta" 
           onBack={() => navigation.goBack()} 
-          icono={null}
         /> 
       </View> 
 

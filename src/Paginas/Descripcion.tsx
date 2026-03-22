@@ -15,7 +15,6 @@ const Descripcion = ({ navigation }: any) => {
             <Header 
                 title="¡Sube un plato!" 
                 onBack={() => navigation.goBack()} 
-                icono={null}
             /> 
             </View>
     
