@@ -2,6 +2,9 @@ import { StyleSheet } from "react-native";
 import { colores } from "../../estilos_global";
 
 export const estilos_filtros = StyleSheet.create({
+
+  // --------- Estilos de los filtros del foro ---------
+
   container: {
     flexDirection: "row",
     gap: 5,

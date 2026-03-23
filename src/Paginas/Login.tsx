@@ -17,10 +17,7 @@ export default function Login({ navigation }: any) {
           /> 
         </View> 
 
-        <Formu_Inicio
-          onRegisterPress={() => navigation.navigate("Registro")}
-          onChatBot={() => navigation.navigate("Chatbot")}
-        />
+        <Formu_Inicio/>
 
       </View>
     </SafeAreaView>

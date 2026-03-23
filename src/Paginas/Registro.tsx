@@ -9,6 +9,7 @@ import Seleccionar_Avatar from "../Componentes/Seleccionar_Avatar";
 
 export default function Registro({ navigation }: any) {
 
+  // ================= Estados para mostrar el avatar despues de seleccionarlo =================
   const [avatar, setAvatar] = useState(null);
   const [mostrarAvatares, setMostrarAvatares] = useState(false);
 
@@ -36,6 +37,7 @@ export default function Registro({ navigation }: any) {
             <Formu_Registro 
               avatar={avatar} 
               onAbrirAvatares={() => setMostrarAvatares(true)} 
+              navigation={navigation}
             />
           </View>
 

@@ -1,22 +1,21 @@
-import React, { useState, useRef } from "react";
-import { Alert, TextInput, TouchableOpacity, View } from "react-native";
-import * as ImagePicker from "expo-image-picker";
+import React, { useRef } from "react";
+import { TouchableOpacity, View } from "react-native";
 import { RichEditor, RichToolbar, actions } from 'react-native-pell-rich-editor';
 import { estilos_formu_subir_receta } from "./css/formu_subir_receta_css";
 import estilos_global, { colores } from "../estilos_global";
 import Texto from "./Texto";
-import ToastMensaje from "./ToastMensaje";
-import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 
 const Formu_Descripcion_Pasos = () => {
 
-    // Variables para los editores de texto
+    // ================= Funciones para lo editores de texto =================
     const editorRef = useRef<any>(null);
     const pasosRef = useRef<any>(null); 
 
     return(
         <View style={estilos_formu_subir_receta.contenedor}>
             <View style={estilos_formu_subir_receta.caja_input}>
+
+                {/* --- Input de la descripcion --- */}
                 <Texto style={estilos_formu_subir_receta.label}>Descripción</Texto>
 
                 <View style={estilos_formu_subir_receta.caja_editor}>
@@ -50,6 +49,7 @@ const Formu_Descripcion_Pasos = () => {
                 </View>
             </View>
 
+            {/* --- Input de los pasos de preparacion --- */}
             <View style={estilos_formu_subir_receta.caja_input}>
                 <Texto style={estilos_formu_subir_receta.label}>Pasos Preparación</Texto>
 
@@ -81,6 +81,7 @@ const Formu_Descripcion_Pasos = () => {
                 </View>
             </View>
 
+            {/* --- Boton para enviar el formulario --- */}
             <View style={estilos_formu_subir_receta.caja_boton}>
                 <TouchableOpacity style={[estilos_global.btn_1, estilos_formu_subir_receta.boton]}>
                 <Texto style={estilos_global.texto_btn_1}>Subir</Texto>

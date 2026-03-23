@@ -12,6 +12,11 @@ import ModalConfirmacion from "../Componentes/ModalConfirmacion";
 
 export default function DetallePublicacion({ route, navigation }: any) {
 
+  // ================= Estados para ver la notificacion o el modal de confirmacion =================
+  const [modalVisible, setModalVisible] = useState(false);
+  const [mostrarNoti, setMostrarNoti] = useState(false); 
+
+  const [eliminar, setEliminar] = useState(false);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
@@ -22,6 +27,14 @@ export default function DetallePublicacion({ route, navigation }: any) {
           onBack={() => navigation.goBack()} 
         /> 
       </View>
+
+      {mostrarNoti && ( 
+        <Notificacion
+          mensaje="Plato eliminado"
+          onFinish={() => setMostrarNoti(false)}
+          icono={require('../Img/icono-correcto.png')}
+        />
+      )}
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -37,10 +50,15 @@ export default function DetallePublicacion({ route, navigation }: any) {
 
           <View style={estilos_publicaciones.container}>
 
-            <PublicacionCard/>
+            <PublicacionCard
+              guardar_ejemplo={false}     
+              setGuardar_Ejemplo={() => {}} 
+            />
 
-            <Comentarios/>
-            <Comentarios/>
+            <Comentarios
+              eliminar={eliminar}
+              setEliminar={setModalVisible}
+            />
 
           </View>
 
@@ -51,6 +69,12 @@ export default function DetallePublicacion({ route, navigation }: any) {
       </View> 
 
     </KeyboardAvoidingView>
+
+    <ModalConfirmacion
+      visible={modalVisible}
+      confirmar={() => [setMostrarNoti(true), setModalVisible(false)]}
+      cancelar={() => setModalVisible(false)}
+    />
 
     </SafeAreaView>
   );

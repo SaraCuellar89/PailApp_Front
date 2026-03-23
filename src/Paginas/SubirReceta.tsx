@@ -4,6 +4,7 @@ import FormSubirReceta from "../Componentes/FormSubirReceta";
 import Header from "../Componentes/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colores } from "../estilos_global";
+import estilos_publicaciones from "./css/publicaciones_css";
 
 export default function SubirReceta({ navigation }: any) {
   return (
@@ -28,7 +29,7 @@ export default function SubirReceta({ navigation }: any) {
           keyboardShouldPersistTaps="handled"
         >
 
-        <View style={styles.container}>
+        <View style={estilos_publicaciones.container}>
 
           <FormSubirReceta navigation={() => navigation.navigate("Descripcion")} />
 
@@ -41,7 +42,3 @@ export default function SubirReceta({ navigation }: any) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#EDE4C7", padding: 20 },
-});

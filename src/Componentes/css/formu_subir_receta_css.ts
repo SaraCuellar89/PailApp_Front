@@ -4,7 +4,9 @@ import { colores } from "../../estilos_global";
 const { height, width } = Dimensions.get('window');
 
 export const estilos_formu_subir_receta = StyleSheet.create({
-    // Estilos de formulario inicial
+
+    // --------- Estilos del primer formulario para subir una publicacion (datos iniciales) ---------
+    
     contenedor: {
         justifyContent: "center",
         borderRadius: 10,
@@ -103,7 +105,8 @@ export const estilos_formu_subir_receta = StyleSheet.create({
     },
 
 
-    // Estilos de descripcion y pasos de preparacion
+    // --------- Estilos del segundo formulario para subir una publicacion (descripcion y pasos) ---------
+
     input_grande: {
         width: "100%",
         height: height * 0.5,

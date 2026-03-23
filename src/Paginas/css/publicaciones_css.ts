@@ -1,11 +1,15 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { colores } from "../../estilos_global";
 
 const { height, width } = Dimensions.get('window');
 
 const estilos_publicaciones = StyleSheet.create({
+
+    // --------- Estilos de publicaciones ---------
+
     container: { 
         flex: 1, 
-        backgroundColor: "#EDE4C7",
+        backgroundColor: colores.color_2,
         padding: 20,
         gap: 20
     },

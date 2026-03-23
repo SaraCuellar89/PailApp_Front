@@ -4,6 +4,9 @@ import { colores } from "../../estilos_global";
 const { height, width } = Dimensions.get('window');
 
 const registro_css = StyleSheet.create({
+
+    // --------- Estilos de registro ---------
+
     contenedor: {
         flex: 1,
         backgroundColor: colores.color_2,

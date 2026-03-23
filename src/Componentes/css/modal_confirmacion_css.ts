@@ -2,6 +2,9 @@ import { StyleSheet } from "react-native";
 import { colores } from "../../estilos_global";
 
 export const estilos_modal_confirmacion = StyleSheet.create({
+
+  // --------- Estilos del modal de confirmacion ---------
+
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.4)",

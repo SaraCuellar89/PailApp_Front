@@ -2,10 +2,10 @@ import { StyleSheet } from "react-native";
 import { colores } from "../../estilos_global";
 
 export const estilos_opciones = StyleSheet.create({
+
+    // --------- Estilos de la caja de opciones (eliminar/editar) ---------
+
     contenedor: {
-        position: "absolute",
-        top: 40,
-        right: 40,
         width: 150,
         justifyContent: "center",
         borderRadius: 10,

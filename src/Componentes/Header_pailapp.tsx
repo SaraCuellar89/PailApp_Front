@@ -13,12 +13,13 @@ const Header_pailapp = () => {
     <View style={[estilos_header_pailapp.contenedor, estilos_global.sombra_contenedor]}>
 
       <Texto style={estilos_header_pailapp.titulo}>PailApp</Texto>
-
-      <TouchableOpacity onPress={() => navigation.navigate("Configuracion")}>
+      
+      <TouchableOpacity onPress={() => navigation.navigate("Notificaciones")}>
         <Image
           source={require("../Img/icono-campana.png")}
           style={estilos_header_pailapp.icono}
         />
+        <Texto style={estilos_header_pailapp.cantidad_notificaciones}>1</Texto>
       </TouchableOpacity>
 
     </View>

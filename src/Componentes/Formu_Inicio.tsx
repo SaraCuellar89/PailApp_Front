@@ -6,16 +6,11 @@ import Texto from "./Texto";
 import estilo_formu_inicio_sesion_css from "./css/formu_inicio_sesion_css"
 import estilos_global from "../estilos_global";
 
-
-interface Props {
-  onRegisterPress: () => void;
-  onChatBot: () => void;
-}
-
-const Formu_Inicio = ({ onRegisterPress, onChatBot }: Props) => {
+const Formu_Inicio = () => {
 
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
+  // ================= Estados para ver y ocultar contraseña =================
   const [mostrar, setMostrar] = useState(false);
 
   return (
@@ -55,7 +50,8 @@ const Formu_Inicio = ({ onRegisterPress, onChatBot }: Props) => {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity>
+          {/* --- Boton para recuperar contraseña --- */}
+          <TouchableOpacity onPress={() => navigation.navigate('Correo_Recuperacion')}>
             <Texto>Recuperar Contraseña</Texto> 
           </TouchableOpacity>
         </View>

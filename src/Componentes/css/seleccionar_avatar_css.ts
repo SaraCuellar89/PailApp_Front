@@ -4,6 +4,9 @@ import { colores } from "../../estilos_global";
 const { height, width } = Dimensions.get('window');
 
 const seleccionar_avatar_css = StyleSheet.create({
+
+    // --------- Estilos del modal para escoger el avatar de foto de perfil ---------
+
     contenedor: {
         backgroundColor: colores.color_5,
         justifyContent: 'center',

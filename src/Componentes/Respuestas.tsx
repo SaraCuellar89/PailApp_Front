@@ -7,7 +7,7 @@ import estilos_global from "../estilos_global";
 
 const Respuestas = () => {
 
-    // Opciones y funciones para editar un comentario
+    // ================= Estados y funciones para editar una respuesta =================
     const [caja_opciones, setCaja_opciones] = useState(false);
     const [editar, setEditar] = useState(false);
 
@@ -44,10 +44,12 @@ const Respuestas = () => {
                 null
             ): 
             (
-                <Opciones
-                    editar={editar}
-                    setEditar={setEditar}
-                />
+                <View style={estilos_comentarios.caja_opciones}>
+                    <Opciones
+                        editar={editar}
+                        setEditar={setEditar}
+                    />
+                </View>
             )}
 
             {editar === false ?

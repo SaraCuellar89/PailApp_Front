@@ -2,6 +2,9 @@ import { StyleSheet } from "react-native";
 import { colores } from "../../estilos_global";
 
 export const estilos_comentarios = StyleSheet.create({
+
+    // --------- Estilos de los comentarios ---------
+
     contenedor: {
         justifyContent: "center",
         borderRadius: 10,
@@ -54,12 +57,20 @@ export const estilos_comentarios = StyleSheet.create({
         height: 25
     },
 
-    // Estilos de las respuestas
+
+    // --------- Estilos de las respuestas ---------
+
     contenedor_componente_respuestas: {
         margin: 10
     },
 
-    // Estilos de editar comentario o respuesta
+
+    // --------- Estilos de editar comentario/respuesta ---------
+    caja_opciones: {
+        position: "absolute",
+        top: 40,
+        right: 30,
+    },
     input_editar: {
         flex: 1,
         borderWidth: 1,

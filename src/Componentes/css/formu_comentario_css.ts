@@ -4,6 +4,9 @@ import { colores } from "../../estilos_global";
 const { height, width } = Dimensions.get('window');
 
 export const estilos_formu_comentario = StyleSheet.create({
+
+    // --------- Estilos del input de subir un comentario ---------
+
     contenedor: {
         justifyContent: "center",
         alignItems: "center",

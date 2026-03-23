@@ -1,10 +1,13 @@
 import { StyleSheet } from 'react-native';
 
 const estilos_pantalla_inicio = StyleSheet.create({
+
+    // --------- Estilos de la pantalla de inicio ---------
+
     contenedor: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     caja_titulo: {
         justifyContent: 'center',

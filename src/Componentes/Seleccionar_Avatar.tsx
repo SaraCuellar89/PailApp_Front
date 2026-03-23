@@ -4,10 +4,6 @@ import seleccionar_avatar_css from "./css/seleccionar_avatar_css";
 import Texto from "./Texto";
 import estilos_global from "../estilos_global";
 
-type Props = {
-    onChange: (avatar: any) => void;
-}
-
 const avatares = [
     require('../Img/avatar_1.png'),
     require('../Img/avatar_2.png'),
@@ -19,8 +15,9 @@ const avatares = [
     require('../Img/avatar_8.png'),
     require('../Img/avatar_9.png'),
 ];
-const Seleccionar_Avatar = ({ onChange }: Props) => {
+const Seleccionar_Avatar = ({ onChange }: any) => {
 
+    // ================= Estados y funciones seleccionar el avatar de foto de perfil =================
     const [seleccionado, setSeleccionado] = useState<number | null>(null);
 
     const Aceptar = () => {

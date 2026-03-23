@@ -7,13 +7,14 @@ import Respuestas from "./Respuestas";
 import Opciones from "./Opciones";
 import estilos_global from "../estilos_global";
 
-const Comentarios = () => {
+const Comentarios = ({eliminar, setEliminar}: any) => {
 
+    // ================= Estados para abrir el input de responder y para abrir las respuestas del comentario =================
     const [formu_respuesta, setFormu_respuesta] = useState(false);
     const [caja_respuestas, setCaja_respuestas] = useState(false);
 
 
-    // Opciones y funciones para editar un comentario
+    // ================= Estados y funciones para abrir la caja de editar/eliminar y para abrir el input de editar comentario =================
     const [caja_opciones, setCaja_opciones] = useState(false);
     const [editar, setEditar] = useState(false);
 
@@ -26,6 +27,8 @@ const Comentarios = () => {
 
     return(
         <View style={estilos_comentarios.contenedor}>
+
+            {/* --- Informacion del usuario y la fecha --- */}
             <View style={estilos_comentarios.contenedor_info}>
                 <View style={estilos_comentarios.caja_info}>
                     <Image
@@ -46,17 +49,21 @@ const Comentarios = () => {
                 </TouchableOpacity>
             </View> 
 
+            {/* --- Opciones para editar o eliminar el comentario --- */}
             {caja_opciones === false ? 
+            (null): 
             (
-                null
-            ): 
-            (
-                <Opciones
-                    editar={editar}
-                    setEditar={setEditar}
-                />
+                <View style={estilos_comentarios.caja_opciones}>
+                    <Opciones
+                        editar={editar}
+                        setEditar={setEditar}
+                        eliminar={eliminar}
+                        setElimianr={setEliminar}
+                    />
+                </View>
             )}
 
+            {/* --- Input para editar el comentario --- */}
             {editar === false ?
             (
                 <Texto style={estilos_comentarios.texto}>
@@ -83,6 +90,7 @@ const Comentarios = () => {
                 </View>
             )}
 
+            {/* --- Opciones para responder un comentario o para ver todas las respuestas --- */}
             <View style={estilos_comentarios.contenedor_respuestas}>
                 <TouchableOpacity onPress={() => setFormu_respuesta(!formu_respuesta)}>
                     <Texto style={estilos_comentarios.nombre_usuario}>Responder</Texto>
@@ -102,17 +110,13 @@ const Comentarios = () => {
             (
                 <Formu_Comentario/>
             ) : 
-            (
-                null
-            )}
+            (null)}
 
             {caja_respuestas === true ? 
             (
                 <Respuestas/>
             ) : 
-            (
-                null
-            )}
+            (null)}
            
         </View>
     )

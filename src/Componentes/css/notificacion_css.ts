@@ -1,10 +1,15 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { colores } from '../../estilos_global';
 
+const { height, width } = Dimensions.get('window');
+
 const estilos_notificacion = StyleSheet.create({
+
+    // --------- Estilos del mensaje (con temporizador) que sale al, por ejemplo, guardar una publicacion ---------
+
     container: {
         position: "absolute",
-        top: 60,
+        top: height * 0.15,
         right: 0,
         backgroundColor: colores.color_5,
         borderTopLeftRadius: 30,

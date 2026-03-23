@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View,TextInput,TouchableOpacity, Image, Alert, StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import ToastMensaje from "./ToastMensaje";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 import DropDownPicker from 'react-native-dropdown-picker';
 import { estilos_formu_subir_receta } from "./css/formu_subir_receta_css";
@@ -11,7 +10,7 @@ import estilos_global from "../estilos_global";
 export default function FormSubirReceta({ navigation }: any) {
 
 
-  // Subir imagen desde el dispositivo
+    // ================= Estados y Funciones para subir imagenes desde el dispositivo =================
     const [imagen, setImagen] = useState<ImagePicker.ImagePickerAsset | null>(null);
 
     // =================== Abrir la Galería ===================
@@ -23,7 +22,6 @@ export default function FormSubirReceta({ navigation }: any) {
         if (!result.canceled) setImagen(result.assets[0]);
     };
 
-
     // =================== Abrir la camara ===================
     const tomarFoto = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -31,7 +29,6 @@ export default function FormSubirReceta({ navigation }: any) {
         const result = await ImagePicker.launchCameraAsync({ mediaTypes: ['images'], quality: 0.8 });
         if (!result.canceled) setImagen(result.assets[0]);
     };
-
 
     // =================== Elegir opciones para la imagen (Galeria, Camara o Cancelar) ===================
     const elegirFuente = () => {
@@ -43,19 +40,22 @@ export default function FormSubirReceta({ navigation }: any) {
     };
 
 
-  // Lista de Ingredientes
+  // ================= Estados y funciones para agregar o eliminar ingredientes =================
   const [ingredientes, setIngredientes] = useState([""]);
   
+  // Crear un nuevo input para escribir un ingrediente
   const agregar_ingredientes = () => {
     setIngredientes([...ingredientes, ""]);
   };
 
+  // Poder reescribir en un ingrediente
   const actualizar_ingrediente = (texto: string, index: number) => {
     const nuevo = [...ingredientes];
     nuevo[index] = texto;
     setIngredientes(nuevo);
   };
 
+  // Eliminar ingrediente de las lista
   const eliminar_ingrediente = (index: number) => {
     const nuevo = [...ingredientes];  
     nuevo.splice(index, 1);           
@@ -63,7 +63,7 @@ export default function FormSubirReceta({ navigation }: any) {
   };
 
 
-  // Picker para el tipo de tiempo
+  // ================= Estados para el dropdown de tiempo =================
   const [abrir_tipo_tiempo, setAbrir_tipo_tiempo] = useState(false);
   const [tipo_tiempo_value, setTipo_tiempo_value] = useState(null);
 
@@ -73,7 +73,7 @@ export default function FormSubirReceta({ navigation }: any) {
   ]);
 
 
-  // Picker para la dificultad
+  // ================= Estador para el dropdown de dificultad =================
   const [abrir_dificultad, setAbrir_dificultad] = useState(false);
   const [dificultad_value, setDificultad_value] = useState(null);
 

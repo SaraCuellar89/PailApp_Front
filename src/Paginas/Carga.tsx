@@ -6,7 +6,7 @@ import Texto from "../Componentes/Texto";
 
 export default function Carga({ navigation }: any) {
 
-  // Funcion para cambiar de vista despues de 2.5 segundos
+  // ================= Funcion para cambiar de vista despues de 2.5 segudnos =================
   useEffect(() => {
       const timer = setTimeout(() => {
         navigation.replace("Inicio");

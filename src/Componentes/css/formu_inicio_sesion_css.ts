@@ -5,6 +5,9 @@ import { StyleSheet, Dimensions } from "react-native";
 const { height, width } = Dimensions.get('window');
 
 const estilo_formu_inicio_sesion_css = StyleSheet.create({
+
+    // --------- Estilos del formulario de inicio de sesion - correo recuperacion - codigo - cambio de contraseña ---------
+
     content: {
         flex: 1,
         alignItems: "center",

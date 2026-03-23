@@ -10,16 +10,18 @@ import PublicacionCard from "../Componentes/PublicacionCard";
 import estilos_foro from "./css/foro_css";
 
 export default function Foro({ navigation, route }: any) {
+
+  // ================= Estados y funciones para mostrar el mensaje de notificacion =================
   const [filtro, setFiltro] = useState<"recientes" | "antiguas">("recientes");
   const [mostrarNoti, setMostrarNoti] = useState(true);
   const [mensajeNoti, setMensajeNoti] = useState("");
 
   useEffect(() => {
-  if (route.params?.notificacion) {
-    setMensajeNoti(route.params.notificacion);
-    setMostrarNoti(true);
-      }
-    }, [route.params]);
+    if (route.params?.notificacion) {
+      setMensajeNoti(route.params.notificacion);
+      setMostrarNoti(true);
+        }
+  }, [route.params]);
   
 
   return (
@@ -54,8 +56,10 @@ export default function Foro({ navigation, route }: any) {
           </View>
 
           <View style={estilos_foro.contenedor_publicaciones}>
-            <PublicacionCard/>
-            <PublicacionCard/>
+            <PublicacionCard
+              guardar_ejemplo={false}
+              setGuardar_Ejemplo={() => {}}
+            />
           </View>
 
         </View>

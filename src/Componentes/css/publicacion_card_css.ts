@@ -4,6 +4,9 @@ import { colores } from "../../estilos_global";
 const { height, width } = Dimensions.get('window');
 
 const estilos_publicacion_card = StyleSheet.create({
+
+    // --------- Estilos de las publicaciones ---------
+
     contenedor: {
         justifyContent: "center",
         alignItems: "center",
@@ -17,9 +20,23 @@ const estilos_publicacion_card = StyleSheet.create({
         fontSize: 18,
         paddingBottom: 10
     },
-    descripcion: {
+    texto_reducido: {
+        width: '100%',
+        height: height * 0.1,
+        fontSize: 14,
+        borderBottomWidth: 1,
+        borderColor: "#00000025"
+    },
+    texto_ampliado: {
         width: '100%',
         fontSize: 14,
+    },
+    btn_ver_mas: {
+        paddingVertical: 10
+    },
+    texto_ver_mas: {
+        fontFamily: "JetBrainsMono_700Bold",
+        fontSize: 12
     },
     img_publicacion: {
         width: '100%',

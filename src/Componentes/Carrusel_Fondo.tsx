@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, Image, useWindowDimensions, View } from 'react-native';
 
+// ================= Imagenes del Carrusel del inicio de la aplicacion =================
 const imagenes = [
     require('../Img/robot_1.png'),
     require('../Img/robot_2.png'),
@@ -8,6 +9,8 @@ const imagenes = [
 ];
 
 const Carrusel_Fondo = () => {
+
+    // ================= Funciones para hacer funcionar wl carrusel =================
     const { width, height } = useWindowDimensions();
     const [indiceActual, setIndiceActual] = useState(0);
     const ref = useRef<FlatList>(null);

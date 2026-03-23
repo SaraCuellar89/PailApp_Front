@@ -4,14 +4,9 @@ import Texto from "./Texto";
 import estilo_formu_inicio_sesion_css from "./css/formu_inicio_sesion_css"
 import estilos_global, { colores } from "../estilos_global";
 
+const Formu_Registro = ({ avatar, onAbrirAvatares, navigation}: any) => {
 
-type Props = {
-  avatar: any;
-  onAbrirAvatares: () => void;
-}
-
-const Formu_Registro = ({ avatar, onAbrirAvatares  }: Props) => {
-
+  // ================= Estados para ver y ocultar contraseñas =================
   const [mostrar_contrasena, setMostrar_contrasena] = useState(false);
   const [mostrar_confirmar_contrasena, setMostrar_confirmar_contrasena] = useState(false);
 
@@ -115,8 +110,8 @@ const Formu_Registro = ({ avatar, onAbrirAvatares  }: Props) => {
 
         {/* --- Boton para enviar el Formulario --- */}
 
-        <TouchableOpacity style={estilos_global.btn_1}>
-         <Texto style={estilos_global.texto_btn_1}>Registrarse</Texto> 
+        <TouchableOpacity style={estilos_global.btn_1} onPress={() => navigation.navigate('Datos_Adicionales')}>
+         <Texto style={estilos_global.texto_btn_1}>Siguiente</Texto> 
         </TouchableOpacity>
 
       </View>

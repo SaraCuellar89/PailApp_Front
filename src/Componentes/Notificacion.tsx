@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Animated, Image } from "react-native";
+import { View, Text, Animated, Image } from "react-native";
 import estilos_notificacion from "./css/notificacion_css";
 
 export default function Notificacion({ mensaje, onFinish, icono }: any) {
