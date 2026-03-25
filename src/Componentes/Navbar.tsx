@@ -1,3 +1,7 @@
+/**
+ * Barra inferior de navegacion con accesos al chatbot, foro, guardados y perfil.
+ */
+
 import React from "react";
 import { View, TouchableOpacity, Image, StyleSheet } from "react-native";
 import estilos_navbar from "./css/navbar_css";

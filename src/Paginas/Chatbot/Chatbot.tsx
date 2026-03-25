@@ -1,3 +1,7 @@
+/**
+ * Pantalla contenedora del chatbot. Combina header, contenido principal y barra de navegacion inferior.
+ */
+
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import Header_pailapp from "../../Componentes/Header_pailapp";

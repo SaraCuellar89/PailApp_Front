@@ -1,3 +1,7 @@
+/**
+ * Formulario visual de registro con campos basicos y selector de avatar.
+ */
+
 import React, { useState } from "react";
 import { View, TouchableOpacity, TextInput, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";

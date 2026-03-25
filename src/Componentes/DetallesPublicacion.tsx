@@ -1,3 +1,7 @@
+/**
+ * Renderiza la informacion extendida de una publicacion y administra el envio de comentarios.
+ */
+
 import React, { useState } from "react";
 import { View,Text,ScrollView,TextInput,TouchableOpacity,KeyboardAvoidingView,Platform, } from "react-native";
 import { useForo } from "../context/ForoContext";

@@ -1,3 +1,7 @@
+/**
+ * Formulario para capturar titulo, descripcion e informacion de una receta antes de publicarla.
+ */
+
 import React, { useState } from "react";
 import { View,TextInput,TouchableOpacity,Text,ScrollView, } from "react-native";
 import { useForo } from "../context/ForoContext";

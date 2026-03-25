@@ -1,3 +1,7 @@
+/**
+ * Pantalla principal del foro. Coordina filtros, notificaciones y el listado visible de publicaciones.
+ */
+
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import Filtros from "../Componentes/Filtros";

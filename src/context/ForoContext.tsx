@@ -1,3 +1,8 @@
+/**
+ * Contexto global del foro.
+ * Mantiene las publicaciones en memoria y expone acciones para crear recetas,
+ * guardar platos, dar like y agregar comentarios o respuestas anidadas.
+ */
 import React, { createContext, useContext, useState } from "react";
 
 export interface Usuario {
@@ -50,6 +55,7 @@ export const ForoProvider = ({ children }: any) => {
   const [publicaciones, setPublicaciones] = useState<Publicacion[]>([]);
 
   const agregarPublicacion = (data: any) => {
+    // Cada publicacion se completa aqui con metadatos que la UI espera.
     const nueva: Publicacion = {
       id: Date.now(),
       fecha: new Date(),
@@ -65,6 +71,7 @@ export const ForoProvider = ({ children }: any) => {
   };
 
   const toggleGuardar = (id: number) => {
+    // Alterna si una receta aparece o no dentro de "Mis platos".
     setPublicaciones((prev) =>
       prev.map((p) =>
         p.id === id ? { ...p, guardado: !p.guardado } : p
@@ -81,6 +88,7 @@ const toggleLikePublicacion = (id: number) => {
 
       return {
         ...p,
+        // El contador se recalcula segun el estado anterior del like del usuario.
         likedByUserr: !yaDioLike,
         likes: yaDioLike ? p.likes - 1 : p.likes + 1,
       };
@@ -93,6 +101,7 @@ const agregarComentario = (
   texto: string,
   parentId?: string
 ) => {
+  // Usuario temporal mientras aun no exista autenticacion real enlazada al foro.
   const usuarioMock: Usuario = {
     id: "1",
     nombre: "usuario",
@@ -113,6 +122,7 @@ const agregarComentario = (
       };
 
       if (!parentId) {
+        // Si no hay comentario padre, se agrega al nivel principal del hilo.
         return {
           ...pub,
           listaComentarios: [...pub.listaComentarios, nuevoComentario],
@@ -125,6 +135,7 @@ const agregarComentario = (
           if (c.id === parentId) {
             return {
               ...c,
+              // Las respuestas se guardan dentro del comentario padre correspondiente.
               respuestas: [...c.respuestas, nuevoComentario],
             };
           }

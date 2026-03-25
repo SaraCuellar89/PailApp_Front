@@ -1,3 +1,8 @@
+/**
+ * Punto de entrada principal de la aplicacion.
+ * Aqui se cargan las fuentes, se montan los providers globales
+ * y se declara el stack de navegacion completo.
+ */
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -23,14 +28,13 @@ import EditarPerfil from './src/Paginas/EditarPerfil';
 
 const Stack = createNativeStackNavigator();
 
-// Funcion para cargar la tipografia de la aplicacion
-
 export default function App() {
   const [fuentes_cargadas] = useFonts({
     JetBrainsMono_400Regular,
     JetBrainsMono_700Bold,
   });
 
+  // La app espera a que la tipografia este lista para evitar saltos visuales.
   if (!fuentes_cargadas) return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <ActivityIndicator size="large" />
@@ -38,6 +42,7 @@ export default function App() {
   );
 
   return (
+    // Los providers envuelven toda la navegacion para compartir estado entre pantallas.
     <RecetasProvider>
       <ForoProvider>
         <NavigationContainer>
@@ -45,6 +50,7 @@ export default function App() {
             id="main"
             screenOptions={{ headerShown: false }}
           >
+            {/* Cada pantalla aqui registrada queda disponible en el stack principal. */}
             <Stack.Screen name="Carga" component={Carga} />
             <Stack.Screen name="Inicio" component={Inicio} />
             <Stack.Screen name="Login" component={Login} />

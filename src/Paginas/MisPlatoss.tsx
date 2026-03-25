@@ -1,3 +1,7 @@
+/**
+ * Pantalla que muestra las publicaciones guardadas por el usuario y permite quitarlas de favoritos.
+ */
+
 import React, { useState } from "react";
 import { View, ScrollView } from "react-native";
 import { useForo } from "../context/ForoContext";

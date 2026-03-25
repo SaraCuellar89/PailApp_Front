@@ -1,3 +1,7 @@
+/**
+ * Header principal con la marca PailApp y acceso rapido a configuracion.
+ */
+
 import React from "react";
 import { View, TouchableOpacity, Image } from "react-native";
 import {estilos_header_pailapp} from "./css/header_pailapp_css";

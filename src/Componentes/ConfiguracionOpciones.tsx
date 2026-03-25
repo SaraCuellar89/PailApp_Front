@@ -1,3 +1,7 @@
+/**
+ * Lista visual de opciones de configuracion y accesos a acciones del perfil.
+ */
+
 import { View, Text, TouchableOpacity } from "react-native";
 import styles from "../Estilos/ConfiguracionOpciones";
 import { useNavigation } from "@react-navigation/native";

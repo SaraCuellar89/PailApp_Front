@@ -1,3 +1,7 @@
+/**
+ * Componente de mensaje emergente simple para retroalimentacion rapida.
+ */
+
 import React from "react";
 import { View, Text, } from "react-native";
 import { Ionicons as Icon } from "@expo/vector-icons";

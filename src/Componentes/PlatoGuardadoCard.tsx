@@ -1,3 +1,7 @@
+/**
+ * Tarjeta visual para mostrar un plato guardado y permitir quitarlo de favoritos.
+ */
+
 import React from "react";
 import { View, Text,Image, TouchableOpacity } from "react-native";
 import { Ionicons as Icon } from "@expo/vector-icons";

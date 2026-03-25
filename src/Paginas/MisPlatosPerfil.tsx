@@ -1,3 +1,7 @@
+/**
+ * Pantalla de perfil que lista los platos publicados por el usuario y ofrece acciones sobre ellos.
+ */
+
 import React, { useState } from "react";
 import { View, Text, ScrollView } from "react-native";
 import { useRecetas } from "../context/RecetasContext";

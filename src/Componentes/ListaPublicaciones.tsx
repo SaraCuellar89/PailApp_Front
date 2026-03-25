@@ -1,3 +1,7 @@
+/**
+ * Lista las publicaciones del foro ordenadas segun el filtro seleccionado.
+ */
+
 import React from "react";
 import { ScrollView } from "react-native";
 import { useForo } from "../context/ForoContext";

@@ -1,3 +1,7 @@
+/**
+ * Pantalla splash de arranque. Muestra logo y redirige automaticamente al inicio.
+ */
+
 import React, { useEffect } from "react";
 import { View, ActivityIndicator, Image } from "react-native";
 import estilos_pantalla_carga from "./css/carga_css"

@@ -1,3 +1,7 @@
+/**
+ * Pantalla de autenticacion que monta el formulario de inicio de sesion.
+ */
+
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

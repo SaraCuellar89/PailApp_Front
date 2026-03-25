@@ -1,3 +1,7 @@
+/**
+ * Tarjeta de perfil para mostrar recetas propias con acciones de editar o eliminar.
+ */
+
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { styles } from "../Estilos/PublicacionCard";

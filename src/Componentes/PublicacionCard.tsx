@@ -1,3 +1,7 @@
+/**
+ * Tarjeta visual de una publicacion del foro con acciones locales de like y guardado.
+ */
+
 import React, { useState } from "react";
 import { View, Image, TouchableOpacity, } from "react-native";
 import Texto from "./Texto";

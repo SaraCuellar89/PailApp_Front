@@ -1,3 +1,7 @@
+/**
+ * Vista simplificada del chatbot cuando la experiencia esta centrada en voz.
+ * Se encarga de mostrar el robot, el estado del microfono y la transcripcion en vivo.
+ */
 import React from "react";
 import { Image, PanResponderInstance, Text, View } from "react-native";
 import { styles } from "../../Estilos/Chatbot/ChatbotPrincipal";
@@ -33,6 +37,7 @@ export default function ChatbotVoz({
         ]}
         {...panHandlers}
       >
+        {/* El mismo gesto sirve para expandir o contraer el personaje cuando no esta fijo en voz. */}
         <Text style={[styles.gestureHint, expandedMode && styles.hiddenHint]}>
           {voiceMode
             ? "Habla y veras tu mensaje en vivo"

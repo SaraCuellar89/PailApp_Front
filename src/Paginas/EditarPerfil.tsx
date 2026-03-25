@@ -1,3 +1,7 @@
+/**
+ * Pantalla de formulario para editar datos basicos del perfil del usuario.
+ */
+
 import { View, Text, TextInput, Image, TouchableOpacity } from "react-native";
 import styles from "../Estilos/EditarPerfil";
 

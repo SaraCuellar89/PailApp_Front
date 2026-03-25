@@ -1,3 +1,9 @@
+/**
+ * Componente central del asistente.
+ * Orquesta la conversacion, el streaming desde el backend,
+ * la reproduccion de voz, la transcripcion del microfono
+ * y la transicion visual entre modo chat y modo voz.
+ */
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -39,6 +45,7 @@ const createMessage = (
   role: ChatMessage["role"],
   content: string,
 ): ChatMessage => ({
+  // El id unico permite actualizar placeholders del asistente durante el stream.
   id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
   role,
   content,
@@ -236,6 +243,7 @@ export default function ChatbotPrincipal({
         stream: !doneReading,
       });
 
+      // El backend responde como Server-Sent Events: cada bloque termina en doble salto de linea.
       let separatorIndex = buffer.indexOf("\n\n");
       while (separatorIndex !== -1) {
         const rawEvent = buffer.slice(0, separatorIndex);
@@ -268,6 +276,7 @@ export default function ChatbotPrincipal({
             if (delta) {
               if (!firstChunk) {
                 firstChunk = true;
+                // Se usa para ocultar el loader apenas llega la primera parte del texto.
                 onFirstChunk?.();
               }
               fullText += delta;
@@ -309,6 +318,7 @@ export default function ChatbotPrincipal({
       return;
     }
 
+    // Primero se valida el permiso del microfono para evitar fallos silenciosos.
     const permission = await speechRecognitionModule.requestPermissionsAsync();
     if (!permission.granted) {
       setSpeechError("Debes permitir el uso del microfono para transcribir.");
@@ -387,6 +397,7 @@ export default function ChatbotPrincipal({
       }
 
       await speakText(respuestaFinal);
+      // Se guarda el ultimo mensaje hablado para permitir reproduccion manual si se necesita.
       lastSpokenMessageIdRef.current = assistantPlaceholder.id;
     } catch (error: any) {
       replaceMessageContent(
@@ -411,6 +422,7 @@ export default function ChatbotPrincipal({
         startValue = focusProgress;
       },
       onPanResponderMove: (_, gestureState) => {
+        // El progreso se traduce en tamano del robot y visibilidad del panel de chat.
         const next = startValue + -gestureState.dy / 220;
         setFocusProgress(clamp(next, 0, 1));
       },
@@ -464,6 +476,7 @@ export default function ChatbotPrincipal({
         setIsListening(false);
       }),
       speechRecognitionModule.addListener("result", (event: any) => {
+        // La transcripcion parcial se refleja tanto en el panel de voz como en el input.
         const nextTranscript = event.results
           ?.map((item: any) => item.transcript)
           .join(" ")

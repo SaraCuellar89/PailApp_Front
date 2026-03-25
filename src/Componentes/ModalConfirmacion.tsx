@@ -1,3 +1,7 @@
+/**
+ * Modal reutilizable para confirmar la eliminacion de un plato guardado.
+ */
+
 import React from "react";
 import { View, Text, TouchableOpacity,Modal } from "react-native";
 import { styles } from "../Estilos/ModalConfirmacion";

@@ -1,3 +1,7 @@
+/**
+ * Representa un comentario del foro y permite responderlo de forma anidada.
+ */
+
 import React, { useState } from "react";
 import { View,Text,Image,TouchableOpacity,TextInput, } from "react-native";
 import { Comentario } from "../context/ForoContext";

@@ -1,3 +1,7 @@
+/**
+ * Hoja de estilos del chatbot principal, incluyendo estados de voz, robot y conversacion.
+ */
+
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({

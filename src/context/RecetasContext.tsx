@@ -1,10 +1,14 @@
+/**
+ * Contexto sencillo para exponer recetas del usuario a las pantallas de perfil.
+ * Hoy funciona como almacenamiento temporal en memoria.
+ */
 import React, { createContext, useContext, useState } from "react";
 
 const RecetasContext = createContext<any>(null);
 
 export const RecetasProvider = ({ children }: any) => {
-
 const [recetas, setRecetas] = useState([
+// Datos semilla para que las vistas de perfil tengan contenido inicial.
 {
 id: 1,
 titulo: "Pasta con Pollo",

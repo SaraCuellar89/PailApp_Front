@@ -1,3 +1,7 @@
+/**
+ * Hoja de estilos reutilizable para un componente o pantalla especifica del proyecto.
+ */
+
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
