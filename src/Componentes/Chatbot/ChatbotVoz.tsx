@@ -4,7 +4,8 @@
  */
 import React from "react";
 import { Image, PanResponderInstance, Text, View } from "react-native";
-import { styles } from "../../Estilos/Chatbot/ChatbotPrincipal";
+import { chatbotVozStyles as styles } from "../../Estilos/Chatbot/ChatbotVoz";
+import ChatbotUsageBar from "./ChatbotUsageBar";
 
 type ChatbotVozProps = {
   expandedMode: boolean;
@@ -14,6 +15,8 @@ type ChatbotVozProps = {
   speechError: string;
   robotSize: number;
   panHandlers: PanResponderInstance["panHandlers"];
+  usageProgress: number;
+  remainingInteractions: number;
 };
 
 const formatTranscript = (transcript: string) =>
@@ -27,6 +30,8 @@ export default function ChatbotVoz({
   speechError,
   robotSize,
   panHandlers,
+  usageProgress,
+  remainingInteractions,
 }: ChatbotVozProps) {
   return (
     <>
@@ -37,6 +42,12 @@ export default function ChatbotVoz({
         ]}
         {...panHandlers}
       >
+        <ChatbotUsageBar
+          progress={usageProgress}
+          remainingInteractions={remainingInteractions}
+          styles={styles}
+        />
+
         {/* El mismo gesto sirve para expandir o contraer el personaje cuando no esta fijo en voz. */}
         <Text style={[styles.gestureHint, expandedMode && styles.hiddenHint]}>
           {voiceMode

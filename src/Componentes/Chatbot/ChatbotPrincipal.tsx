@@ -24,7 +24,8 @@ import { createAudioPlayer, setAudioModeAsync } from "expo-audio";
 import * as FileSystem from "expo-file-system/legacy";
 import { API_BASE_URL } from "../../../config/api";
 import ChatbotVoz from "./ChatbotVoz";
-import { styles } from "../../Estilos/Chatbot/ChatbotPrincipal";
+import ChatbotUsageBar from "./ChatbotUsageBar";
+import { chatbotPrincipalStyles as styles } from "../../Estilos/Chatbot/ChatbotPrincipal";
 
 let speechRecognitionModule: any = null;
 
@@ -57,6 +58,11 @@ const clamp = (value: number, min: number, max: number) =>
 type ChatbotPrincipalProps = {
   initialVoiceMode?: boolean;
 };
+
+const MAX_SESSION_TOKENS = 6000;
+const TOKENS_PER_INTERACTION = 450;
+const estimateTokens = (text: string) =>
+  Math.max(0, Math.ceil(text.trim().length / 4));
 
 export default function ChatbotPrincipal({
   initialVoiceMode = false,
@@ -104,6 +110,20 @@ export default function ChatbotPrincipal({
   const chatHidden = voiceMode || focusProgress > 0.82;
   const chatOpacity = clamp(1 - focusProgress * 1.35, 0, 1);
   const speechRecognitionAvailable = Boolean(speechRecognitionModule);
+  const usedTokens = useMemo(
+    () =>
+      messages.reduce(
+        (total, message) => total + estimateTokens(message.content),
+        0,
+      ),
+    [messages],
+  );
+  const remainingTokens = Math.max(0, MAX_SESSION_TOKENS - usedTokens);
+  const usageProgress = clamp(usedTokens / MAX_SESSION_TOKENS, 0, 1);
+  const remainingInteractions = Math.max(
+    0,
+    Math.floor(remainingTokens / TOKENS_PER_INTERACTION),
+  );
 
   // Estas utilidades permiten actualizar el mensaje del asistente mientras llega el stream.
   const replaceMessageContent = (id: string, content: string) => {
@@ -523,6 +543,8 @@ export default function ChatbotPrincipal({
             speechError={speechError}
             robotSize={robotSize}
             panHandlers={robotPanResponder.panHandlers}
+            usageProgress={usageProgress}
+            remainingInteractions={remainingInteractions}
           />
         ) : !chatHidden ? (
           <>
@@ -533,6 +555,12 @@ export default function ChatbotPrincipal({
               ]}
               {...robotPanResponder.panHandlers}
             >
+              <ChatbotUsageBar
+                progress={usageProgress}
+                remainingInteractions={remainingInteractions}
+                styles={styles}
+              />
+
               {/* El robot funciona como elemento visual y tambien como zona gestual. */}
               <Text
                 style={[styles.gestureHint, expandedMode && styles.hiddenHint]}
@@ -618,6 +646,12 @@ export default function ChatbotPrincipal({
             ]}
             {...robotPanResponder.panHandlers}
           >
+            <ChatbotUsageBar
+              progress={usageProgress}
+              remainingInteractions={remainingInteractions}
+              styles={styles}
+            />
+
             <Text style={[styles.gestureHint, expandedMode && styles.hiddenHint]}>
               Desliza el personaje hacia arriba o abajo
             </Text>

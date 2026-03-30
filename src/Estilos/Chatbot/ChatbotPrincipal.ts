@@ -1,10 +1,10 @@
 /**
- * Hoja de estilos del chatbot principal, incluyendo estados de voz, robot y conversacion.
+ * Hoja de estilos exclusiva del chatbot principal.
  */
 
 import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+export const chatbotPrincipalStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#EDE4C7",
@@ -29,6 +29,48 @@ export const styles = StyleSheet.create({
     paddingTop: 0,
     paddingBottom: 0,
   },
+  usageWrapper: {
+    width: "100%",
+    maxWidth: 320,
+    backgroundColor: "rgba(255,250,232,0.92)",
+    borderWidth: 1,
+    borderColor: "#D8C898",
+    borderRadius: 18,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    marginTop: 8,
+    marginBottom: 10,
+  },
+  usageHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 12,
+    marginBottom: 8,
+  },
+  usageTitle: {
+    fontSize: 13,
+    fontWeight: "800",
+    color: "#2E2418",
+  },
+  usageMeta: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: "#6D5633",
+  },
+  usageBarTrack: {
+    width: "100%",
+    height: 10,
+    borderRadius: 999,
+    overflow: "hidden",
+    backgroundColor: "#E8DFC0",
+    marginBottom: 8,
+  },
+  usageBarFill: {
+    height: "100%",
+    borderRadius: 999,
+    backgroundColor: "#000000",
+  },
   gestureHint: {
     fontSize: 13,
     fontWeight: "600",
@@ -41,13 +83,10 @@ export const styles = StyleSheet.create({
     marginBottom: 0,
   },
   robot: {
-    marginBottom: 10,
+    marginBottom: 2,
   },
   robotExpanded: {
     marginBottom: 0,
-  },
-  robotVoiceMode: {
-    marginBottom: 4,
   },
   chatBox: {
     flex: 1,
@@ -106,40 +145,6 @@ export const styles = StyleSheet.create({
   loadingText: {
     color: "#000",
     fontSize: 14,
-  },
-  voicePanel: {
-    width: "100%",
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-start",
-    paddingHorizontal: 12,
-    paddingBottom: 12,
-  },
-  voiceStatus: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#2C2419",
-    marginBottom: 12,
-  },
-  voiceTranscript: {
-    width: "100%",
-    backgroundColor: "rgba(255,255,255,0.74)",
-    borderRadius: 22,
-    paddingHorizontal: 18,
-    paddingVertical: 16,
-    marginBottom: 18,
-    fontSize: 22,
-    lineHeight: 30,
-    color: "#1E1A16",
-    fontWeight: "600",
-    minHeight: 120,
-  },
-  voiceError: {
-    marginTop: 10,
-    color: "#A11D1D",
-    fontSize: 14,
-    fontWeight: "600",
-    textAlign: "center",
   },
   inputContainer: {
     flexDirection: "row",
