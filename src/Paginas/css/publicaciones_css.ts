@@ -15,6 +15,14 @@ const estilos_publicaciones = StyleSheet.create({
     },
     caja_formu_comentario: {
         paddingHorizontal: 20
+    },
+    btn_ingredientes: {
+        alignSelf: "center",
+        backgroundColor: colores.color_5,
+        padding: 10,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: colores.color_4
     }
 
 })

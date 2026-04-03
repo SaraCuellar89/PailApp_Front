@@ -31,14 +31,14 @@ export const estilos_formu_subir_receta = StyleSheet.create({
         borderTopWidth: 1,
         borderRadius: 10,
         backgroundColor: colores.color_3,
-        color: colores.color_4
+        color: colores.color_4,
     },
     caja_ingredientes: {
         width: "100%",
         flexDirection: "row",
         alignSelf: "stretch",
         alignItems: "center", 
-        gap: 5    
+        gap: 5,    
     },
     input_ingrediente: {
         height: 45,
@@ -110,8 +110,6 @@ export const estilos_formu_subir_receta = StyleSheet.create({
     input_grande: {
         width: "100%",
         height: height * 0.5,
-        borderWidth: 1,
-        borderTopWidth: 1,
         borderRadius: 10,
         backgroundColor: colores.color_3,
         color: colores.color_4
@@ -123,5 +121,12 @@ export const estilos_formu_subir_receta = StyleSheet.create({
     editor: {
         backgroundColor: colores.color_3,
         borderRadius: 10,
+    },
+    estilos_rich_editor: {
+        flex: 1,
+        borderWidth: 1,
+        borderColor: colores.color_4,
+        borderRadius: 10,
+        overflow: "hidden"
     }
 });

@@ -26,6 +26,8 @@ import Codigo from './src/Paginas/Codigo';
 import Cambiar_Contrasena from './src/Paginas/Cambiar_Contrasena';
 import Notificaciones from './src/Paginas/Notificaciones';
 import { Configuracion_Toast } from './src/utils/Configuracion_Toast';
+import Lista_Ingredientes from './src/Paginas/Lista_Ingredientes';
+import Editar_Cuenta from './src/Paginas/Editar_Cuenta';
 
 
 export type RootStackParamList = {
@@ -46,8 +48,10 @@ export type RootStackParamList = {
   Descripcion: undefined;
   DetallePublicacion: undefined;
   MisPlatos: undefined;
+  Lista_Ingredientes: undefined;
   Perfil: undefined;
   Configuracion: undefined;
+  Editar_Cuenta: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>(); 
@@ -85,8 +89,10 @@ export default function App() {
         <Stack.Screen name="Descripcion" component={Descripcion} />
         <Stack.Screen name="DetallePublicacion" component={DetallePublicacion} options={{ headerShown: false}} />
         <Stack.Screen name="MisPlatos" component={MisPlatoss} options={{ headerShown: false }} />
+        <Stack.Screen name="Lista_Ingredientes" component={Lista_Ingredientes} options={{ headerShown: false }} />
         <Stack.Screen name="Perfil" component={Perfil} />
         <Stack.Screen name="Configuracion" component={Configuracion} />
+        <Stack.Screen name="Editar_Cuenta" component={Editar_Cuenta} />
       </Stack.Navigator>
 
       <Toast config={Configuracion_Toast}/>

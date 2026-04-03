@@ -4,11 +4,10 @@ import Texto from "./Texto";
 import estilo_formu_inicio_sesion_css from "./css/formu_inicio_sesion_css"
 import estilos_global from "../estilos_global";
 
-const Formu_Registro = ({ avatar, onAbrirAvatares, navigation}: any) => {
+const Formu_Editar_Cuenta = ({ avatar, onAbrirAvatares}: any) => {
 
   // ================= Estados para ver y ocultar contraseñas =================
   const [mostrar_contrasena, setMostrar_contrasena] = useState(false);
-  const [mostrar_confirmar_contrasena, setMostrar_confirmar_contrasena] = useState(false);
 
 
   return (
@@ -86,32 +85,41 @@ const Formu_Registro = ({ avatar, onAbrirAvatares, navigation}: any) => {
           </View>
         </View>
 
-        {/* --- Input de Confirmar Contraseña --- */}
+        {/* --- Input de la edad --- */}
 
         <View style={estilo_formu_inicio_sesion_css.contenedor_input}>
-          <Texto style={estilo_formu_inicio_sesion_css.texto_label}>Confirmar Contraseña</Texto>
-          
-          <View style={estilo_formu_inicio_sesion_css.caja_contrasena}>
+            <Texto style={estilo_formu_inicio_sesion_css.texto_label}>Edad</Texto>
             <TextInput 
-              secureTextEntry={!mostrar_confirmar_contrasena}
-              placeholder="••••••••" 
-              placeholderTextColor={"grey"} 
-              style={estilo_formu_inicio_sesion_css.caja_input_contrasena}
+                placeholder="Ej: 22" 
+                placeholderTextColor={"grey"} 
+                style={[estilos_global.caja_input]}
             />
-            <TouchableOpacity onPress={() => setMostrar_confirmar_contrasena(!mostrar_confirmar_contrasena)}>
-              <Image
-                source={require("../Img/oculto.png")}
-                style={mostrar_confirmar_contrasena ? estilo_formu_inicio_sesion_css.no_ver_contrasena : estilo_formu_inicio_sesion_css.ver_contrasena}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </View>
+        </View>
+
+        {/* --- Input de la altura --- */}
+        <View style={estilo_formu_inicio_sesion_css.contenedor_input}>
+            <Texto style={estilo_formu_inicio_sesion_css.texto_label}>Altura</Texto>
+            <TextInput 
+                placeholder="Ej: 170" 
+                placeholderTextColor={"grey"} 
+                style={[estilos_global.caja_input]}
+            />
+        </View>
+
+        {/* --- Input del peso --- */}
+        <View style={estilo_formu_inicio_sesion_css.contenedor_input}>
+            <Texto style={estilo_formu_inicio_sesion_css.texto_label}>Peso</Texto>
+            <TextInput 
+                placeholder="Ej: 60" 
+                placeholderTextColor={"grey"} 
+                style={[estilos_global.caja_input]}
+            />
         </View>
 
         {/* --- Boton para enviar el Formulario --- */}
 
-        <TouchableOpacity style={estilos_global.btn_1} onPress={() => navigation.navigate('Datos_Adicionales')}>
-         <Texto style={estilos_global.texto_btn_1}>Siguiente</Texto> 
+        <TouchableOpacity style={estilos_global.btn_1}>
+         <Texto style={estilos_global.texto_btn_1}>Guardar</Texto> 
         </TouchableOpacity>
 
       </View>
@@ -120,4 +128,4 @@ const Formu_Registro = ({ avatar, onAbrirAvatares, navigation}: any) => {
   );
 }
 
-export default Formu_Registro;
+export default Formu_Editar_Cuenta;

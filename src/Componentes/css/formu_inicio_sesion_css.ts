@@ -13,7 +13,6 @@ const estilo_formu_inicio_sesion_css = StyleSheet.create({
         alignItems: "center",
         paddingTop: 40,
     },
-
     card: {
         width: "80%",
         padding: 20,
@@ -24,37 +23,39 @@ const estilo_formu_inicio_sesion_css = StyleSheet.create({
         alignItems: 'center',
         gap: 30,
     },
-
     texto_label: {
         fontFamily: "JetBrainsMono_700Bold",
         fontSize: 16,
     },
-
     contenedor_input: {
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
         gap: 10,
     },
-
-    caja_input_contrasena: {
-        width: '90%',
+    caja_contrasena: {
+        width: '100%',
+        flexDirection: 'row',
         backgroundColor: "white",
         borderRadius: 10,
         color: "black",
         borderColor: "black",
         borderWidth: 1,
     },
-
-    caja_contrasena: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '100%'
+    caja_input_contrasena: {
+        flex: 1,
+        
     },
+    
 
     ver_contrasena: {
         width: width * 0.09,
         height: height * 0.05,
+    },
+    no_ver_contrasena: {
+        width: width * 0.09,
+        height: height * 0.05,
+        opacity: 0.4
     },
 
     googleBtn: {

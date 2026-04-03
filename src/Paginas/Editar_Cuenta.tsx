@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { View, ScrollView, KeyboardAvoidingView, Platform, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../Componentes/Header";
-import Formu_Registro from "../Componentes/Formu_Registro";
+import Formu_Editar_Cuenta from "../Componentes/Formu_Editar_Cuenta";
 import { colores } from "../estilos_global";
 import registro_css from "./css/registro_css";
 import Seleccionar_Avatar from "../Componentes/Seleccionar_Avatar";
 
-export default function Registro({ navigation }: any) {
+export default function Editar_Cuenta({ navigation }: any) {
 
   // ================= Estados para mostrar el avatar despues de seleccionarlo =================
   const [avatar, setAvatar] = useState(null);
@@ -18,7 +18,7 @@ export default function Registro({ navigation }: any) {
 
       <View style={{backgroundColor: colores.color_2}}>
         <Header 
-          title="Crear Cuenta" 
+          title="Editar Cuenta" 
           onBack={() => navigation.goBack()} 
         /> 
       </View> 
@@ -34,10 +34,9 @@ export default function Registro({ navigation }: any) {
         >
 
           <View style={registro_css.contenedor}>    
-            <Formu_Registro 
+            <Formu_Editar_Cuenta 
               avatar={avatar} 
               onAbrirAvatares={() => setMostrarAvatares(true)} 
-              navigation={navigation}
             />
           </View>
 

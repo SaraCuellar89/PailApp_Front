@@ -11,10 +11,10 @@ export const estilos_boton_agregar = StyleSheet.create({
     alignItems: "center",
     borderTopStartRadius: 10,
     borderTopEndRadius: 10,
-    paddingVertical: 10
+    paddingVertical: 15
   },
   icon: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
   },
 });

@@ -29,8 +29,8 @@ const Formu_Cambiar_Contrasena = ({navigation}: any) => {
                         />
                         <TouchableOpacity onPress={() => setMostrar_contrasena(!mostrar_contrasena)}>
                         <Image
-                            source={mostrar_contrasena ? require("../Img/ver.png") : require("../Img/oculto.png")}
-                            style={estilo_formu_inicio_sesion_css.ver_contrasena}
+                            source={require("../Img/oculto.png")}
+                            style={mostrar_contrasena ? estilo_formu_inicio_sesion_css.no_ver_contrasena : estilo_formu_inicio_sesion_css.ver_contrasena}
                             resizeMode="contain"
                         />
                         </TouchableOpacity>
@@ -51,8 +51,8 @@ const Formu_Cambiar_Contrasena = ({navigation}: any) => {
                         />
                         <TouchableOpacity onPress={() => setMostrar_confirmar_contrasena(!mostrar_confirmar_contrasena)}>
                         <Image
-                            source={mostrar_confirmar_contrasena ? require("../Img/ver.png") : require("../Img/oculto.png")}
-                            style={estilo_formu_inicio_sesion_css.ver_contrasena}
+                            source={require("../Img/oculto.png")}
+                            style={mostrar_confirmar_contrasena ? estilo_formu_inicio_sesion_css.no_ver_contrasena : estilo_formu_inicio_sesion_css.ver_contrasena}
                             resizeMode="contain"
                         />
                         </TouchableOpacity>

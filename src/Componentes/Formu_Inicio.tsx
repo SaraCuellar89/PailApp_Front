@@ -11,7 +11,7 @@ const Formu_Inicio = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   // ================= Estados para ver y ocultar contraseña =================
-  const [mostrar, setMostrar] = useState(false);
+  const [mostrar_contrasena, setMostrar_contrasena] = useState(false);
 
   return (
     <View style={estilo_formu_inicio_sesion_css.content}>
@@ -36,15 +36,15 @@ const Formu_Inicio = () => {
           
           <View style={estilo_formu_inicio_sesion_css.caja_contrasena}>
             <TextInput 
-              secureTextEntry={!mostrar}
+              secureTextEntry={!mostrar_contrasena}
               placeholder="••••••••" 
               placeholderTextColor={"grey"} 
               style={estilo_formu_inicio_sesion_css.caja_input_contrasena}
             />
-            <TouchableOpacity onPress={() => setMostrar(!mostrar)}>
+            <TouchableOpacity onPress={() => setMostrar_contrasena(!mostrar_contrasena)}>
               <Image
-                source={mostrar ? require("../Img/ver.png") : require("../Img/oculto.png")}
-                style={estilo_formu_inicio_sesion_css.ver_contrasena}
+                source={require("../Img/oculto.png")}
+                style={mostrar_contrasena ? estilo_formu_inicio_sesion_css.no_ver_contrasena : estilo_formu_inicio_sesion_css.ver_contrasena}
                 resizeMode="contain"
               />
             </TouchableOpacity>

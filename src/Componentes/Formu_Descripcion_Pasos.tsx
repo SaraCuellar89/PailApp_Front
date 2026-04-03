@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { RichEditor, RichToolbar, actions } from 'react-native-pell-rich-editor';
 import { estilos_formu_subir_receta } from "./css/formu_subir_receta_css";
@@ -10,6 +10,8 @@ const Formu_Descripcion_Pasos = () => {
     // ================= Funciones para lo editores de texto =================
     const editorRef = useRef<any>(null);
     const pasosRef = useRef<any>(null); 
+
+    const [activar_opciones, setActivar_opciones] = useState([]);
 
     return(
         <View style={estilos_formu_subir_receta.contenedor}>
@@ -23,15 +25,17 @@ const Formu_Descripcion_Pasos = () => {
                         style={estilos_formu_subir_receta.editor}
                         editor={editorRef}
                         actions={[
-                        actions.setBold,
-                        actions.setItalic,
-                        actions.setUnderline,
-                        actions.insertBulletsList,
-                        actions.insertOrderedList,
-                        actions.alignLeft,
-                        actions.alignCenter,
-                        actions.alignRight,
+                            actions.setBold,
+                            actions.setItalic,
+                            actions.setUnderline,
+                            actions.insertBulletsList,
+                            actions.insertOrderedList,
+                            actions.alignLeft,
+                            actions.alignCenter,
+                            actions.alignRight,
                         ]}
+                        iconTint="grey"
+                        selectedIconTint="black"
                     />
                 </View>
 
@@ -39,11 +43,17 @@ const Formu_Descripcion_Pasos = () => {
                     <RichEditor
                         ref={editorRef}
                         placeholder="Ej: El arroz paisa es de Antioquia"
-                        style={{ flex: 1 }}
+                        style={estilos_formu_subir_receta.estilos_rich_editor}
                         editorStyle={{
                             backgroundColor: colores.color_3, 
                             color: colores.color_4,             
                             placeholderColor: 'grey',
+                        }}
+                        onCursorPosition={() => {}}
+                        {...{
+                            registerToolbar: (items: any) => {
+                                setActivar_opciones(items);
+                            }
                         }}
                     />
                 </View>
@@ -58,24 +68,33 @@ const Formu_Descripcion_Pasos = () => {
                         style={estilos_formu_subir_receta.editor}
                         editor={pasosRef}
                         actions={[
-                        actions.setBold,
-                        actions.setItalic,
-                        actions.setUnderline,
-                        actions.insertBulletsList,
-                        actions.insertOrderedList,
+                            actions.setBold,
+                            actions.setItalic,
+                            actions.setUnderline,
+                            actions.insertBulletsList,
+                            actions.insertOrderedList,
                         ]}
+                        iconTint="grey"
+                        selectedIconTint="black"
                     />
                 </View>
 
                 <View style={estilos_formu_subir_receta.input_grande}>
                     <RichEditor
                         ref={pasosRef}
+                        initialContentHTML={`<ol><li></li></ol>`}
                         placeholder="Ej: 1. Poner los frijoles en agua "
-                        style={{ flex: 1 }}
+                        style={estilos_formu_subir_receta.estilos_rich_editor}
                         editorStyle={{
                             backgroundColor: colores.color_3, 
                             color: colores.color_4,             
                             placeholderColor: 'grey',
+                        }}
+                        onCursorPosition={() => {}}
+                        {...{
+                            registerToolbar: (items: any) => {
+                                setActivar_opciones(items);
+                            }
                         }}
                     />
                 </View>

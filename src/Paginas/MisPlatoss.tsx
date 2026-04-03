@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import ModalConfirmacion from "../Componentes/ModalConfirmacion";
 import Notificacion from "../Componentes/Notificacion"; 
 import Header from "../Componentes/Header";
@@ -7,6 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { colores } from "../estilos_global";
 import PublicacionCard from "../Componentes/PublicacionCard";
 import estilos_publicaciones from "./css/publicaciones_css";
+import Texto from "../Componentes/Texto";
 
 export default function MisPlatoss({ navigation }: any) {
 
@@ -47,6 +48,10 @@ export default function MisPlatoss({ navigation }: any) {
             guardar_ejemplo={guardar_ejemplo}
             setGuardar_Ejemplo={setModalVisible}
           />
+
+          <TouchableOpacity style={estilos_publicaciones.btn_ingredientes} onPress={() => navigation.navigate('Lista_Ingredientes')}>
+            <Texto>Lista de Ingredientes</Texto>
+          </TouchableOpacity>
         </View>
 
       </ScrollView>

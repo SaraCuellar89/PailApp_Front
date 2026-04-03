@@ -2,14 +2,12 @@ import { View, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import estilos_configuracion_opciones from "./css/configuracion_opciones";
 import Texto from "./Texto";
-import { useState } from "react";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 
 
 export default function ConfiguracionOpciones() {
 
   const navigation = useNavigation<any>();
-
 
   return (
     <View>
@@ -24,10 +22,10 @@ export default function ConfiguracionOpciones() {
       </View>
 
       {/* --- Boton para editar toda la informacion del usuario --- */}
-      <TouchableOpacity style={estilos_configuracion_opciones.card}>
-        <Texto style={estilos_configuracion_opciones.titulo}>Editar Perfil</Texto>
+      <TouchableOpacity style={estilos_configuracion_opciones.card} onPress={() => navigation.navigate('Editar_Cuenta')}>
+        <Texto style={estilos_configuracion_opciones.titulo}>Editar Cuenta</Texto>
         <Texto style={estilos_configuracion_opciones.descripcion}>
-          Puedes editar toda la información de tu cuenta
+          Puedes editar toda la información de tu perfil y cuenta
         </Texto>
       </TouchableOpacity>
 
