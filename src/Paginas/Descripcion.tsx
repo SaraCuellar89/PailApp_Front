@@ -1,6 +1,5 @@
 import React from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
-import Texto from "../Componentes/Texto";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../Componentes/Header";
 import { colores } from "../estilos_global";

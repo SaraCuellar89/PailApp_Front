@@ -1,6 +1,7 @@
 // Estilos de los formularios de inicio de sesion y registro de usuario
 
 import { StyleSheet, Dimensions } from "react-native";
+import { colores } from "../../estilos_global";
 
 const { height, width } = Dimensions.get('window');
 
@@ -44,10 +45,8 @@ const estilo_formu_inicio_sesion_css = StyleSheet.create({
     },
     caja_input_contrasena: {
         flex: 1,
-        
+        color: colores.color_4  
     },
-    
-
     ver_contrasena: {
         width: width * 0.09,
         height: height * 0.05,
