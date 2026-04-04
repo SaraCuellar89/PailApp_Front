@@ -28,7 +28,7 @@ const estilos_toast = StyleSheet.create({
     borderColor: colores.color_4,
     padding: 20,
     borderRadius: 10,
-    width: '80%',
+    width: '80%'
   },
   contenedor_error: {
     backgroundColor: '#f09191',
@@ -37,7 +37,7 @@ const estilos_toast = StyleSheet.create({
     borderColor: colores.color_4,
     padding: 20,
     borderRadius: 10,
-    width: '80%',
+    width: '80%'
   },
   contenedor_info: {
     backgroundColor: '#f0df91',
@@ -46,11 +46,12 @@ const estilos_toast = StyleSheet.create({
     borderColor: colores.color_4,
     padding: 20,
     borderRadius: 10,
-    width: '80%',
+    width: '80%'
   },
   texto: {
     color: colores.color_4,
     fontSize: 14,
     fontFamily: 'JetBrainsMono_400Regular',
+    textAlign: "center"
   }
 });

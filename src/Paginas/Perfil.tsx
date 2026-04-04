@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colores } from "../estilos_global";
 import Header from "../Componentes/Header";
@@ -22,30 +22,24 @@ const Perfil = ({ navigation }: any) => {
             /> 
         </View>
 
-        <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        > 
+       
+        <ScrollView
+            style={{ flex: 1, backgroundColor: '#000000' }}
+            contentContainerStyle={{ flexGrow: 1 }}
+            showsVerticalScrollIndicator={true}
+            keyboardShouldPersistTaps="handled"
+        >
 
-            <ScrollView
-                style={{ flex: 1, backgroundColor: '#000000' }}
-                contentContainerStyle={{ flexGrow: 1 }}
-                showsVerticalScrollIndicator={true}
-                keyboardShouldPersistTaps="handled"
-            >
+        <View style={estilos_publicaciones.container}>
 
-            <View style={estilos_publicaciones.container}>
+            <Header_Perfil/>
 
-                <Header_Perfil/>
+            <Platos_Perfil
+                navigation={navigation}
+            />
+        </View>
 
-                <Platos_Perfil
-                    navigation={navigation}
-                />
-            </View>
-
-            </ScrollView>
-
-        </KeyboardAvoidingView>
+        </ScrollView>
 
         </SafeAreaView>
     )

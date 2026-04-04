@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, ScrollView, KeyboardAvoidingView, Platform, Modal } from "react-native";
+import { View, ScrollView, KeyboardAvoidingView, Platform, ImageSourcePropType } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../Componentes/Header";
 import Formu_Registro from "../Componentes/Formu_Registro";
@@ -10,7 +10,7 @@ import Seleccionar_Avatar from "../Componentes/Seleccionar_Avatar";
 export default function Registro({ navigation }: any) {
 
   // ================= Estados para mostrar el avatar despues de seleccionarlo =================
-  const [avatar, setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState<ImageSourcePropType>({uri: "https://raw.githubusercontent.com/SaraCuellar89/PailApp_Front/main/src/Img/avatar_1.png"});
   const [mostrarAvatares, setMostrarAvatares] = useState(false);
 
   return (
@@ -49,7 +49,7 @@ export default function Registro({ navigation }: any) {
 
         {mostrarAvatares === true ? 
         (
-          <Seleccionar_Avatar onChange={(av) => { 
+          <Seleccionar_Avatar onChange={(av: ImageSourcePropType)  => { 
             setAvatar(av); 
             setMostrarAvatares(false); 
           }} />

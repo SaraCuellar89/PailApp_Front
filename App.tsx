@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts, JetBrainsMono_400Regular, JetBrainsMono_700Bold } from '@expo-google-fonts/jetbrains-mono';
 import { ActivityIndicator, View } from 'react-native';
 import Toast from 'react-native-toast-message';
+import { AuthProvider } from "./src/utils/Auth_Context";
 
 
 import Carga from './src/Paginas/Carga';
@@ -70,32 +71,34 @@ export default function App() {
   );
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator id="main" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Carga" component={Carga} />
-        <Stack.Screen name="Inicio" component={Inicio} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Correo_Recuperacion" component={Correo_Recuperacion} />
-        <Stack.Screen name="Codigo" component={Codigo} />
-        <Stack.Screen name="Cambiar_Contrasena" component={Cambiar_Contrasena} />
-        <Stack.Screen name="Registro" component={Registro} />
-        <Stack.Screen name="Datos_Adicionales" component={Datos_Adicionales} />
-        <Stack.Screen name="Chatbot" component={ChatbotPrincipal} />
-        <Stack.Screen name="Notificaciones" component={Notificaciones} />
-        <Stack.Screen name="ChatbotVoz" component={ChatVoz} />
-        <Stack.Screen name="Chatbot_Conversacion" component={Chatbot_Conversacion} />
-        <Stack.Screen name="Foro" component={Foro} />
-        <Stack.Screen name="SubirReceta" component={SubirReceta} />
-        <Stack.Screen name="Descripcion" component={Descripcion} />
-        <Stack.Screen name="DetallePublicacion" component={DetallePublicacion} options={{ headerShown: false}} />
-        <Stack.Screen name="MisPlatos" component={MisPlatoss} options={{ headerShown: false }} />
-        <Stack.Screen name="Lista_Ingredientes" component={Lista_Ingredientes} options={{ headerShown: false }} />
-        <Stack.Screen name="Perfil" component={Perfil} />
-        <Stack.Screen name="Configuracion" component={Configuracion} />
-        <Stack.Screen name="Editar_Cuenta" component={Editar_Cuenta} />
-      </Stack.Navigator>
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator id="main" screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Carga" component={Carga} />
+          <Stack.Screen name="Inicio" component={Inicio} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Correo_Recuperacion" component={Correo_Recuperacion} />
+          <Stack.Screen name="Codigo" component={Codigo} />
+          <Stack.Screen name="Cambiar_Contrasena" component={Cambiar_Contrasena} />
+          <Stack.Screen name="Registro" component={Registro} />
+          <Stack.Screen name="Datos_Adicionales" component={Datos_Adicionales} />
+          <Stack.Screen name="Chatbot" component={ChatbotPrincipal} />
+          <Stack.Screen name="Notificaciones" component={Notificaciones} />
+          <Stack.Screen name="ChatbotVoz" component={ChatVoz} />
+          <Stack.Screen name="Chatbot_Conversacion" component={Chatbot_Conversacion} />
+          <Stack.Screen name="Foro" component={Foro} />
+          <Stack.Screen name="SubirReceta" component={SubirReceta} />
+          <Stack.Screen name="Descripcion" component={Descripcion} />
+          <Stack.Screen name="DetallePublicacion" component={DetallePublicacion} options={{ headerShown: false}} />
+          <Stack.Screen name="MisPlatos" component={MisPlatoss} options={{ headerShown: false }} />
+          <Stack.Screen name="Lista_Ingredientes" component={Lista_Ingredientes} options={{ headerShown: false }} />
+          <Stack.Screen name="Perfil" component={Perfil} />
+          <Stack.Screen name="Configuracion" component={Configuracion} />
+          <Stack.Screen name="Editar_Cuenta" component={Editar_Cuenta} />
+        </Stack.Navigator>
 
-      <Toast config={Configuracion_Toast}/>
-    </NavigationContainer>
+        <Toast config={Configuracion_Toast}/>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }

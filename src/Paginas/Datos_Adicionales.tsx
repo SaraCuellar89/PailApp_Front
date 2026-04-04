@@ -12,8 +12,7 @@ const Datos_Adicionales = ({ navigation }: any) => {
 
                 <View style={{backgroundColor: colores.color_2}}>
                     <Header 
-                    title="Datos Adicionales" 
-                    onBack={() => navigation.goBack()} 
+                        title="Datos Adicionales" 
                     /> 
                 </View> 
 
