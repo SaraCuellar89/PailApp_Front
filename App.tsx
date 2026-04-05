@@ -23,7 +23,6 @@ import Perfil from './src/Paginas/Perfil';
 import Configuracion from './src/Paginas/Configuracion';
 import Descripcion from './src/Paginas/Descripcion';
 import Datos_Adicionales from './src/Paginas/Datos_Adicionales';
-import Codigo from './src/Paginas/Codigo';
 import Cambiar_Contrasena from './src/Paginas/Cambiar_Contrasena';
 import Notificaciones from './src/Paginas/Notificaciones';
 import { Configuracion_Toast } from './src/utils/Configuracion_Toast';
@@ -33,11 +32,10 @@ import Editar_Cuenta from './src/Paginas/Editar_Cuenta';
 
 export type RootStackParamList = {
   Carga: undefined;
-  Inicio: undefined;
-  Login: undefined;
+  Inicio: { cerro_sesion?: boolean };
+  Login: { registro_exitoso?: boolean };
   Registro: undefined;
   Correo_Recuperacion: undefined;
-  Codigo: undefined;
   Cambiar_Contrasena: undefined;
   Datos_Adicionales: undefined;
   Chatbot: undefined;
@@ -78,7 +76,6 @@ export default function App() {
           <Stack.Screen name="Inicio" component={Inicio} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Correo_Recuperacion" component={Correo_Recuperacion} />
-          <Stack.Screen name="Codigo" component={Codigo} />
           <Stack.Screen name="Cambiar_Contrasena" component={Cambiar_Contrasena} />
           <Stack.Screen name="Registro" component={Registro} />
           <Stack.Screen name="Datos_Adicionales" component={Datos_Adicionales} />

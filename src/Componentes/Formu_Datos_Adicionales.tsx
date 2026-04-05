@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { TouchableOpacity, View, TextInput } from "react-native";
 import estilo_formu_inicio_sesion_css from "./css/formu_inicio_sesion_css";
 import estilos_global from "../estilos_global";
 import Texto from "./Texto";
-import { useContext } from "react";
 import { AuthContext } from "../utils/Auth_Context";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const Formu_Datos_Adicionales = ({navigation}: any) => {
 
-    // Datos del usuario por un contexto difinido
+    // ================= Datos del usuario por un contexto difinido =================
     const authContext = useContext(AuthContext);
     if (!authContext) throw new Error("AuthContext no está disponible");
     const { usuario, setUsuario } = authContext;
@@ -59,6 +59,13 @@ const Formu_Datos_Adicionales = ({navigation}: any) => {
         console.log(data)
 
         if(data.success === false) return Mensaje_Toast.info(data.message);
+
+        
+
+        // Actualizar contexto con los nuevos datos
+        const usuario_actualizado = { ...usuario, edad: form.edad, peso: form.peso, altura: form.altura };
+        setUsuario(usuario_actualizado);                             
+        await AsyncStorage.setItem("usuario", JSON.stringify(usuario_actualizado));
 
         navigation.reset({
             index: 0,

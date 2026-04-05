@@ -12,10 +12,9 @@ const estilo_formu_inicio_sesion_css = StyleSheet.create({
     content: {
         flex: 1,
         alignItems: "center",
-        paddingTop: 40,
     },
     card: {
-        width: "80%",
+        width: "100%",
         padding: 20,
         borderRadius: 12,
         borderWidth: 1,

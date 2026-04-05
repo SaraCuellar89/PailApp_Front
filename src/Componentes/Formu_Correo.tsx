@@ -23,7 +23,7 @@ const Formu_Correo = ({navigation}: any) => {
 
                 {/* --- Boton para enviar el Formulario --- */}
 
-                <TouchableOpacity style={estilos_global.btn_1} onPress={() => navigation.navigate('Codigo')}>
+                <TouchableOpacity style={estilos_global.btn_1} onPress={() => navigation.navigate('Cambiar_Contrasena')}>
                     <Texto style={estilos_global.texto_btn_1}>Siguiente</Texto> 
                 </TouchableOpacity>
 

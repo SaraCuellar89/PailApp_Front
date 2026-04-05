@@ -5,7 +5,7 @@ import Texto from "./Texto";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 
 
-export default function ConfiguracionOpciones() {
+export default function ConfiguracionOpciones({Cerrar_Sesion}: any) {
 
   const navigation = useNavigation<any>();
 
@@ -31,7 +31,7 @@ export default function ConfiguracionOpciones() {
 
 
       {/* --- Boton para cerrar sesion --- */}
-      <TouchableOpacity style={estilos_configuracion_opciones.card}>
+      <TouchableOpacity style={estilos_configuracion_opciones.card} onPress={Cerrar_Sesion}>
         <Texto style={estilos_configuracion_opciones.titulo}>Cerrar Sesión</Texto>
         <Texto style={estilos_configuracion_opciones.descripcion}>
           Recuerda que siempre puedes volver

@@ -8,7 +8,7 @@ type Usuario = any;
 type AuthContextType = {
     usuario: Usuario | null;
     setUsuario: (user: Usuario | null) => void;
-    loading: boolean;
+    cargando: boolean;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -19,7 +19,7 @@ type Props = {
 
 export const AuthProvider = ({ children }: Props) => {
     const [usuario, setUsuario] = useState<Usuario | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [cargando, setLoading] = useState(true);
 
     const cargarUsuario = async () => {
         const info_usuario = await AsyncStorage.getItem("usuario");
@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: Props) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ usuario, setUsuario, loading }}>
+        <AuthContext.Provider value={{ usuario, setUsuario, cargando }}>
             {children}
         </AuthContext.Provider>
     );

@@ -28,6 +28,7 @@ export default function MisPlatoss({ navigation }: any) {
         /> 
       </View>
 
+      {/* Renderizado de notificacion */}
       {mostrarNoti && ( 
         <Notificacion
           mensaje="Plato eliminado"
@@ -56,6 +57,7 @@ export default function MisPlatoss({ navigation }: any) {
 
       </ScrollView>
 
+      {/* Renderizado de modal de confirmacion */}
       <ModalConfirmacion
         visible={modalVisible}
         confirmar={() => [setMostrarNoti(true), setModalVisible(false)]}

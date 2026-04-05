@@ -48,7 +48,7 @@ const estilos_header_perfil = StyleSheet.create({
     },
     texto_info_extra: {
         fontSize: 12
-    }
+    },
 });
 
 export default estilos_header_perfil;

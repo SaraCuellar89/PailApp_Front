@@ -55,7 +55,7 @@ const Formu_Registro = ({ avatar, onAbrirAvatares, navigation}: any) => {
 
     if(!res.ok) return Mensaje_Toast.error("Error al registrar");
 
-    navigation.navigate("Login");
+    navigation.navigate("Login", { registro_exitoso: true });
   }
 
 
@@ -63,19 +63,6 @@ const Formu_Registro = ({ avatar, onAbrirAvatares, navigation}: any) => {
     <View style={estilo_formu_inicio_sesion_css.content}>
 
       <View style={[estilo_formu_inicio_sesion_css.card, estilos_global.fondo_1]}>
-
-        {/* --- Input de Nombre de usuario --- */}
-
-        <View style={estilo_formu_inicio_sesion_css.contenedor_input}>
-          <Texto style={estilo_formu_inicio_sesion_css.texto_label}>Nombre de Usuario</Texto>
-          <TextInput 
-            placeholder="Pepe Perez" 
-            placeholderTextColor={"grey"} 
-            style={[estilos_global.caja_input]}
-            value={form.nombre_usuario}
-            onChangeText={(valor) => handleChange("nombre_usuario", valor)}
-          />
-        </View>
 
         {/* --- Seleccionar avatar --- */}
         <View style={estilo_formu_inicio_sesion_css.contenedor_input}>
@@ -101,6 +88,19 @@ const Formu_Registro = ({ avatar, onAbrirAvatares, navigation}: any) => {
             </TouchableOpacity>
           )}
 
+        </View>
+
+        {/* --- Input de Nombre de usuario --- */}
+
+        <View style={estilo_formu_inicio_sesion_css.contenedor_input}>
+          <Texto style={estilo_formu_inicio_sesion_css.texto_label}>Nombre de Usuario</Texto>
+          <TextInput 
+            placeholder="Pepe Perez" 
+            placeholderTextColor={"grey"} 
+            style={[estilos_global.caja_input]}
+            value={form.nombre_usuario}
+            onChangeText={(valor) => handleChange("nombre_usuario", valor)}
+          />
         </View>
 
         {/* --- Input de Correo electronico --- */}

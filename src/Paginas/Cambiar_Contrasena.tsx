@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../Componentes/Header";
 import estilos_global, { colores } from "../estilos_global";
 import Formu_Cambiar_Contrasena from "../Componentes/Formu_Cambiar_Contrasena";
+import estilos_publicaciones from "./css/publicaciones_css";
 
 const Cambiar_Contrasena = ({navigation}: any) => {
     return(
@@ -17,9 +18,11 @@ const Cambiar_Contrasena = ({navigation}: any) => {
                 /> 
                 </View> 
 
-                <Formu_Cambiar_Contrasena
-                    navigation={navigation}
-                />
+                <View style={estilos_publicaciones.container}>
+                    <Formu_Cambiar_Contrasena
+                        navigation={navigation}
+                    />
+                </View>
 
             </View>
         </SafeAreaView>

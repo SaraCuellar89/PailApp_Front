@@ -13,7 +13,7 @@ const Formu_Inicio = () => {
 
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
-  // Datos del usuario por un contexto difinido
+  // ================= Datos del usuario por un contexto difinido =================
   const authContext = useContext(AuthContext);
   if (!authContext) throw new Error("AuthContext no está disponible");
   const { setUsuario } = authContext;

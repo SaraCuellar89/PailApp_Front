@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import estilos_global, { colores } from "../estilos_global";
 import Header from "../Componentes/Header";
 import Formu_Correo from "../Componentes/Formu_Correo";
+import estilos_publicaciones from "./css/publicaciones_css";
 
 const Correo_Recuperacion = ({navigation}: any) => {
     return(
@@ -17,9 +18,11 @@ const Correo_Recuperacion = ({navigation}: any) => {
                 /> 
                 </View> 
 
-                <Formu_Correo
-                    navigation={navigation}
-                />
+                <View style={estilos_publicaciones.container}>
+                    <Formu_Correo
+                        navigation={navigation}
+                    />
+                </View>
 
             </View>
         </SafeAreaView>

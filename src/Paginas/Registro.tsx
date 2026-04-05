@@ -4,8 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../Componentes/Header";
 import Formu_Registro from "../Componentes/Formu_Registro";
 import { colores } from "../estilos_global";
-import registro_css from "./css/registro_css";
 import Seleccionar_Avatar from "../Componentes/Seleccionar_Avatar";
+import estilos_publicaciones from "./css/publicaciones_css";
 
 export default function Registro({ navigation }: any) {
 
@@ -33,7 +33,7 @@ export default function Registro({ navigation }: any) {
           keyboardShouldPersistTaps="handled"
         >
 
-          <View style={registro_css.contenedor}>    
+          <View style={estilos_publicaciones.container}>    
             <Formu_Registro 
               avatar={avatar} 
               onAbrirAvatares={() => setMostrarAvatares(true)} 

@@ -15,6 +15,17 @@ const Formu_Cambiar_Contrasena = ({navigation}: any) => {
 
             <View style={[estilo_formu_inicio_sesion_css.card, estilos_global.fondo_1]}>
 
+                <Texto>Te hemos enviado un codigo de 5 digitos al correo.</Texto>
+
+                <View style={estilo_formu_inicio_sesion_css.contenedor_input}>
+                    <Texto style={estilo_formu_inicio_sesion_css.texto_label}>Codigo</Texto>
+                    <TextInput 
+                        placeholder="00000" 
+                        placeholderTextColor={"grey"} 
+                        style={[estilos_global.caja_input]}
+                    />
+                </View>
+
                 {/* --- Input de Contraseña --- */}
 
                 <View style={estilo_formu_inicio_sesion_css.contenedor_input}>
