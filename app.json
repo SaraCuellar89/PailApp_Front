@@ -20,18 +20,27 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo-aplicacion.png",
-        "backgroundColor": "#FFDB0C",
-        "package": "com.adso.Pailapp",
-        "buildType": "apk"
+        "backgroundColor": "#FFDB0C"
       },
-      "package": "com.adso.PailApp"
+      "package": "com.adso.PailApp",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_IMAGES"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-build-properties",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "La app necesita acceso a tu galería para subir fotos de recetas.",
+          "cameraPermission": "La app necesita acceso a tu cámara para tomar fotos de recetas."
+        }
+      ]
     ],
     "extra": {
       "eas": {

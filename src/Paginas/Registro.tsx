@@ -42,23 +42,23 @@ export default function Registro({ navigation }: any) {
           </View>
 
         </ScrollView>
+
+        {/* Modal de avatares */}
+        <View style={{backgroundColor: colores.color_2}}>
+
+          {mostrarAvatares === true ? 
+          (
+            <Seleccionar_Avatar onChange={(av: ImageSourcePropType)  => { 
+              setAvatar(av); 
+              setMostrarAvatares(false); 
+            }} />
+          ) :
+          (
+            null
+          )}
+
+        </View>
       </KeyboardAvoidingView>
-
-      {/* Modal de avatares */}
-      <View style={{backgroundColor: colores.color_2}}>
-
-        {mostrarAvatares === true ? 
-        (
-          <Seleccionar_Avatar onChange={(av: ImageSourcePropType)  => { 
-            setAvatar(av); 
-            setMostrarAvatares(false); 
-          }} />
-        ) :
-        (
-          null
-        )}
-
-      </View>
 
     </SafeAreaView>
   );

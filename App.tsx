@@ -42,9 +42,17 @@ export type RootStackParamList = {
   Notificaciones: undefined;
   ChatbotVoz: undefined;
   Chatbot_Conversacion: undefined;
-  Foro: undefined;
+  Foro: { plato_subido?: boolean };
   SubirReceta: undefined;
-  Descripcion: undefined;
+  Descripcion: {
+    titulo: string;
+    archivo: string;
+    public_id: string;
+    ingredientes: string;
+    tiempo_preparacion: string;
+    tipo_tiempo: string;
+    dificultad: string;
+  };
   DetallePublicacion: undefined;
   MisPlatos: undefined;
   Lista_Ingredientes: undefined;

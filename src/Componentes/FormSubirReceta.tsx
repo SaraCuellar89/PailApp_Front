@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View,TextInput,TouchableOpacity, Image, Alert, StyleSheet } from "react-native";
+import { View,TextInput,TouchableOpacity, Image, Alert, StyleSheet, Linking } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -9,35 +9,62 @@ import estilos_global from "../estilos_global";
 
 export default function FormSubirReceta({ navigation }: any) {
 
+  // ================= Estados y Funciones para subir imagenes desde el dispositivo =================
+  const [imagen, setImagen] = useState<ImagePicker.ImagePickerAsset | null>(null);
 
-    // ================= Estados y Funciones para subir imagenes desde el dispositivo =================
-    const [imagen, setImagen] = useState<ImagePicker.ImagePickerAsset | null>(null);
+  // =================== Abrir la Galería ===================
+  const seleccionarImagen = async () => {
+    // Esperar a que el Alert se cierre completamente
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    const { status, canAskAgain } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    // =================== Abrir la Galería ===================
-    const seleccionarImagen = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync({
+    if (status !== 'granted') {
+        if (!canAskAgain) {
+            Alert.alert(
+                "Permiso requerido",
+                "Activa el permiso de galería en los ajustes de tu dispositivo.",
+                [
+                    { text: "Cancelar", style: "cancel" },
+                    { text: "Ir a Ajustes", onPress: () => Linking.openSettings() }
+                ]
+            );
+        } else {
+            Mensaje_Toast.info('Se necesita permiso para acceder a la galería');
+        }
+        return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ['images'],
         quality: 0.8,
-        });
-        if (!result.canceled) setImagen(result.assets[0]);
+    });
+    if (!result.canceled){
+      setImagen(result.assets[0]);
+      handleChange("archivo", result.assets[0].uri);
     };
+  };
 
-    // =================== Abrir la camara ===================
-    const tomarFoto = async () => {
-        const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== 'granted') return Mensaje_Toast.exito('¡Receta subida!');
-        const result = await ImagePicker.launchCameraAsync({ mediaTypes: ['images'], quality: 0.8 });
-        if (!result.canceled) setImagen(result.assets[0]);
-    };
+  // =================== Abrir la camara ===================
+  const tomarFoto = async () => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+        Mensaje_Toast.info('Se necesita permiso para acceder a la cámara');
+        return;
+    }
+    const result = await ImagePicker.launchCameraAsync({ mediaTypes: ['images'], quality: 0.8 });
+    if (!result.canceled) setImagen(result.assets[0]);
+  };
 
-    // =================== Elegir opciones para la imagen (Galeria, Camara o Cancelar) ===================
-    const elegirFuente = () => {
-        Alert.alert("Agregar imagen", "¿De dónde quieres subir la foto?", [
-        { text: "Galería", onPress: seleccionarImagen },
-        { text: "Cámara",  onPress: tomarFoto },
-        { text: "Cancelar", style: "cancel" },
-        ]);
-    };
+  // =================== Elegir opciones para la imagen (Galeria, Camara o Cancelar) ===================
+  const elegirFuente = () => {
+      Alert.alert("Agregar imagen", "¿De dónde quieres subir la foto?", [
+      { text: "Galería", onPress: seleccionarImagen },
+      { text: "Cámara",  onPress: tomarFoto },
+      { text: "Cancelar", style: "cancel" },
+      ]);
+  };
 
 
   // ================= Estados y funciones para agregar o eliminar ingredientes =================
@@ -68,12 +95,12 @@ export default function FormSubirReceta({ navigation }: any) {
   const [tipo_tiempo_value, setTipo_tiempo_value] = useState(null);
 
   const [tipo_tiempo, setTipo_tiempo] = useState([
-    { label: 'hr', value: 'hr' },
+    { label: 'hr', value: 'h' },
     { label: 'min', value: 'min' }
   ]);
 
 
-  // ================= Estador para el dropdown de dificultad =================
+  // ================= Estados para el dropdown de dificultad =================
   const [abrir_dificultad, setAbrir_dificultad] = useState(false);
   const [dificultad_value, setDificultad_value] = useState(null);
 
@@ -82,6 +109,70 @@ export default function FormSubirReceta({ navigation }: any) {
     { label: 'Media', value: 'media' },
     { label: 'Difícil', value: 'dificil' }
   ]);
+
+
+  // ================= Estados y Funciones para enviar el formulario a la vista Descripcion =================
+  // Estado del formulario 
+  const [form, setForm] = useState({
+      titulo: "",
+      archivo: "",
+      ingredientes: "",
+      tiempo_preparacion: "",
+      tipo_tiempo: "",
+      dificultad: "",
+  });
+
+  // Handle Change genérico 
+  const handleChange = (campo: string, valor: string) => {
+      setForm(prev => ({ ...prev, [campo]: valor }));
+  };
+
+  const Enviar_Siguiente = async () => {
+
+    // ----- Validaciones -----
+    const campos = [
+        { nombre: "Título", valor: form.titulo },
+        { nombre: "Tiempo aprox. de preparación",valor: form.tiempo_preparacion },
+        { nombre: "Tipo de tiempo", valor: form.tipo_tiempo },
+        { nombre: "Dificultad", valor: form.dificultad },
+    ];
+
+    // Campos obligatorios
+    for (const campo of campos) {
+        if (!campo.valor.trim()) {
+            Mensaje_Toast.error(`"${campo.nombre}" es un campo obligatorio`);
+            return;
+        }
+    };
+
+    const ingredientes_validos = ingredientes.filter(i => i.trim() !== "");
+    if (ingredientes_validos.length === 0) {
+        Mensaje_Toast.error(`"Ingredientes" es un campo obligatorio`);
+        return;
+    };
+
+    // Tiempo de preparacion es un numero
+    const tiempo = Number(form.tiempo_preparacion);
+    if (isNaN(tiempo) || tiempo <= 0 || !Number.isInteger(tiempo)) {
+        Mensaje_Toast.error(`"Tiempo de preparación" no es valido`);
+        return;
+    }
+
+
+    // ----- Enviar datos al formulario de descripcion y pasos -----
+    const form_final = {
+        ...form,
+        // Convertir ingredientes en string y les agrega un indice
+        ingredientes: JSON.stringify(
+            ingredientes
+                .filter(i => i.trim() !== "")
+                .map((i, index) => `${index + 1}. ${i}`)
+        )
+    };
+
+    navigation.navigate("Descripcion", form_final);
+  }
+
   
 
   return (
@@ -94,6 +185,8 @@ export default function FormSubirReceta({ navigation }: any) {
           style={estilos_formu_subir_receta.input}
           placeholder="Ej: Arroz Paisa"
           placeholderTextColor={"grey"}
+          value={form.titulo}
+          onChangeText={(valor) => handleChange("titulo", valor)}
         />
       </View> 
       
@@ -102,7 +195,10 @@ export default function FormSubirReceta({ navigation }: any) {
         <Texto style={estilos_formu_subir_receta.label}>Imagen</Texto>
         <TouchableOpacity style={estilos_formu_subir_receta.imagePicker} onPress={elegirFuente}>
           {imagen ? (
-            <Image source={{ uri: imagen.uri }} style={estilos_formu_subir_receta.preview} />
+            <Image 
+              source={{ uri: imagen.uri }} 
+              style={estilos_formu_subir_receta.preview} 
+            />
           ) : (
             <Texto style={estilos_formu_subir_receta.imagePlaceholder}>Toca para subir una foto</Texto>
           )}
@@ -120,7 +216,7 @@ export default function FormSubirReceta({ navigation }: any) {
               placeholder="Ej: 2 tazas de arroz"
               placeholderTextColor={"grey"}
               value={ingrediente}
-              onChangeText={(texto) => actualizar_ingrediente(texto, index)}
+              onChangeText={(texto) => actualizar_ingrediente(texto, index)} 
             />
 
             <TouchableOpacity 
@@ -155,6 +251,8 @@ export default function FormSubirReceta({ navigation }: any) {
             style={estilos_formu_subir_receta.input_ingrediente}
             placeholder="Ej: 90"
             placeholderTextColor={"grey"}
+            value={form.tiempo_preparacion}
+            onChangeText={(valor) => handleChange("tiempo_preparacion", valor)}
           />
           <DropDownPicker
             containerStyle={{ width: 100 }}
@@ -173,6 +271,7 @@ export default function FormSubirReceta({ navigation }: any) {
             placeholder="Ej: min"
             placeholderStyle={{ color: 'grey' }}
             listMode="SCROLLVIEW"
+            onChangeValue={(valor) => handleChange("tipo_tiempo", valor ?? "")}
           />
         </View>
       </View> 
@@ -190,12 +289,13 @@ export default function FormSubirReceta({ navigation }: any) {
           placeholder="Ej: Media"
           placeholderStyle={{ color: 'grey' }}
           listMode="SCROLLVIEW"
+          onChangeValue={(valor) => handleChange("dificultad", valor ?? "")}
         />
       </View>
 
       {/* --- Boton para continuar con la descripcion --- */}
       <View style={estilos_formu_subir_receta.caja_boton}>
-        <TouchableOpacity style={[estilos_global.btn_1, estilos_formu_subir_receta.boton]} onPress={navigation}>
+        <TouchableOpacity style={[estilos_global.btn_1, estilos_formu_subir_receta.boton]} onPress={Enviar_Siguiente}>
           <Texto style={estilos_global.texto_btn_1}>Siguiente</Texto>
         </TouchableOpacity>
       </View>
@@ -203,28 +303,4 @@ export default function FormSubirReceta({ navigation }: any) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  imagePicker: {
-    height: 190,
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: "#e5e7eb",
-    borderStyle: "dashed",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 25,
-    overflow: "hidden",
-  },
-  preview: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  imagePlaceholder: {
-    fontSize: 15,
-    color: "#9ca3af",
-  },
-});
 

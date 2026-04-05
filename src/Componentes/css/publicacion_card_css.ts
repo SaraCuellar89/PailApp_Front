@@ -20,16 +20,21 @@ const estilos_publicacion_card = StyleSheet.create({
         fontSize: 18,
         paddingBottom: 10
     },
-    texto_reducido: {
+    caja_reducida: {
         width: '100%',
         height: height * 0.1,
-        fontSize: 14,
         borderBottomWidth: 1,
-        borderColor: "#00000025"
+        borderColor: "#00000025",
+        gap: 15,
+        overflow: "hidden"
     },
-    texto_ampliado: {
+    caja_ampliada: {
         width: '100%',
-        fontSize: 14,
+        height: "auto",
+        gap: 15
+    },
+    texto_mediano: {
+        fontSize: 12,
     },
     btn_ver_mas: {
         paddingVertical: 10
@@ -61,7 +66,6 @@ const estilos_publicacion_card = StyleSheet.create({
     },
     texto_pequeno: {
         fontSize: 11,
-        
     },
     tiempo: {
         flexDirection: "row",
