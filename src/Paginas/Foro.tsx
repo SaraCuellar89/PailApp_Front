@@ -26,6 +26,8 @@ interface Plato {
   total_reacciones: number;
   total_comentarios: number;
   fecha_creacion: string;
+  usuario_ya_reacciono: number;
+  usuario_ya_guardo: number;
 }
 
 export default function Foro({ navigation, route }: any) {
@@ -36,10 +38,22 @@ export default function Foro({ navigation, route }: any) {
   const { usuario, setUsuario } = authContext;
 
 
-  // ================= Estados para mostrar la notificacion de plato subido =================
-  const [mensaje_plato_subido, setMensaje_plato_subido] = useState(
-      route.params?.plato_subido ?? false
-  );
+  // ================= Funciones y Estados para mostrar la notificaciones de exito =================
+  const { plato_subido} = route.params ?? {};
+
+  const [notificacion_exito, setNotificacion_exito] = useState(false);
+  const [mensaje_notificacion, setMensaje_notificacion] = useState("");
+
+  useEffect(() => {
+    if (plato_subido) {
+      Mostrar_Notificacion("¡Plato Subido!");
+    }
+  }, [plato_subido]);
+  
+  const Mostrar_Notificacion = (mensaje: string) => {
+    setMensaje_notificacion(mensaje);
+    setNotificacion_exito(true);
+  }
 
 
   // ================= Estados y funciones para mostrar el mensaje de notificacion =================
@@ -48,7 +62,7 @@ export default function Foro({ navigation, route }: any) {
 
   // ================= Funciones y estados para obtener todas los platos =================
   // Estado para guardar los platos
-  const [platos, setPlatos] = useState<Plato[]>([])
+  const [platos, setPlatos] = useState<Plato[]>([]);
 
   useEffect(() => {
     const Obtener_Todos_Platos = async () => {
@@ -64,8 +78,6 @@ export default function Foro({ navigation, route }: any) {
       const data = await res.json();
 
       if(!data.success) return Mensaje_Toast.info(data.message);
-
-      console.log(data)
 
       setPlatos(data.data)
     }
@@ -86,10 +98,10 @@ export default function Foro({ navigation, route }: any) {
       </View> 
 
       {/* Renderizado de notificacion de plato subido */}
-      {mensaje_plato_subido && ( 
+      {notificacion_exito && ( 
           <Notificacion
-              mensaje="Plato Subido"
-              onFinish={() => setMensaje_plato_subido(false)}
+              mensaje={mensaje_notificacion}
+              onFinish={() => setNotificacion_exito(false)}
               icono={require('../Img/icono-correcto.png')}
           />
       )}
@@ -127,6 +139,10 @@ export default function Foro({ navigation, route }: any) {
                     total_reacciones={p.total_reacciones}
                     total_comentarios={p.total_comentarios}
                     fecha_creacion={p.fecha_creacion}
+                    corazon_inicial={p.usuario_ya_reacciono}
+                    SetNotificacion_reaccion={() => Mostrar_Notificacion("¡Reacción agregada!")}
+                    guardado_inicial={p.usuario_ya_guardo}
+                    Setnotificacion_guardado={() => Mostrar_Notificacion("¡Receta guardada!")}
                   />
                 ))}
               </>

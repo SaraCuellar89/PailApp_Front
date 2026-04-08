@@ -14,8 +14,6 @@ const Descripcion = ({route, navigation}: Props) => {
 
     //Datos recibidos de la vista de subir_receta
     const {titulo, archivo, ingredientes, tiempo_preparacion, tipo_tiempo, dificultad} = route.params;
-    
-    console.log("Datos recibidos:", route.params);
 
     return(
         <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>

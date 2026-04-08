@@ -42,6 +42,7 @@ const Perfil = ({ navigation }: any) => {
             <Header_Perfil
                 nombre_usuario={usuario.nombre ?? "dato incompleto"}
                 edad={usuario.edad ?? "dato incompleto "}
+                sexo={usuario.sexo ?? "dato incompleto "}
                 altura={usuario.altura ?? "dato incompleto "}
                 peso={usuario.peso ?? "dato incompleto "}
                 avatar={usuario.avatar ?? "dato incompleto"}

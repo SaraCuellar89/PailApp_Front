@@ -54,6 +54,9 @@ const Formu_Descripcion_Pasos = ({navigation, datos_receta}: any) => {
         // ----- Construir FormData -----
         const formData = new FormData();
 
+        const ahora = new Date();
+        const fecha_creacion = ahora.toISOString().slice(0, 19).replace("T", " ");
+
         // Datos de texto
         formData.append("titulo", datos_receta.titulo);
         formData.append("ingredientes", datos_receta.ingredientes);
@@ -62,6 +65,7 @@ const Formu_Descripcion_Pasos = ({navigation, datos_receta}: any) => {
         formData.append("dificultad", datos_receta.dificultad);
         formData.append("descripcion", form.descripcion);
         formData.append("preparacion", form.preparacion);
+        formData.append("fecha_creacion", fecha_creacion);
 
         // Archivo de imagen (si existe)
         if (datos_receta.archivo) {

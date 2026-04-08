@@ -33,7 +33,7 @@ import Editar_Cuenta from './src/Paginas/Editar_Cuenta';
 export type RootStackParamList = {
   Carga: undefined;
   Inicio: { cerro_sesion?: boolean };
-  Login: { registro_exitoso?: boolean };
+  Login: {registro_exitoso?: boolean };
   Registro: undefined;
   Correo_Recuperacion: undefined;
   Cambiar_Contrasena: undefined;
@@ -53,7 +53,7 @@ export type RootStackParamList = {
     tipo_tiempo: string;
     dificultad: string;
   };
-  DetallePublicacion: undefined;
+  DetallePublicacion: {id_publicacion: number};
   MisPlatos: undefined;
   Lista_Ingredientes: undefined;
   Perfil: undefined;

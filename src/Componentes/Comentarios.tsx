@@ -7,7 +7,7 @@ import Respuestas from "./Respuestas";
 import Opciones from "./Opciones";
 import estilos_global from "../estilos_global";
 
-const Comentarios = ({eliminar, setEliminar}: any) => {
+const Comentarios = ({eliminar, setEliminar, id_comentario, avatar, nombre_usuario, fecha, contenido, contenido_respuesta, setcontenido_respuesta, Responder}: any) => {
 
     // ================= Estados para abrir el input de responder y para abrir las respuestas del comentario =================
     const [formu_respuesta, setFormu_respuesta] = useState(false);
@@ -32,12 +32,12 @@ const Comentarios = ({eliminar, setEliminar}: any) => {
             <View style={estilos_comentarios.contenedor_info}>
                 <View style={estilos_comentarios.caja_info}>
                     <Image
-                        source={require("../Img/avatar_3.png")}
+                        source={{uri: avatar}}
                         style={estilos_comentarios.foto_usuario}
                         resizeMode="contain"
                     />
-                    <Texto style={estilos_comentarios.nombre_usuario}>Usuario_1</Texto>
-                    <Texto style={estilos_comentarios.texto}>7/02/2025</Texto>
+                    <Texto style={estilos_comentarios.nombre_usuario}>{nombre_usuario}</Texto>
+                    <Texto style={estilos_comentarios.texto}>{new Date(fecha).toLocaleDateString("es-CO")}</Texto>
                 </View>
                 
                 <TouchableOpacity onPress={() => setCaja_opciones(!caja_opciones)}>
@@ -67,7 +67,7 @@ const Comentarios = ({eliminar, setEliminar}: any) => {
             {editar === false ?
             (
                 <Texto style={estilos_comentarios.texto}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque et metus vitae Aliquam, ullamcorper tristique Aliquam Lorem ipsum dolor sit amet, consectetur.
+                    {contenido}
                 </Texto>
             ) : 
             (
@@ -108,7 +108,11 @@ const Comentarios = ({eliminar, setEliminar}: any) => {
 
             {formu_respuesta === true ? 
             (
-                <Formu_Comentario/>
+                <Formu_Comentario
+                    contenido={contenido_respuesta}
+                    setcontenido={setcontenido_respuesta}
+                    onSubmit={Responder}
+                />
             ) : 
             (null)}
 
