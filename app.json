@@ -2,42 +2,53 @@
   "expo": {
     "name": "PailApp",
     "jsEngine": "hermes",
+    "developmentClient": false,
     "slug": "PailApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo-aplicacion.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/logo-aplicacion.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFDB0C"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.PailApp"
+      "bundleIdentifier": "com.adso.PailApp"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "foregroundImage": "./assets/logo-aplicacion.png",
+        "backgroundColor": "#FFDB0C"
       },
-      "package": "com.anonymous.PailApp"
+      "package": "com.adso.PailApp",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_IMAGES"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "93891f23-1523-4e01-9e5c-d296fba8b1ed"
-      }
     },
     "plugins": [
       "expo-build-properties",
       "expo-font",
       "expo-speech-recognition",
-      "expo-audio"
-    ]
+      "expo-audio",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "La app necesita acceso a tu galería para subir fotos de recetas.",
+          "cameraPermission": "La app necesita acceso a tu cámara para tomar fotos de recetas."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "c7d7ee53-2bbd-48a9-9694-27b9e7f17f0d"
+      }
+    },
+    "owner": "sara_cuellar"
   }
 }

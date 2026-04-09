@@ -9,7 +9,8 @@ const { height, width } = Dimensions.get('window');
 
 const estilos_publicacion_card = StyleSheet.create({
 
-    // --------- Estilo de pantalla de carga ---------
+    // --------- Estilos de las publicaciones ---------
+
     contenedor: {
         justifyContent: "center",
         alignItems: "center",
@@ -23,9 +24,28 @@ const estilos_publicacion_card = StyleSheet.create({
         fontSize: 18,
         paddingBottom: 10
     },
-    descripcion: {
+    caja_reducida: {
         width: '100%',
+        height: height * 0.1,
+        borderBottomWidth: 1,
+        borderColor: "#00000025",
+        gap: 15,
+        overflow: "hidden"
+    },
+    caja_ampliada: {
+        width: '100%',
+        height: "auto",
+        gap: 15
+    },
+    texto_mediano: {
         fontSize: 12,
+    },
+    btn_ver_mas: {
+        paddingVertical: 10
+    },
+    texto_ver_mas: {
+        fontFamily: "JetBrainsMono_700Bold",
+        fontSize: 12
     },
     img_publicacion: {
         width: '100%',
@@ -50,7 +70,6 @@ const estilos_publicacion_card = StyleSheet.create({
     },
     texto_pequeno: {
         fontSize: 11,
-        
     },
     tiempo: {
         flexDirection: "row",

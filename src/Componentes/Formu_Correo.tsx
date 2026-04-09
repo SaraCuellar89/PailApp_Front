@@ -1,0 +1,36 @@
+import React from "react";
+import { TextInput, TouchableOpacity, View } from "react-native";
+import estilo_formu_inicio_sesion_css from "./css/formu_inicio_sesion_css";
+import estilos_global from "../estilos_global";
+import Texto from "./Texto";
+
+const Formu_Correo = ({navigation}: any) => {
+    return(
+        <View style={estilo_formu_inicio_sesion_css.content}>
+
+            <View style={[estilo_formu_inicio_sesion_css.card, estilos_global.fondo_1]}>
+
+                {/* --- Input de Correo electronico --- */}
+
+                <View style={estilo_formu_inicio_sesion_css.contenedor_input}>
+                <Texto style={estilo_formu_inicio_sesion_css.texto_label}>Correo Electronico</Texto>
+                <TextInput 
+                    placeholder="ejemplo@gmail.com" 
+                    placeholderTextColor={"grey"} 
+                    style={[estilos_global.caja_input]}
+                />
+                </View>
+
+                {/* --- Boton para enviar el Formulario --- */}
+
+                <TouchableOpacity style={estilos_global.btn_1} onPress={() => navigation.navigate('Cambiar_Contrasena')}>
+                    <Texto style={estilos_global.texto_btn_1}>Siguiente</Texto> 
+                </TouchableOpacity>
+
+            </View>
+    
+        </View>
+    )
+}
+
+export default Formu_Correo;

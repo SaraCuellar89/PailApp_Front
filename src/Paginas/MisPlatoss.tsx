@@ -3,59 +3,72 @@
  */
 
 import React, { useState } from "react";
-import { View, ScrollView } from "react-native";
-import { useForo } from "../context/ForoContext";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import ModalConfirmacion from "../Componentes/ModalConfirmacion";
-import PlatoGuardadoCard from "../Componentes/PlatoGuardadoCard";
 import Notificacion from "../Componentes/Notificacion"; 
 import Header from "../Componentes/Header";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { colores } from "../estilos_global";
+import PublicacionCard from "../Componentes/PublicacionCard";
+import estilos_publicaciones from "./css/publicaciones_css";
+import Texto from "../Componentes/Texto";
 
 export default function MisPlatoss({ navigation }: any) {
-  const { publicaciones, toggleGuardar } = useForo();
-  const guardados = publicaciones.filter(p => p.guardado);
 
+
+  // ================= Estados para ver la notificacion o el modal de confirmacion =================
   const [modalVisible, setModalVisible] = useState(false);
-  const [platoSeleccionado, setPlatoSeleccionado] = useState<any>(null);
   const [mostrarNoti, setMostrarNoti] = useState(false); 
 
-  const confirmarEliminar = () => {
-    if (!platoSeleccionado) return;
-    toggleGuardar(platoSeleccionado.id);
-    setModalVisible(false);
-    setMostrarNoti(true); 
-  };
+  const [guardar_ejemplo, setGuardar_Ejemplo] = useState(false);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#EDE4C7" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
 
+      <View style={{backgroundColor: colores.color_2}}>
+        <Header 
+          title="Mis Platos" 
+          onBack={() => navigation.goBack()} 
+        /> 
+      </View>
+
+      {/* Renderizado de notificacion */}
       {mostrarNoti && ( 
         <Notificacion
           mensaje="Plato eliminado"
           onFinish={() => setMostrarNoti(false)}
+          icono={require('../Img/icono-correcto.png')}
         />
       )}
 
-      <Header title="Mis platos" onBack={() => navigation.goBack()} />
+      <ScrollView
+        style={{ flex: 1, backgroundColor: '#000000' }}
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={true}
+        keyboardShouldPersistTaps="handled"
+      >
 
-      <ScrollView>
-        {guardados.map((plato) => (
-          <PlatoGuardadoCard
-            key={plato.id}
-            plato={plato}
-            onEliminar={(p: any) => {
-              setPlatoSeleccionado(p);
-              setModalVisible(true);
-            }}
+        <View style={estilos_publicaciones.container}>
+          <PublicacionCard
+            guardar_ejemplo={guardar_ejemplo}
+            setGuardar_Ejemplo={setModalVisible}
           />
-        ))}
+
+          <TouchableOpacity style={estilos_publicaciones.btn_ingredientes} onPress={() => navigation.navigate('Lista_Ingredientes')}>
+            <Texto>Lista de Ingredientes</Texto>
+          </TouchableOpacity>
+        </View>
+
       </ScrollView>
 
+      {/* Renderizado de modal de confirmacion */}
       <ModalConfirmacion
         visible={modalVisible}
-        onConfirm={confirmarEliminar}
-        onCancel={() => setModalVisible(false)}
+        confirmar={() => [setMostrarNoti(true), setModalVisible(false)]}
+        cancelar={() => setModalVisible(false)}
       />
 
-    </View>
+  
+    </SafeAreaView>
   );
 }

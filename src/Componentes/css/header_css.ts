@@ -7,6 +7,9 @@ import { Dimensions, StyleSheet } from "react-native";
 const { height, width } = Dimensions.get('window');
 
 const header_css = StyleSheet.create({
+
+    // --------- Estilos del header (el que tiene la flecha de retorno) ---------
+
     contenedor: {
         padding: 20,
         alignItems: "center",
@@ -35,8 +38,8 @@ const header_css = StyleSheet.create({
         justifyContent: 'center',
     },
     icono: {
-        width: 40,
-        height: 40,
+        width: 30,
+        height: 30,
     },
 });
 

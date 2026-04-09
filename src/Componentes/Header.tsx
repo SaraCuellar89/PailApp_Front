@@ -8,13 +8,7 @@ import header_css from "./css/header_css";
 import estilos_global, { colores } from "../estilos_global";
 import Texto from "./Texto";
 
-interface Props {
-  title: string;
-  onBack?: () => void;
-  icono: any;
-}
-
-export default function Header({ title, onBack, icono }: Props) {
+export default function Header({ title, onBack, navegar, icono }: any) {
   return (
     <View style={[header_css.contenedor, { backgroundColor: colores.color_1 }, estilos_global.sombra_contenedor]}>
       {onBack && (
@@ -29,7 +23,7 @@ export default function Header({ title, onBack, icono }: Props) {
 
       <Texto style={header_css.titulo}>{title}</Texto>
 
-      <TouchableOpacity onPress={onBack} style={header_css.contenedor_icono}>
+      <TouchableOpacity onPress={navegar} style={header_css.contenedor_icono}>
         <Image
           source={icono}
           style={header_css.icono}

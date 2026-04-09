@@ -6,7 +6,10 @@ import { StyleSheet } from 'react-native';
 import { colores } from '../../estilos_global';
 
 const estilos_navbar = StyleSheet.create({
-    container: {
+
+  // --------- Estilos de la barra de navegacion ---------
+
+  container: {
     backgroundColor: colores.color_1,
     paddingVertical: 10,
     flexDirection: "row",

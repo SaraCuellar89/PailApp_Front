@@ -4,28 +4,25 @@
 
 import React from "react";
 import { View, Text, TouchableOpacity,Modal } from "react-native";
-import { styles } from "../Estilos/ModalConfirmacion";
+import { estilos_modal_confirmacion } from "./css/modal_confirmacion_css";
+import Texto from "./Texto";
 
-export default function ModalConfirmacion({
-  visible,
-  onConfirm,
-  onCancel,
-}: any) {
+export default function ModalConfirmacion({texto, visible, confirmar, cancelar}: any) {
   return (
     <Modal transparent visible={visible} animationType="fade">
-      <View style={styles.overlay}>
-        <View style={styles.box}>
-          <Text style={styles.text}>
-            ¿Quieres quitar este plato de tus guardados?
+      <View style={estilos_modal_confirmacion.overlay}>
+        <View style={estilos_modal_confirmacion.box}>
+          <Text style={estilos_modal_confirmacion.text}>
+            {texto}
           </Text>
 
-          <View style={styles.buttons}>
-            <TouchableOpacity style={styles.btn} onPress={onConfirm}>
-              <Text style={styles.btnText}>Si</Text>
+          <View style={estilos_modal_confirmacion.buttons}>
+            <TouchableOpacity style={estilos_modal_confirmacion.btn} onPress={confirmar}>
+              <Texto style={estilos_modal_confirmacion.btnText}>Si</Texto>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.btn} onPress={onCancel}>
-              <Text style={styles.btnText}>No</Text>
+            <TouchableOpacity style={estilos_modal_confirmacion.btn} onPress={cancelar}>
+              <Texto style={estilos_modal_confirmacion.btnText}>No</Texto>
             </TouchableOpacity>
           </View>
         </View>

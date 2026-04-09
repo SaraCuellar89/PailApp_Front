@@ -3,17 +3,18 @@
  */
 
 import React, { useState } from "react";
-import { View, ScrollView, KeyboardAvoidingView, Platform, Modal } from "react-native";
+import { View, ScrollView, KeyboardAvoidingView, Platform, ImageSourcePropType } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../Componentes/Header";
 import Formu_Registro from "../Componentes/Formu_Registro";
 import { colores } from "../estilos_global";
-import registro_css from "./css/registro_css";
 import Seleccionar_Avatar from "../Componentes/Seleccionar_Avatar";
+import estilos_publicaciones from "./css/publicaciones_css";
 
 export default function Registro({ navigation }: any) {
 
-  const [avatar, setAvatar] = useState(null);
+  // ================= Estados para mostrar el avatar despues de seleccionarlo =================
+  const [avatar, setAvatar] = useState<ImageSourcePropType>({uri: "https://raw.githubusercontent.com/SaraCuellar89/PailApp_Front/main/src/Img/avatar_1.png"});
   const [mostrarAvatares, setMostrarAvatares] = useState(false);
 
   return (
@@ -21,9 +22,8 @@ export default function Registro({ navigation }: any) {
 
       <View style={{backgroundColor: colores.color_2}}>
         <Header 
-          title="Crear cuenta" 
+          title="Crear Cuenta" 
           onBack={() => navigation.goBack()} 
-          icono={null}
         /> 
       </View> 
 
@@ -37,31 +37,32 @@ export default function Registro({ navigation }: any) {
           keyboardShouldPersistTaps="handled"
         >
 
-          <View style={registro_css.contenedor}>    
+          <View style={estilos_publicaciones.container}>    
             <Formu_Registro 
               avatar={avatar} 
               onAbrirAvatares={() => setMostrarAvatares(true)} 
+              navigation={navigation}
             />
           </View>
 
         </ScrollView>
+
+        {/* Modal de avatares */}
+        <View style={{backgroundColor: colores.color_2}}>
+
+          {mostrarAvatares === true ? 
+          (
+            <Seleccionar_Avatar onChange={(av: ImageSourcePropType)  => { 
+              setAvatar(av); 
+              setMostrarAvatares(false); 
+            }} />
+          ) :
+          (
+            null
+          )}
+
+        </View>
       </KeyboardAvoidingView>
-
-      {/* Modal de avatares */}
-      <View style={{backgroundColor: colores.color_2}}>
-
-        {mostrarAvatares === true ? 
-        (
-          <Seleccionar_Avatar onChange={(av) => { 
-            setAvatar(av); 
-            setMostrarAvatares(false); 
-          }} />
-        ) :
-        (
-          null
-        )}
-
-      </View>
 
     </SafeAreaView>
   );

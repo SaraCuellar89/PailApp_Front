@@ -6,14 +6,19 @@ import { StyleSheet } from "react-native";
 import { colores } from "../../estilos_global";
 
 export const estilos_boton_agregar = StyleSheet.create({
+
+  // --------- Estilos del boton para ir al formulario de subir una publicacion ---------
+
   boton: {
     width: "100%",
     backgroundColor: colores.color_1,
     alignItems: "center",
     borderTopStartRadius: 10,
-    borderTopEndRadius: 10
+    borderTopEndRadius: 10,
+    paddingVertical: 15
   },
-  texto: {
-    fontSize: 40,
+  icon: {
+    width: 30,
+    height: 30,
   },
 });

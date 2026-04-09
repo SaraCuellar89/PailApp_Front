@@ -3,10 +3,10 @@
  */
 
 import React, { useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Animated } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, Animated, Image } from "react-native";
+import estilos_notificacion from "./css/notificacion_css";
 
-export default function Notificacion({ mensaje, onFinish }: any) {
+export default function Notificacion({ mensaje, onFinish, icono }: any) {
   const progreso = useRef(new Animated.Value(1)).current;
   const translateX = useRef(new Animated.Value(300)).current;
 
@@ -20,7 +20,7 @@ export default function Notificacion({ mensaje, onFinish }: any) {
 
     Animated.timing(progreso, {
       toValue: 0,
-      duration: 3000,
+      duration: 4000,
       useNativeDriver: false,
     }).start(() => {
       Animated.timing(translateX, {
@@ -37,61 +37,20 @@ export default function Notificacion({ mensaje, onFinish }: any) {
   });
 
   return (
-    <Animated.View style={[styles.container, { transform: [{ translateX }] }]}>
-      <View style={styles.contenido}>
-        <View style={styles.iconoContainer}>
-          <Ionicons name="checkmark-circle" size={24} color="#1a1a1a" />
+    <Animated.View style={[estilos_notificacion.container, { transform: [{ translateX }] }]}>
+      <View style={estilos_notificacion.contenido}>
+        <View style={estilos_notificacion.iconoContainer}>
+          <Image
+            source={icono}
+            style={estilos_notificacion.icono}
+            resizeMode="contain"
+          />
         </View>
-        <Text style={styles.texto}>{mensaje}</Text>
+        <Text style={estilos_notificacion.texto}>{mensaje}</Text>
       </View>
-      <View style={styles.barraFondo}>
-        <Animated.View style={[styles.barra, { width }]} />
+      <View>
+        <Animated.View style={[estilos_notificacion.barra, { width }]} />
       </View>
     </Animated.View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: 60,
-    right: 0,
-    backgroundColor: "#f5e662",
-    borderTopLeftRadius: 30,
-    borderBottomLeftRadius: 30,
-    zIndex: 999,
-    shadowColor: "#000",
-    shadowOffset: { width: -2, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    elevation: 8,
-    overflow: "hidden",
-    minWidth: 200,
-  },
-  contenido: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 12,
-    paddingLeft: 16,
-    paddingRight: 20,
-    gap: 10,
-  },
-  iconoContainer: {
-    backgroundColor: "#f0d800",
-    borderRadius: 20,
-    padding: 4,
-  },
-  texto: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#1a1a1a",
-  },
-  barraFondo: {
-    height: 4,
-    backgroundColor: "#e0c800",
-  },
-  barra: {
-    height: 4,
-    backgroundColor: "#1a1a1a",
-  },
-});

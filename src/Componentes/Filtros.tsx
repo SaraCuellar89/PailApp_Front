@@ -11,6 +11,7 @@ export default function Filtros({ filtro, setFiltro }: any) {
   return (
     <View style={estilos_filtros.container}>
       
+      {/* --- Boton para filtrar publicaciones por populares --- */}
       <TouchableOpacity
         style={[
           estilos_filtros.boton,
@@ -28,6 +29,8 @@ export default function Filtros({ filtro, setFiltro }: any) {
         </Text>
       </TouchableOpacity>
 
+
+      {/* --- Boton para filtrar publicaciones por antiguas --- */}
       <TouchableOpacity
         style={[
           estilos_filtros.boton,
@@ -45,6 +48,8 @@ export default function Filtros({ filtro, setFiltro }: any) {
         </Text>
       </TouchableOpacity>
 
+
+      {/* --- Boton para filtrar publicaciones por recientes --- */}
       <TouchableOpacity
         style={[
           estilos_filtros.boton,
