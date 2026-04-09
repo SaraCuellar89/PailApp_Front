@@ -34,6 +34,8 @@
     "plugins": [
       "expo-build-properties",
       "expo-font",
+      "expo-speech-recognition",
+      "expo-audio",
       [
         "expo-image-picker",
         {

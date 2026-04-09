@@ -1,3 +1,7 @@
+/**
+ * Formulario para capturar titulo, descripcion e informacion de una receta antes de publicarla.
+ */
+
 import React, { useState } from "react";
 import { View,TextInput,TouchableOpacity, Image, Alert, StyleSheet, Linking } from "react-native";
 import * as ImagePicker from "expo-image-picker";

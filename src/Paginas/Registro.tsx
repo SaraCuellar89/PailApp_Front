@@ -1,3 +1,7 @@
+/**
+ * Pantalla de registro que integra el formulario y el selector modal de avatar.
+ */
+
 import React, { useState } from "react";
 import { View, ScrollView, KeyboardAvoidingView, Platform, ImageSourcePropType } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

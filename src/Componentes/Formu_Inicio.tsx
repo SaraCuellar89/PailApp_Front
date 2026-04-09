@@ -1,3 +1,7 @@
+/**
+ * Formulario de inicio de sesion con accesos a registro y entrada al chatbot.
+ */
+
 import React, { useContext, useState } from "react";
 import { View, TouchableOpacity, TextInput, Image } from "react-native";
 import { useNavigation } from '@react-navigation/native';

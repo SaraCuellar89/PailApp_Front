@@ -1,3 +1,7 @@
+/**
+ * Toast animado que muestra mensajes breves de confirmacion al usuario.
+ */
+
 import React, { useEffect, useRef } from "react";
 import { View, Text, Animated, Image } from "react-native";
 import estilos_notificacion from "./css/notificacion_css";

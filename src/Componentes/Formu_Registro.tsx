@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, TouchableOpacity, TextInput, Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Texto from "./Texto";
 import estilo_formu_inicio_sesion_css from "./css/formu_inicio_sesion_css"
 import estilos_global from "../estilos_global";

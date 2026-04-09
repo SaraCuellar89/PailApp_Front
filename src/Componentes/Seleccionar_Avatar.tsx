@@ -1,3 +1,7 @@
+/**
+ * Selector modal de avatar para el flujo de registro del usuario.
+ */
+
 import React, { useState } from "react";
 import { View, Image, TouchableOpacity, ImageSourcePropType } from "react-native";
 import seleccionar_avatar_css from "./css/seleccionar_avatar_css";

@@ -1,3 +1,7 @@
+/**
+ * Pantalla contenedora para crear una nueva receta o publicacion desde el formulario dedicado.
+ */
+
 import React from "react";
 import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import FormSubirReceta from "../Componentes/FormSubirReceta";

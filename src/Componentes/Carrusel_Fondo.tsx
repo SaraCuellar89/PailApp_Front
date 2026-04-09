@@ -1,3 +1,7 @@
+/**
+ * Carrusel automatico de imagenes usado como fondo decorativo en la pantalla de inicio.
+ */
+
 import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, Image, useWindowDimensions, View } from 'react-native';
 

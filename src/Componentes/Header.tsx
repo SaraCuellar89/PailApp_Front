@@ -1,3 +1,7 @@
+/**
+ * Header reutilizable con titulo, boton de retroceso e icono auxiliar.
+ */
+
 import React from "react";
 import { View, Text,TouchableOpacity, Image } from "react-native";
 import header_css from "./css/header_css";

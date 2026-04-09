@@ -1,3 +1,8 @@
+/**
+ * Punto de entrada principal de la aplicacion.
+ * Aqui se cargan las fuentes, se montan los providers globales
+ * y se declara el stack de navegacion completo.
+ */
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -13,8 +18,7 @@ import Login from './src/Paginas/Login';
 import Correo_Recuperacion from './src/Paginas/Correo_Recuperacion';
 import Registro from './src/Paginas/Registro';
 import ChatbotPrincipal from './src/Paginas/Chatbot/Chatbot';
-import ChatVoz from './src/Paginas/Chatbot/Chatbot_Voz';
-import Chatbot_Conversacion from './src/Paginas/Chatbot/Chatbot_Conversacion';
+import ChatbotVoz from './src/Paginas/Chatbot/Chatbot_Voz';
 import Foro from './src/Paginas/Foro';
 import SubirReceta from './src/Paginas/SubirReceta';
 import DetallePublicacion from './src/Paginas/Publicaciones';
@@ -70,6 +74,7 @@ export default function App() {
     JetBrainsMono_700Bold,
   });
 
+  // La app espera a que la tipografia este lista para evitar saltos visuales.
   if (!fuentes_cargadas) return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <ActivityIndicator size="large" />
@@ -89,8 +94,8 @@ export default function App() {
           <Stack.Screen name="Datos_Adicionales" component={Datos_Adicionales} />
           <Stack.Screen name="Chatbot" component={ChatbotPrincipal} />
           <Stack.Screen name="Notificaciones" component={Notificaciones} />
-          <Stack.Screen name="ChatbotVoz" component={ChatVoz} />
-          <Stack.Screen name="Chatbot_Conversacion" component={Chatbot_Conversacion} />
+          <Stack.Screen name="ChatbotVoz" component={ChatbotVoz} />
+          <Stack.Screen name="Chatbot_Conversacion" component={ChatbotPrincipal} />
           <Stack.Screen name="Foro" component={Foro} />
           <Stack.Screen name="SubirReceta" component={SubirReceta} />
           <Stack.Screen name="Descripcion" component={Descripcion} />

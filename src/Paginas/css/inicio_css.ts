@@ -1,3 +1,7 @@
+/**
+ * Modulo de estilos exclusivo de una pantalla. Centraliza colores, espacios y distribucion visual.
+ */
+
 import { StyleSheet } from 'react-native';
 
 const estilos_pantalla_inicio = StyleSheet.create({

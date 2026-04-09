@@ -1,3 +1,7 @@
+/**
+ * Registra App como componente raiz para que Expo pueda iniciar la aplicacion.
+ */
+
 import { registerRootComponent } from 'expo';
 
 import App from './App';

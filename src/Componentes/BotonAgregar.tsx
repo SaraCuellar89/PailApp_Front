@@ -1,3 +1,7 @@
+/**
+ * Boton flotante reutilizable para abrir la pantalla de creacion de recetas.
+ */
+
 import React from "react";
 import { TouchableOpacity, Text, Image } from "react-native";
 import { estilos_boton_agregar } from "./css/boton_agregar_css";
