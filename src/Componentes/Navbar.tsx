@@ -12,7 +12,7 @@ export default function Navbar({ navigation }: any) {
     <View style={[estilos_navbar.container, estilos_global.sombra_contenedor]}>
 
       {/* --- Boton para ir al inicio (o chatbot) --- */}
-      <TouchableOpacity onPress={() => navigation.navigate("ChatbotVoz")}>
+      <TouchableOpacity onPress={() => navigation.navigate("Chatbot_Conversacion")}>
         <Image
           source={require("../Img/icono-robot.png")}
           style={estilos_navbar.icon}

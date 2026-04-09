@@ -24,12 +24,6 @@ export default function Login({ navigation, route }: any) {
         /> 
       </View> 
 
-<<<<<<< HEAD
-        <Formu_Inicio
-          onRegisterPress={() => navigation.navigate("Registro")}
-          onChatBot={() => navigation.navigate("ChatbotVoz")}
-        />
-=======
       {/* Renderizado de notificacion de registro exitoso */}
       {mensaje_cerrar_sesion && ( 
           <Notificacion
@@ -52,7 +46,6 @@ export default function Login({ navigation, route }: any) {
         </View>
 
       </ScrollView>
->>>>>>> 5a5e0e6cf45f2314627ed160aafa87d7a9260ce9
 
     </SafeAreaView>
   );

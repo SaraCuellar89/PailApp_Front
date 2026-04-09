@@ -19,7 +19,7 @@ export const chatbotVozStyles = StyleSheet.create({
     paddingBottom: 0,
   },
   usageWrapper: {
-    width: "100%",
+    width: "50%",
     maxWidth: 320,
     backgroundColor: "rgba(255,250,232,0.92)",
     borderWidth: 1,
@@ -27,12 +27,10 @@ export const chatbotVozStyles = StyleSheet.create({
     borderRadius: 18,
     paddingHorizontal: 14,
     paddingVertical: 12,
-    marginTop: 130,
+    marginTop: 180,
     marginBottom: 10,
   },
   usageHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     gap: 12,
     marginBottom: 8,
@@ -71,14 +69,12 @@ export const chatbotVozStyles = StyleSheet.create({
     height: 0,
     marginBottom: 0,
   },
-  robot: {
-    marginBottom: 2,
-  },
+  
   robotExpanded: {
-    marginBottom: 0,
+    marginBottom: 1,
   },
   robotVoiceMode: {
-    marginTop:30,
+    marginTop:1,
   },
   voicePanel: {
     width: "100%",
@@ -86,14 +82,13 @@ export const chatbotVozStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     paddingHorizontal: 12,
-    paddingBottom: 12,
     marginTop: 100,
   },
   voiceStatus: {
     fontSize: 10,
     fontWeight: "700",
     color: "#2C2419",
-    marginTop: 130,
+    marginTop: 60,
   },
   voiceTranscript: {
     width: "100%",
@@ -101,7 +96,6 @@ export const chatbotVozStyles = StyleSheet.create({
     borderRadius: 22,
     paddingHorizontal: 18,
     paddingVertical: 16,
-    marginBottom: 18,
     marginTop: 10,
     fontSize: 22,
     lineHeight: 30,

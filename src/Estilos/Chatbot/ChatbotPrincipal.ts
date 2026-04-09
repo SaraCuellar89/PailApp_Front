@@ -20,8 +20,6 @@ export const chatbotPrincipalStyles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 4,
-    paddingBottom: 8,
   },
   robotGestureAreaExpanded: {
     flex: 1,
@@ -30,33 +28,25 @@ export const chatbotPrincipalStyles = StyleSheet.create({
     paddingBottom: 0,
   },
   usageWrapper: {
-    width: "100%",
+    width: "50%",
     maxWidth: 320,
     backgroundColor: "rgba(255,250,232,0.92)",
     borderWidth: 1,
     borderColor: "#D8C898",
-    borderRadius: 18,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    marginTop: 8,
+    borderRadius: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 1,
     marginBottom: 10,
   },
   usageHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    gap: 12,
-    marginBottom: 8,
-  },
-  usageTitle: {
-    fontSize: 13,
-    fontWeight: "800",
-    color: "#2E2418",
+    marginBottom: 4,
   },
   usageMeta: {
     fontSize: 12,
     fontWeight: "700",
     color: "#6D5633",
+    textAlign:"center"
   },
   usageBarTrack: {
     width: "100%",
@@ -94,7 +84,6 @@ export const chatbotPrincipalStyles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.58)",
     borderRadius: 18,
     overflow: "hidden",
-    marginBottom: 10,
   },
   scroll: {
     flex: 1,
@@ -120,7 +109,7 @@ export const chatbotPrincipalStyles = StyleSheet.create({
   },
   bubbleText: {
     color: "#000",
-    fontSize: 15,
+    fontSize: 14,
     lineHeight: 20,
     marginBottom: 2,
   },
@@ -149,8 +138,8 @@ export const chatbotPrincipalStyles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 12,
+    paddingHorizontal: 24,
+    paddingTop: 5,
     paddingBottom: 24,
     gap: 8,
     backgroundColor: "#EDE4C7",
@@ -162,18 +151,23 @@ export const chatbotPrincipalStyles = StyleSheet.create({
     paddingHorizontal: 15,
     minHeight: 45,
     color: "#000",
+    marginBottom:1
   },
   inputVoiceMode: {
     backgroundColor: "#FFF6D1",
+    marginBottom:50
   },
   iconButton: {
     width: 36,
     height: 36,
+    marginBottom:1
   },
   iconActive: {
     tintColor: "#B11818",
+    marginBottom:50
   },
   iconDisabled: {
     opacity: 0.5,
+    marginBottom:50
   },
 });

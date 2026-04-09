@@ -28,7 +28,6 @@ export default function ChatbotUsageBar({
   return (
     <View style={styles.usageWrapper}>
       <View style={styles.usageHeader}>
-        <Text style={styles.usageTitle}>Presupuesto estimado</Text>
         <Text style={styles.usageMeta}>
           {remainingInteractions} interacciones restantes
         </Text>
