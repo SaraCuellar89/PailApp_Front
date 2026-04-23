@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import estilos_global, { colores } from "../estilos_global";
 import Header from "../Componentes/Header";
@@ -16,13 +16,29 @@ const Datos_Adicionales = ({ navigation }: any) => {
                 /> 
             </View> 
 
-            <View style={estilos_publicaciones.container}>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            >
 
-                <Formu_Datos_Adicionales
-                    navigation={navigation}
-                />
+                <ScrollView
+                    style={{ flex: 1, backgroundColor: colores.color_4 }}
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    showsVerticalScrollIndicator={true}
+                    keyboardShouldPersistTaps="handled"
+                >
 
-            </View>
+                    <View style={estilos_publicaciones.container}>
+
+                        <Formu_Datos_Adicionales
+                            navigation={navigation}
+                        />
+
+                    </View>
+
+                </ScrollView>
+
+            </KeyboardAvoidingView>
 
         </SafeAreaView>
     )

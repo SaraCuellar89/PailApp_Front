@@ -7,7 +7,7 @@ import Respuestas from "./Respuestas";
 import Opciones from "./Opciones";
 import estilos_global from "../estilos_global";
 
-const Comentarios = ({eliminar, setEliminar, id_comentario, avatar, nombre_usuario, fecha, contenido, contenido_respuesta, setcontenido_respuesta, Responder}: any) => {
+const Comentarios = ({eliminar, setEliminar, id_comentario, avatar, nombre_usuario, fecha, contenido, contenido_respuesta, setcontenido_respuesta, Responder, total_respuestas, respuestas, avatar_respuesta, usuario_respuesta, fecha_respuesta, texto_respuesta}: any) => {
 
     // ================= Estados para abrir el input de responder y para abrir las respuestas del comentario =================
     const [formu_respuesta, setFormu_respuesta] = useState(false);
@@ -97,7 +97,7 @@ const Comentarios = ({eliminar, setEliminar, id_comentario, avatar, nombre_usuar
                 </TouchableOpacity>
                 
                 <TouchableOpacity style={estilos_comentarios.caja_respuestas} onPress={() => setCaja_respuestas(!caja_respuestas)}>
-                    <Texto style={estilos_comentarios.texto}>2</Texto>
+                    <Texto style={estilos_comentarios.texto}>{total_respuestas}</Texto>
                     <Image
                         source={require("../Img/icono-respuesta.png")}
                         style={estilos_comentarios.icono_respuesta}
@@ -118,7 +118,23 @@ const Comentarios = ({eliminar, setEliminar, id_comentario, avatar, nombre_usuar
 
             {caja_respuestas === true ? 
             (
-                <Respuestas/>
+                <>
+                    {respuestas.length === 0 ? 
+                    (
+                        <Texto style={estilos_comentarios.texto}>No hay respuestas</Texto>
+                    ) : 
+                    (
+                        respuestas.map((r: any) => (
+                            <Respuestas
+                                key={r.respuesta_id}
+                                avatar_respuesta={r.autor_respuesta_avatar}
+                                usuario_respuesta={r.autor_respuesta_nombre}
+                                fecha_respuesta={r.respuesta_fecha}
+                                texto_respuesta={r.respuesta_contenido}
+                            />
+                        ))
+                    )}
+                </>
             ) : 
             (null)}
            

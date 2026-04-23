@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { View, ScrollView, KeyboardAvoidingView, Platform, Keyboard } from "react-native";
 import Header from "../Componentes/Header";
 import Notificacion from "../Componentes/Notificacion";
@@ -55,37 +55,40 @@ export default function DetallePublicacion({ route, navigation }: any) {
 
 
   // ================= Funciones y estados para obtener la informacion de un solo plato =================
-  // Estado para guardar la informacion del plato
+  // Estados para guardar la informacion del plato
   const [plato, setPlato] = useState<Plato | null>(null);
-  const [reacciones, setReacciones] = useState<any[]>([]);
+  const [total_reacciones, setTotal_reacciones] = useState(0);
   const [comentarios, setComentarios] = useState<any[]>([]);
   const [total_comentarios, setTotal_comentarios] = useState(0);
+
+  // Estados para guardar la informacion especifica de los comentarios
+  const [total_respuestas, setTotal_respuestas] = useState(0);
 
   // Id publicacion proveniente de los parametros
   const id_publicacion = route.params.id_publicacion;
 
+  // Funcion para la informacion del plato
+  const Obtener_Info_Plato = async () => {
+    const res = await fetch(`http://35.174.135.238/publicaciones/una/${id_publicacion}`, {
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${usuario.token}` }
+    });
+
+    const data = await res.json();
+
+    if(!data.success) return Mensaje_Toast.info(data.message);
+
+    setPlato(data.data.publicacion);
+    setTotal_reacciones(data.data.total_reacciones);
+    setComentarios(data.data.comentarios);
+    setTotal_comentarios(data.data.total_comentarios);
+  };
+
+  // Llamar la funcion y recargar la informacion
+  const [refetch, setRefetch] = useState(0);
   useEffect(() => {
-    const Obtener_Info_Plato = async () => {
-      const res = await fetch(`http://35.174.135.238/publicaciones/una/${id_publicacion}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${usuario.token}`
-        }
-      })
-
-      const data = await res.json();
-
-      if(!data.success) return Mensaje_Toast.info(data.message);
-
-
-      setPlato(data.data.publicacion);
-      setReacciones(data.data.informacion_reacciones);
-      setComentarios(data.data.comentarios);
-      setTotal_comentarios(data.data.total_comentarios[0].total_comentarios)
-    }
-
     Obtener_Info_Plato();
-  }, [id_publicacion, usuario.token]);
+  }, [refetch]);
 
 
   // ================= Funciones y estados para subir un comentario =================
@@ -117,6 +120,8 @@ export default function DetallePublicacion({ route, navigation }: any) {
     Keyboard.dismiss();
     setcontenido("");
     Mensaje_Toast.exito('Comentario hecho');
+
+    setRefetch(prev => prev + 1);
   }
 
 
@@ -149,21 +154,8 @@ export default function DetallePublicacion({ route, navigation }: any) {
     Keyboard.dismiss();
     setcontenido_respuesta("");
     Mensaje_Toast.exito('Respuesta hecha');
-  }
 
-  // ================= Funciones y estados para obtener las respuestas de un comentario =================
-  const Obtener_Respuestas = async (id_comentario: number) => {
-    const res = await fetch(`http://35.174.135.238/comentarios/uno/${id_comentario}`, {
-      method: "GET",
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${usuario.token}`
-      }
-    })
-
-    const data = await res.json();
-
-    console.log(data)
+    setRefetch(prev => prev + 1);
   }
 
 
@@ -212,7 +204,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
                 tiempo_preparacion={plato.publicacion_tiempo_preparacion}
                 tipo_tiempo={plato.publicacion_tipo_tiempo}
                 dificultad={plato.publicacion_dificultad}
-                total_reacciones={reacciones.length}
+                total_reacciones={total_reacciones}
                 total_comentarios={total_comentarios}
                 fecha_creacion={plato.publicacion_fecha}
                 corazon_inicial={plato.ya_reacciono}
@@ -240,6 +232,8 @@ export default function DetallePublicacion({ route, navigation }: any) {
                     contenido_respuesta={contenido_respuesta}
                     setcontenido_respuesta={setcontenido_respuesta}
                     Responder={() => Responder(c.comentario_id)}
+                    total_respuestas={c.respuestas.length}
+                    respuestas={c.respuestas}
                   />
                 ))}
               </>

@@ -5,6 +5,7 @@ import estilos_global from "../estilos_global";
 import Texto from "./Texto";
 import { AuthContext } from "../utils/Auth_Context";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
+import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
@@ -19,10 +20,21 @@ const Formu_Datos_Adicionales = ({navigation}: any) => {
     // ================= Funciones y estados para el inicio de sesion =================
     // Estado del formulario 
     const [form, setForm] = useState({
+        sexo: "",
         edad: "",
         peso: "",
         altura: "",
     });
+
+    // Estados para el dropdown de sexo
+    const [abrir_sexo, setAbrir_sexo] = useState(false);
+    const [sexo_value, setSexo_value] = useState(null);
+
+    const [sexo, setSexo] = useState([
+    { label: 'Masculino', value: 'Masculino' },
+    { label: 'Femenino', value: 'Femenino' },
+    { label: 'Prefiero no decirlo', value: 'Prefiero no decirlo' }
+    ]);
 
     // Handle Change genérico 
     const handleChange = (campo: string, valor: string) => {
@@ -60,10 +72,9 @@ const Formu_Datos_Adicionales = ({navigation}: any) => {
 
         if(data.success === false) return Mensaje_Toast.info(data.message);
 
-        
 
         // Actualizar contexto con los nuevos datos
-        const usuario_actualizado = { ...usuario, edad: form.edad, peso: form.peso, altura: form.altura };
+        const usuario_actualizado = { ...usuario, edad: form.edad, peso: form.peso, altura: form.altura, sexo: form.sexo };
         setUsuario(usuario_actualizado);                             
         await AsyncStorage.setItem("usuario", JSON.stringify(usuario_actualizado));
 
@@ -78,6 +89,24 @@ const Formu_Datos_Adicionales = ({navigation}: any) => {
         <View style={estilo_formu_inicio_sesion_css.content}>
 
             <View style={[estilo_formu_inicio_sesion_css.card, estilos_global.fondo_1]}>
+
+                {/* --- Input del sexo --- */}
+
+                <View style={estilo_formu_inicio_sesion_css.contenedor_input}>
+                    <Texto style={estilo_formu_inicio_sesion_css.texto_label}>Sexo</Texto>
+                    <DropDownPicker
+                        open={abrir_sexo}
+                        value={sexo_value}
+                        items={sexo}
+                        setOpen={setAbrir_sexo}
+                        setValue={setSexo_value}
+                        setItems={setSexo}
+                        placeholder="Ej: Femenino"
+                        placeholderStyle={{ color: 'grey' }}
+                        listMode="SCROLLVIEW"
+                        onChangeValue={(valor) => handleChange("sexo", valor ?? "")}
+                    />
+                </View>
 
                 {/* --- Input de la edad --- */}
 

@@ -35,8 +35,13 @@ export default function PublicacionCard({id_publicacion, titulo, archivo, descri
 
   const Formatear_Ingredientes = (ingredientes: string) => {
     try {
-      const parsed = JSON.parse(JSON.parse(ingredientes));
-      return parsed.join('\n');
+      let parsed = ingredientes;
+    
+      while (typeof parsed === 'string') {
+        parsed = JSON.parse(parsed);
+      }
+      
+      return (parsed as string[]).join('\n');
     } catch {
       return ingredientes;
     }
@@ -52,6 +57,11 @@ export default function PublicacionCard({id_publicacion, titulo, archivo, descri
   useEffect(() => {
     setCorazon(corazon_inicial);
   }, [corazon_inicial]);
+
+  // Actualizar el contador de reacciones
+  useEffect(() => {
+    setTotal_reacciones_local(total_reacciones);
+  }, [total_reacciones]);
 
   // Enviar datos a la bbdd
   const Reaccionar = async (id_publicacion:number) => {

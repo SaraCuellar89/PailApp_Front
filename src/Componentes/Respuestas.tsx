@@ -5,7 +5,7 @@ import Texto from "./Texto";
 import Opciones from "./Opciones";
 import estilos_global from "../estilos_global";
 
-const Respuestas = () => {
+const Respuestas = ({avatar_respuesta, usuario_respuesta, fecha_respuesta, texto_respuesta}: any) => {
 
     // ================= Estados y funciones para editar una respuesta =================
     const [caja_opciones, setCaja_opciones] = useState(false);
@@ -22,12 +22,12 @@ const Respuestas = () => {
             <View style={estilos_comentarios.contenedor_info}>
                 <View style={estilos_comentarios.caja_info}>
                     <Image
-                        source={require("../Img/avatar_5.png")}
+                        source={{uri: avatar_respuesta}}
                         style={estilos_comentarios.foto_usuario}
                         resizeMode="contain"
                     />
-                    <Texto style={estilos_comentarios.nombre_usuario}>Usuario_1</Texto>
-                    <Texto style={estilos_comentarios.texto}>7/02/2025</Texto>
+                    <Texto style={estilos_comentarios.nombre_usuario}>{usuario_respuesta}</Texto>
+                    <Texto style={estilos_comentarios.texto}>{new Date(fecha_respuesta).toLocaleDateString("es-CO")}</Texto>
                 </View>
                 
                 <TouchableOpacity onPress={() => setCaja_opciones(!caja_opciones)}>
@@ -55,7 +55,7 @@ const Respuestas = () => {
             {editar === false ?
             (
                 <Texto style={estilos_comentarios.texto}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque et metus vitae Aliquam, ullamcorper tristique Aliquam Lorem ipsum dolor sit amet, consectetur.
+                    {texto_respuesta}
                 </Texto>
             ) : 
             (

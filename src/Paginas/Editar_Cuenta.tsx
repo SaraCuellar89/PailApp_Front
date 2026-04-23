@@ -48,7 +48,7 @@ export default function Editar_Cuenta({ navigation }: any) {
 
         {mostrarAvatares === true ? 
         (
-          <Seleccionar_Avatar onChange={(av) => { 
+          <Seleccionar_Avatar onChange={(av : any) => { 
             setAvatar(av); 
             setMostrarAvatares(false); 
           }} />
