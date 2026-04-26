@@ -8,9 +8,10 @@ import Opciones from "./Opciones";
 import estilos_global from "../estilos_global";
 import { useContext } from "react";
 import { AuthContext } from "../utils/Auth_Context";
+import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 
 
-const Comentarios = ({eliminar_comentario, setEliminar_comentario, id_comentario, avatar, nombre_usuario, fecha, contenido, contenido_respuesta, setcontenido_respuesta, Responder, total_respuestas, respuestas, id_usuario_comentario}: any) => {
+const Comentarios = ({Editar_Comentario, eliminar_comentario, setEliminar_comentario, id_comentario, avatar, nombre_usuario, fecha, contenido, contenido_respuesta, setcontenido_respuesta, Responder, total_respuestas, respuestas, id_usuario_comentario, setEliminar_respuesta, Editar_Respuesta}: any) => {
 
     // ================= Datos del usuario por un contexto difinido =================
     const authContext = useContext(AuthContext);
@@ -37,9 +38,8 @@ const Comentarios = ({eliminar_comentario, setEliminar_comentario, id_comentario
     }, [editar]);
 
 
-    // ================= Editar comentario =================
-
-    
+     // ================= Estados para editar un comentario =================
+      const [comentario_editado, setComentario_editado] = useState(contenido);
     
 
     return(
@@ -96,14 +96,16 @@ const Comentarios = ({eliminar_comentario, setEliminar_comentario, id_comentario
                         multiline={true}
                         numberOfLines={4}        
                         textAlignVertical="top"
+                        value={comentario_editado}
+                        onChangeText={setComentario_editado}
                     />
                     
                     <View style={estilos_comentarios.caja_btn_editar}>
-                        <TouchableOpacity style={estilos_global.btn_1}>
-                            <Texto style={estilos_global.texto_btn_1}>Cancelar</Texto>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={estilos_global.btn_1}>
+                        <TouchableOpacity style={estilos_global.btn_1} onPress={() => {Editar_Comentario(comentario_editado); setEditar(!editar)}}>
                             <Texto style={estilos_global.texto_btn_1}>Guardar</Texto>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={estilos_global.btn_1} onPress={() => setEditar(!editar)}>
+                            <Texto style={estilos_global.texto_btn_1}>Cancelar</Texto>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -146,11 +148,14 @@ const Comentarios = ({eliminar_comentario, setEliminar_comentario, id_comentario
                         respuestas.map((r: any) => (
                             <Respuestas
                                 key={r.respuesta_id}
+                                id_respuesta={r.respuesta_id}
                                 id_usuario_respuesta={r.autor_respuesta_id}
                                 avatar_respuesta={r.autor_respuesta_avatar}
                                 usuario_respuesta={r.autor_respuesta_nombre}
                                 fecha_respuesta={r.respuesta_fecha}
                                 texto_respuesta={r.respuesta_contenido}
+                                setEliminar_respuesta={() => setEliminar_respuesta(r.respuesta_id)}
+                                Editar_Respuesta={Editar_Respuesta}
                             />
                         ))
                     )}

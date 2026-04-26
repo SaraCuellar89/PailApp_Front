@@ -4,6 +4,9 @@ const estilos_platos_perfil = StyleSheet.create({
 
     // --------- Estilos de los platos que hay en el perfil del usuario ---------
 
+    contendor_platos: {
+        marginVertical: 10
+    },
     texto: {
         textAlign: "center",
         fontFamily: "JetBrainsMono_700Bold",

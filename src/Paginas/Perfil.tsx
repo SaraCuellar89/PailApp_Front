@@ -112,32 +112,11 @@ const Perfil = ({ navigation }: any) => {
                 <Texto>¡Sube un plato!</Texto>
             ) : 
             (
-                <>
-                    {mis_platos.map((p) => (
-                        <Platos_Perfil
-                            navigation={navigation}
-                            key={p.id_publicacion}
-                            mi_plato_id_publicacion={p.id_publicacion}
-                            mi_plato_guardar_ejemplo={false}
-                            mi_plato_setGuardar_Ejemplo={() => {}}
-                            mi_plato_titulo={p.titulo}
-                            mi_plato_archivo={p.archivo}
-                            mi_plato_descripcion={p.descripcion}
-                            mi_plato_ingredientes={p.ingredientes}
-                            mi_plato_preparacion={p.preparacion}
-                            mi_plato_tiempo_preparacion={p.tiempo_preparacion}
-                            mi_plato_tipo_tiempo={p.tipo_tiempo}
-                            mi_plato_dificultad={p.dificultad}
-                            mi_plato_total_reacciones={p.total_reacciones}
-                            mi_plato_total_comentarios={p.total_comentarios}
-                            mi_plato_fecha_creacion={p.fecha_creacion}
-                            mi_plato_corazon_inicial={p.usuario_ya_reacciono}
-                            mi_plato_SetNotificacion_reaccion={() => Mostrar_Notificacion("¡Reacción agregada!")}
-                            mi_plato_guardado_inicial={p.usuario_ya_guardo}
-                            mi_plato_Setnotificacion_guardado={() => Mostrar_Notificacion("¡Receta guardada!")}
-                        />
-                    ))}
-                </>
+                <Platos_Perfil
+                    platos={mis_platos}
+                    navigation={navigation}
+                    Mostrar_Notificacion={Mostrar_Notificacion}
+                />
             )}
         </View>
 

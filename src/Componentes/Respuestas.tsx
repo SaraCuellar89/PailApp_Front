@@ -6,8 +6,9 @@ import Opciones from "./Opciones";
 import estilos_global from "../estilos_global";
 import { useContext } from "react";
 import { AuthContext } from "../utils/Auth_Context";
+import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 
-const Respuestas = ({avatar_respuesta, usuario_respuesta, fecha_respuesta, texto_respuesta, id_usuario_respuesta}: any) => {
+const Respuestas = ({id_respuesta, avatar_respuesta, usuario_respuesta, fecha_respuesta, texto_respuesta, id_usuario_respuesta, eliminar_respuesta, setEliminar_respuesta, Editar_Respuesta}: any) => {
 
     // ================= Datos del usuario por un contexto difinido =================
         const authContext = useContext(AuthContext);
@@ -26,6 +27,11 @@ const Respuestas = ({avatar_respuesta, usuario_respuesta, fecha_respuesta, texto
             setCaja_opciones(false);
         }
     }, [editar]);
+
+
+    // ================= Funciones y estados para editar una respuesta =================
+    const [respuesta_editada, setRespuesta_editada] = useState(texto_respuesta);
+
 
     return(
         <View style={[estilos_comentarios.contenedor_componente_respuestas, estilos_comentarios.contenedor]}>
@@ -60,6 +66,8 @@ const Respuestas = ({avatar_respuesta, usuario_respuesta, fecha_respuesta, texto
                     <Opciones
                         editar={editar}
                         setEditar={setEditar}
+                        eliminar={eliminar_respuesta}
+                        setElimianr={setEliminar_respuesta}
                     />
                 </View>
             )}
@@ -77,14 +85,16 @@ const Respuestas = ({avatar_respuesta, usuario_respuesta, fecha_respuesta, texto
                         multiline={true}
                         numberOfLines={4}        
                         textAlignVertical="top"
+                        value={respuesta_editada}
+                        onChangeText={setRespuesta_editada}
                     />
                     
                     <View style={estilos_comentarios.caja_btn_editar}>
-                        <TouchableOpacity style={estilos_global.btn_1}>
-                            <Texto style={estilos_global.texto_btn_1}>Cancelar</Texto>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={estilos_global.btn_1}>
+                        <TouchableOpacity style={estilos_global.btn_1} onPress={() => {Editar_Respuesta(id_respuesta, respuesta_editada); setEditar(!editar)}}>
                             <Texto style={estilos_global.texto_btn_1}>Guardar</Texto>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={estilos_global.btn_1} onPress={() => setEditar(!editar)}>
+                            <Texto style={estilos_global.texto_btn_1}>Cancelar</Texto>
                         </TouchableOpacity>
                     </View>
                 </View>

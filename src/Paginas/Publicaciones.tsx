@@ -13,7 +13,7 @@ import { AuthContext } from "../utils/Auth_Context";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 import Texto from "../Componentes/Texto";
 
-// Tipos de los platos publicados
+// Interfaz de los platos
 interface Plato {
   publicacion_id: number;
   publicacion_titulo: string;
@@ -39,9 +39,9 @@ export default function DetallePublicacion({ route, navigation }: any) {
 
   // ================= Estados para ver la notificacion o el modal de confirmacion =================
   const [modalVisible, setModalVisible] = useState(false);
+  const [tipo_eliminacion, setTipo_eliminacion] = useState<'comentario' | 'respuesta' | null>(null);
+  
   const [mostrarNoti, setMostrarNoti] = useState(false); 
-
-  // const [eliminar, setEliminar] = useState(false);
 
 
   // ================= Funciones y Estados para mostrar la notificaciones de exito =================
@@ -127,6 +127,33 @@ export default function DetallePublicacion({ route, navigation }: any) {
   }
 
 
+  // ================= Funciones y estados para editar un comentario =================
+  const Editar_Comentario = async (id_comentario: number, nuevo_comentario: string) => {
+
+    // Validaciones
+    if(!nuevo_comentario.trim()) return Mensaje_Toast.error("El comentario no puede estar vacio");
+
+    const res = await fetch(`http://35.174.135.238/comentarios/editar/${id_comentario}`, {
+      method: "PUT",
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${usuario.token}`
+      },
+      body: JSON.stringify({contenido: nuevo_comentario})
+    });
+
+    const data = await res.json();
+
+    if(!data.success) return Mensaje_Toast.info(data.message);
+
+    Keyboard.dismiss();
+    setcontenido("");
+    Mostrar_Notificacion("¡Comentario editado!");
+
+    setRefetch(prev => prev + 1);
+  }
+
+
   // ================= Funciones para eliminar un comentario =================
   const [id_comentario, setId_comentario] = useState<number | null>(null);
 
@@ -181,6 +208,52 @@ export default function DetallePublicacion({ route, navigation }: any) {
     setRefetch(prev => prev + 1);
   }
 
+
+  // ================= Funciones y estados para editar una respuesta =================
+  const Editar_Respuesta = async (id_respuesta: number, nueva_respuesta: string) => {
+
+    // Validaciones
+    if(!nueva_respuesta.trim()) return Mensaje_Toast.error("La respuesta no puede estar vacia");
+
+    const res = await fetch(`http://35.174.135.238/respuestas/editar/${id_respuesta}`, {
+      method: "PUT",
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${usuario.token}`
+      },
+      body: JSON.stringify({contenido: nueva_respuesta})
+    });
+
+    const data = await res.json();
+    
+    if(!data.success) return Mensaje_Toast.info(data.message);
+    
+    Keyboard.dismiss();
+    Mostrar_Notificacion("¡Respuesta editada!");
+    
+    setRefetch(prev => prev + 1);
+  }
+
+
+  // ================= Funciones y estados para eliminar una respuesta =================
+  const [id_respuesta, setId_respuesta] = useState<number | null>(null);
+
+  const Eliminar_Respuesta = async () => {
+    const res = await fetch(`http://35.174.135.238/respuestas/eliminar/${id_respuesta}`, {
+      method: "DELETE",
+      headers: {
+          'Authorization': `Bearer ${usuario.token}`
+      }
+    });
+
+    const data = await res.json();
+
+    if(!data.success) return Mensaje_Toast.info(data.message);
+
+    Mostrar_Notificacion("Respuesta eliminada");
+
+    setRefetch(prev => prev + 1);
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
@@ -247,19 +320,29 @@ export default function DetallePublicacion({ route, navigation }: any) {
                     key={c.comentario_id}
                     id_usuario_comentario={c.autor_comentario_id}
                     id_comentario={c.comentario_id}
+                    Editar_Comentario={(nuevo_comentario: string) => Editar_Comentario(c.comentario_id, nuevo_comentario)}
                     setEliminar_comentario={(id: number) => {
                       setId_comentario(id);
+                      setTipo_eliminacion('comentario');
                       setModalVisible(true);             
                     }}
                     avatar={c.autor_comentario_avatar}
                     nombre_usuario={c.autor_comentario_nombre}
                     fecha={c.comentario_fecha}
                     contenido={c.comentario_contenido}
+
+                    // Respuestas
                     contenido_respuesta={contenido_respuesta}
                     setcontenido_respuesta={setcontenido_respuesta}
                     Responder={() => Responder(c.comentario_id)}
                     total_respuestas={c.respuestas.length}
                     respuestas={c.respuestas}
+                    setEliminar_respuesta={(id: number) => {
+                      setId_respuesta(id);
+                      setTipo_eliminacion('respuesta');
+                      setModalVisible(true);             
+                    }}
+                    Editar_Respuesta={Editar_Respuesta}
                   />
                 ))}
               </>
@@ -282,10 +365,23 @@ export default function DetallePublicacion({ route, navigation }: any) {
     </KeyboardAvoidingView>
 
     <ModalConfirmacion
-      texto={"¿Quieres eliminar este comentario?"}
+      texto={tipo_eliminacion === 'comentario' 
+        ? "¿Quieres eliminar este comentario?" 
+        : "¿Quieres eliminar esta respuesta?"
+      }
       visible={modalVisible}
-      confirmar={() => [setMostrarNoti(true), setModalVisible(false), Eliminar_Comentario()]}
-      cancelar={() => setModalVisible(false)}
+      confirmar={() => {
+        setModalVisible(false);
+        if(tipo_eliminacion === 'comentario') {
+          Eliminar_Comentario();
+        } else {
+          Eliminar_Respuesta();
+        }
+      }}
+      cancelar={() => {
+        setModalVisible(false);
+        setTipo_eliminacion(null);
+      }}
     />
 
     </SafeAreaView>
