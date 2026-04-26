@@ -6,8 +6,20 @@ import Formu_Comentario from "./Formu_Comentario";
 import Respuestas from "./Respuestas";
 import Opciones from "./Opciones";
 import estilos_global from "../estilos_global";
+import { useContext } from "react";
+import { AuthContext } from "../utils/Auth_Context";
 
-const Comentarios = ({eliminar, setEliminar, id_comentario, avatar, nombre_usuario, fecha, contenido, contenido_respuesta, setcontenido_respuesta, Responder, total_respuestas, respuestas, avatar_respuesta, usuario_respuesta, fecha_respuesta, texto_respuesta}: any) => {
+
+const Comentarios = ({eliminar_comentario, setEliminar_comentario, id_comentario, avatar, nombre_usuario, fecha, contenido, contenido_respuesta, setcontenido_respuesta, Responder, total_respuestas, respuestas, id_usuario_comentario}: any) => {
+
+    // ================= Datos del usuario por un contexto difinido =================
+    const authContext = useContext(AuthContext);
+    if (!authContext) throw new Error("AuthContext no está disponible");
+    const { usuario, setUsuario } = authContext;
+
+    
+    // ================= Variable para mostrar caja de oopciones dependiendo de si el usuario realizo el comentario =================
+    const es_autor = usuario.id === id_usuario_comentario;
 
     // ================= Estados para abrir el input de responder y para abrir las respuestas del comentario =================
     const [formu_respuesta, setFormu_respuesta] = useState(false);
@@ -23,6 +35,11 @@ const Comentarios = ({eliminar, setEliminar, id_comentario, avatar, nombre_usuar
             setCaja_opciones(false);
         }
     }, [editar]);
+
+
+    // ================= Editar comentario =================
+
+    
     
 
     return(
@@ -40,13 +57,15 @@ const Comentarios = ({eliminar, setEliminar, id_comentario, avatar, nombre_usuar
                     <Texto style={estilos_comentarios.texto}>{new Date(fecha).toLocaleDateString("es-CO")}</Texto>
                 </View>
                 
-                <TouchableOpacity onPress={() => setCaja_opciones(!caja_opciones)}>
-                    <Image
-                        source={require("../Img/icono-puntos.png")}
-                        style={estilos_comentarios.icono_puntos}
-                        resizeMode="contain"
-                    />
-                </TouchableOpacity>
+                {es_autor && (
+                    <TouchableOpacity onPress={() => setCaja_opciones(!caja_opciones)}>
+                        <Image
+                            source={require("../Img/icono-puntos.png")}
+                            style={estilos_comentarios.icono_puntos}
+                            resizeMode="contain"
+                        />
+                    </TouchableOpacity>
+                )}
             </View> 
 
             {/* --- Opciones para editar o eliminar el comentario --- */}
@@ -57,8 +76,8 @@ const Comentarios = ({eliminar, setEliminar, id_comentario, avatar, nombre_usuar
                     <Opciones
                         editar={editar}
                         setEditar={setEditar}
-                        eliminar={eliminar}
-                        setElimianr={setEliminar}
+                        eliminar={eliminar_comentario}
+                        setElimianr={() => setEliminar_comentario(id_comentario)}
                     />
                 </View>
             )}
@@ -127,6 +146,7 @@ const Comentarios = ({eliminar, setEliminar, id_comentario, avatar, nombre_usuar
                         respuestas.map((r: any) => (
                             <Respuestas
                                 key={r.respuesta_id}
+                                id_usuario_respuesta={r.autor_respuesta_id}
                                 avatar_respuesta={r.autor_respuesta_avatar}
                                 usuario_respuesta={r.autor_respuesta_nombre}
                                 fecha_respuesta={r.respuesta_fecha}

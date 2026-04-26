@@ -4,8 +4,18 @@ import { estilos_comentarios } from "./css/comentarios_css";
 import Texto from "./Texto";
 import Opciones from "./Opciones";
 import estilos_global from "../estilos_global";
+import { useContext } from "react";
+import { AuthContext } from "../utils/Auth_Context";
 
-const Respuestas = ({avatar_respuesta, usuario_respuesta, fecha_respuesta, texto_respuesta}: any) => {
+const Respuestas = ({avatar_respuesta, usuario_respuesta, fecha_respuesta, texto_respuesta, id_usuario_respuesta}: any) => {
+
+    // ================= Datos del usuario por un contexto difinido =================
+        const authContext = useContext(AuthContext);
+        if (!authContext) throw new Error("AuthContext no está disponible");
+        const { usuario, setUsuario } = authContext;
+
+    // ================= Variable para mostrar caja de oopciones dependiendo de si el usuario realizo el comentario =================
+    const es_autor = usuario.id === id_usuario_respuesta;
 
     // ================= Estados y funciones para editar una respuesta =================
     const [caja_opciones, setCaja_opciones] = useState(false);
@@ -30,13 +40,15 @@ const Respuestas = ({avatar_respuesta, usuario_respuesta, fecha_respuesta, texto
                     <Texto style={estilos_comentarios.texto}>{new Date(fecha_respuesta).toLocaleDateString("es-CO")}</Texto>
                 </View>
                 
-                <TouchableOpacity onPress={() => setCaja_opciones(!caja_opciones)}>
-                    <Image
-                        source={require("../Img/icono-puntos.png")}
-                        style={estilos_comentarios.icono_puntos}
-                        resizeMode="contain"
-                    />
-                </TouchableOpacity>
+                {es_autor && (
+                    <TouchableOpacity onPress={() => setCaja_opciones(!caja_opciones)}>
+                        <Image
+                            source={require("../Img/icono-puntos.png")}
+                            style={estilos_comentarios.icono_puntos}
+                            resizeMode="contain"
+                        />
+                    </TouchableOpacity>
+                )}
             </View> 
 
             {caja_opciones === false ? 

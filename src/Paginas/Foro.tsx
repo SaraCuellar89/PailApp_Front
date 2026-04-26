@@ -22,7 +22,7 @@ interface Plato {
   publicacion_ingredientes: string;
   publicacion_preparacion: string;
   publicacion_tiempo_preparacion: number;
-  tipo_tiempo: string;
+  publicacion_tipo_tiempo: string;
   publicacion_dificultad: string;
   total_reacciones: number;
   total_comentarios: number;
@@ -58,7 +58,7 @@ export default function Foro({ navigation, route }: any) {
 
 
   // ================= Estados para los filtros =================
-  const [filtro, setFiltro] = useState<"recientes" | "antiguedad" | "populares">("recientes");
+  const [filtro, setFiltro] = useState<"recientes" | "antiguas" | "populares">("recientes");
 
 
   // ================= Funciones y estados para obtener todas los platos =================
@@ -136,7 +136,7 @@ export default function Foro({ navigation, route }: any) {
                     ingredientes={p.publicacion_ingredientes}
                     preparacion={p.publicacion_preparacion}
                     tiempo_preparacion={p.publicacion_tiempo_preparacion}
-                    tipo_tiempo={p.tipo_tiempo}
+                    tipo_tiempo={p.publicacion_tipo_tiempo}
                     dificultad={p.publicacion_dificultad}
                     total_reacciones={p.total_reacciones}
                     total_comentarios={p.total_comentarios}

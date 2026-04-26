@@ -30,14 +30,14 @@ export default function Filtros({ filtro, setFiltro }: any) {
       <TouchableOpacity
         style={[
           estilos_filtros.boton,
-          filtro === "antiguedad" && estilos_filtros.botonActivo,
+          filtro === "antiguas" && estilos_filtros.botonActivo,
         ]}
-        onPress={() => setFiltro("antiguedad")}
+        onPress={() => setFiltro("antiguas")}
       >
         <Text
           style={[
             estilos_filtros.texto,
-            filtro === "antiguedad" && estilos_filtros.texto,
+            filtro === "antiguas" && estilos_filtros.texto,
           ]}
         >
           Antiguas

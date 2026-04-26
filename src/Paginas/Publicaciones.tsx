@@ -41,7 +41,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
   const [modalVisible, setModalVisible] = useState(false);
   const [mostrarNoti, setMostrarNoti] = useState(false); 
 
-  const [eliminar, setEliminar] = useState(false);
+  // const [eliminar, setEliminar] = useState(false);
 
 
   // ================= Funciones y Estados para mostrar la notificaciones de exito =================
@@ -77,6 +77,8 @@ export default function DetallePublicacion({ route, navigation }: any) {
     const data = await res.json();
 
     if(!data.success) return Mensaje_Toast.info(data.message);
+
+    console.log(data.data)
 
     setPlato(data.data.publicacion);
     setTotal_reacciones(data.data.total_reacciones);
@@ -119,7 +121,28 @@ export default function DetallePublicacion({ route, navigation }: any) {
 
     Keyboard.dismiss();
     setcontenido("");
-    Mensaje_Toast.exito('Comentario hecho');
+    Mostrar_Notificacion("¡Comentario hecho!");
+
+    setRefetch(prev => prev + 1);
+  }
+
+
+  // ================= Funciones para eliminar un comentario =================
+  const [id_comentario, setId_comentario] = useState<number | null>(null);
+
+  const Eliminar_Comentario = async () => {
+    const res = await fetch(`http://35.174.135.238/comentarios/eliminar/${id_comentario}`, {
+      method: "DELETE",
+      headers: {
+          'Authorization': `Bearer ${usuario.token}`
+      }
+    });
+
+    const data = await res.json();
+
+    if(!data.success) return Mensaje_Toast.info(data.message);
+
+    Mostrar_Notificacion("Comentario eliminado");
 
     setRefetch(prev => prev + 1);
   }
@@ -153,7 +176,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
 
     Keyboard.dismiss();
     setcontenido_respuesta("");
-    Mensaje_Toast.exito('Respuesta hecha');
+    Mostrar_Notificacion("¡Respuesta hecha!");
 
     setRefetch(prev => prev + 1);
   }
@@ -222,9 +245,12 @@ export default function DetallePublicacion({ route, navigation }: any) {
                 {comentarios.map((c) => (
                   <Comentarios
                     key={c.comentario_id}
+                    id_usuario_comentario={c.autor_comentario_id}
                     id_comentario={c.comentario_id}
-                    eliminar={eliminar}
-                    setEliminar={setModalVisible}
+                    setEliminar_comentario={(id: number) => {
+                      setId_comentario(id);
+                      setModalVisible(true);             
+                    }}
                     avatar={c.autor_comentario_avatar}
                     nombre_usuario={c.autor_comentario_nombre}
                     fecha={c.comentario_fecha}
@@ -256,8 +282,9 @@ export default function DetallePublicacion({ route, navigation }: any) {
     </KeyboardAvoidingView>
 
     <ModalConfirmacion
+      texto={"¿Quieres eliminar este comentario?"}
       visible={modalVisible}
-      confirmar={() => [setMostrarNoti(true), setModalVisible(false)]}
+      confirmar={() => [setMostrarNoti(true), setModalVisible(false), Eliminar_Comentario()]}
       cancelar={() => setModalVisible(false)}
     />
 
