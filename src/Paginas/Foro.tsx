@@ -75,8 +75,6 @@ export default function Foro({ navigation, route }: any) {
           }
         });
 
-        if(!res.ok) return console.log('Backend' + res.json());
-
         const data = await res.json();
         if(!data.success) return Mensaje_Toast.info(data.message);
 

@@ -35,8 +35,6 @@ const Notificaciones = ({navigation}: any) => {
 
         const data = await res.json();
 
-        console.log(data)
-
         if(data.data?.info_notificaciones) {
             setNotificaciones(data.data.info_notificaciones);
         } else {

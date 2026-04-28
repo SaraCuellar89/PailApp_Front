@@ -55,7 +55,10 @@ export type RootStackParamList = {
   };
   DetallePublicacion: {id_publicacion: number};
   MisPlatos: undefined;
-  Lista_Ingredientes: undefined;
+  Lista_Ingredientes: {
+    id_publicacion: number;
+    nombre_publicacion: string;
+  };
   Perfil: undefined;
   Configuracion: undefined;
   Editar_Cuenta: undefined;

@@ -11,7 +11,7 @@ import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-export default function PublicacionCard({id_publicacion, titulo, archivo, descripcion, ingredientes, preparacion, tiempo_preparacion, tipo_tiempo, dificultad, total_reacciones, total_comentarios, fecha_creacion, corazon_inicial, SetNotificacion_reaccion, guardado_inicial, Setnotificacion_guardado}: any) {
+export default function PublicacionCard({id_publicacion, titulo, archivo, descripcion, ingredientes, preparacion, tiempo_preparacion, tipo_tiempo, dificultad, total_reacciones, total_comentarios, fecha_creacion, corazon_inicial, SetNotificacion_reaccion, guardado_inicial, Setnotificacion_guardado, antes_desguardar}: any) {
 
   const { width } = useWindowDimensions();
 
@@ -90,21 +90,28 @@ export default function PublicacionCard({id_publicacion, titulo, archivo, descri
 
   // Enviar datos a la bbdd
   const Guardar = async (id_publicacion:number) => {
+    if (guardado === 1 && antes_desguardar) {
+      antes_desguardar(() => Ejecutar_Desguardado(id_publicacion));
+      return;
+    }
+
+    await Ejecutar_Desguardado(id_publicacion);
+  }
+
+  const Ejecutar_Desguardado = async (id_publicacion: number) => {
     const res = await fetch(`http://35.174.135.238/guardados/guardar/${id_publicacion}`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${usuario.token}`
-      }
-    })
+      headers: { 'Authorization': `Bearer ${usuario.token}` }
+    });
 
     const data = await res.json();
 
-    if(!data.success) return Mensaje_Toast.info(data.message);
+    if (!data.success) return Mensaje_Toast.info(data.message);
 
     const nuevo_guardado = guardado === 1 ? 0 : 1;
     setGuardado(nuevo_guardado);
-    
-    if (nuevo_guardado === 1) Setnotificacion_guardado();
+
+    if (nuevo_guardado === 1) Setnotificacion_guardado?.();
   }
 
 

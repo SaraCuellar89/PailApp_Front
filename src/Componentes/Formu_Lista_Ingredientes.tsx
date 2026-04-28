@@ -1,14 +1,35 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { TouchableOpacity, Pressable, View, TextInput } from "react-native";
 import Texto from "./Texto";
 import estilos_formu_lista_ingredientes from "./css/formu_lista_ingredientes";
 import estilos_global from "../estilos_global";
+import { AuthContext } from "../utils/Auth_Context";
+import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 
-type Item = { texto: string; marcado: boolean };
+type Item = { 
+    id?: number;
+    texto: string; 
+    marcado: boolean;
+};
 
-const Formu_Lista_Ingredientes = () => {
+const Formu_Lista_Ingredientes = ({ ingredientes_iniciales = [], id_publicacion }: { 
+    ingredientes_iniciales?: any[];
+    id_publicacion: number;
+}) => {
 
     const [items, setItems] = useState<Item[]>([]);
+
+    // ================= Funcion para renderizar los ingredientes en el editor de texto =================
+    useEffect(() => {
+        if (ingredientes_iniciales.length > 0) {
+        setItems(ingredientes_iniciales.map(ing => ({
+            id: ing.id_ingrediente,
+            texto: ing.nombre,
+            marcado: ing.obtenido === 1
+        })));
+        }
+    }, [ingredientes_iniciales]);
+
     const [lineaActiva, setLineaActiva] = useState("");
     const [editandoIndex, setEditandoIndex] = useState<number | null>(null);
     const inputRef = useRef<TextInput>(null);
@@ -66,6 +87,54 @@ const Formu_Lista_Ingredientes = () => {
         );
     };
 
+    // ================= Datos del usuario por un contexto difinido =================
+        const authContext = useContext(AuthContext);
+        if (!authContext) throw new Error("AuthContext no está disponible");
+        const { usuario } = authContext;
+
+
+    // ================= Funciones y estados para marcar o desmarcar un ingrediente =================
+    const Marcar_Ingrediente = async (id_ingrediente: number | undefined) => {
+        if (!id_ingrediente) return;
+        
+        const res = await fetch(`http://35.174.135.238/ingredientes/marcar/${id_ingrediente}`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${usuario.token}` }
+        });
+
+        const data = await res.json();
+        if (!data.success) return Mensaje_Toast.info(data.message);
+    }
+
+
+    // ================= Funciones y estados para guardar la lista de ingredientes =================
+    const Guardar_Ingredientes = async () => {
+        const todos = lineaActiva.trim() !== ""
+            ? [...items, { texto: lineaActiva.trim(), marcado: false }]
+            : items;
+
+        const res = await fetch(`http://35.174.135.238/ingredientes/agregar/${id_publicacion}`, {
+            method: 'POST',
+            headers: { 
+                'Authorization': `Bearer ${usuario.token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                ingredientes: todos.map(i => ({ nombre: i.texto, obtenido: i.marcado ? 1 : 0 }))
+            })
+        });
+
+        console.log(id_publicacion)
+
+        const data = await res.json();
+
+        console.log(data)
+        if (!data.success) return Mensaje_Toast.info(data.message);
+
+        Mensaje_Toast.info("¡Lista guardada!");
+    }
+
+
     return (
         <View style={estilos_formu_lista_ingredientes.contenedor}>
 
@@ -82,7 +151,7 @@ const Formu_Lista_Ingredientes = () => {
                                 style={item.marcado
                                     ? estilos_formu_lista_ingredientes.btn_check
                                     : estilos_formu_lista_ingredientes.btn_no_check}
-                                onPress={() => Toggle_Marcar(i)}
+                                onPress={() => { Toggle_Marcar(i); Marcar_Ingrediente(items[i].id) }}
                             >
                                 <Texto style={estilos_formu_lista_ingredientes.btn_check_icono}>
                                     {item.marcado ? "✓" : ""}
@@ -138,7 +207,7 @@ const Formu_Lista_Ingredientes = () => {
             </Pressable>
 
             <View style={estilos_formu_lista_ingredientes.caja_btn_guardar}>
-                <TouchableOpacity style={estilos_global.btn_1}>
+                <TouchableOpacity style={estilos_global.btn_1} onPress={Guardar_Ingredientes}>
                     <Texto style={estilos_global.texto_btn_1}>Guardar</Texto>
                 </TouchableOpacity>
             </View>
