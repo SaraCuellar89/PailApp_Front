@@ -19,7 +19,7 @@ import Foro from './src/Paginas/Foro';
 import SubirReceta from './src/Paginas/SubirReceta';
 import DetallePublicacion from './src/Paginas/Publicaciones';
 import MisPlatoss from './src/Paginas/MisPlatoss';
-import Perfil from './src/Paginas/Perfil';
+import Perfil, { Plato } from './src/Paginas/Perfil';
 import Configuracion from './src/Paginas/Configuracion';
 import Descripcion from './src/Paginas/Descripcion';
 import Datos_Adicionales from './src/Paginas/Datos_Adicionales';
@@ -43,7 +43,7 @@ export type RootStackParamList = {
   ChatbotVoz: undefined;
   Chatbot_Conversacion: undefined;
   Foro: { plato_subido?: boolean };
-  SubirReceta: undefined;
+  SubirReceta: { plato?: Plato } | undefined;
   Descripcion: {
     titulo: string;
     archivo: string;
@@ -52,6 +52,7 @@ export type RootStackParamList = {
     tiempo_preparacion: string;
     tipo_tiempo: string;
     dificultad: string;
+    plato?: Plato;
   };
   DetallePublicacion: {id_publicacion: number};
   MisPlatos: undefined;
@@ -59,7 +60,7 @@ export type RootStackParamList = {
     id_publicacion: number;
     nombre_publicacion: string;
   };
-  Perfil: undefined;
+  Perfil: { plato_editado?: boolean };
   Configuracion: undefined;
   Editar_Cuenta: undefined;
 };

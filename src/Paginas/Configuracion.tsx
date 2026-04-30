@@ -9,7 +9,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../utils/Auth_Context";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 import ModalConfirmacion from "../Componentes/ModalConfirmacion";
-import Notificacion from "../Componentes/Notificacion";
 
 export default function Configuracion({navigation}: any) {
 

@@ -68,7 +68,6 @@ const Formu_Datos_Adicionales = ({navigation}: any) => {
         });
 
         const data = await res.json();
-        console.log(data)
 
         if(data.success === false) return Mensaje_Toast.info(data.message);
 

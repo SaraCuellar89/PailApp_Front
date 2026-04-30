@@ -40,8 +40,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
   // ================= Estados para ver la notificacion o el modal de confirmacion =================
   const [modalVisible, setModalVisible] = useState(false);
   const [tipo_eliminacion, setTipo_eliminacion] = useState<'comentario' | 'respuesta' | null>(null);
-  
-  const [mostrarNoti, setMostrarNoti] = useState(false); 
+
 
 
   // ================= Funciones y Estados para mostrar la notificaciones de exito =================
@@ -60,9 +59,6 @@ export default function DetallePublicacion({ route, navigation }: any) {
   const [total_reacciones, setTotal_reacciones] = useState(0);
   const [comentarios, setComentarios] = useState<any[]>([]);
   const [total_comentarios, setTotal_comentarios] = useState(0);
-
-  // Estados para guardar la informacion especifica de los comentarios
-  const [total_respuestas, setTotal_respuestas] = useState(0);
 
   // Id publicacion proveniente de los parametros
   const id_publicacion = route.params.id_publicacion;

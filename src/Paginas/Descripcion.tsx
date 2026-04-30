@@ -7,20 +7,25 @@ import estilos_publicaciones from "./css/publicaciones_css";
 import Formu_Descripcion_Pasos from "../Componentes/Formu_Descripcion_Pasos";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
+import ModalConfirmacion from "../Componentes/ModalConfirmacion";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Descripcion'>;
 
 const Descripcion = ({route, navigation}: Props) => {
 
     //Datos recibidos de la vista de subir_receta
-    const {titulo, archivo, ingredientes, tiempo_preparacion, tipo_tiempo, dificultad} = route.params;
+    const {titulo, archivo, ingredientes, tiempo_preparacion, tipo_tiempo, dificultad, plato} = route.params;
+    const es_edicion = !!plato;
+
+    const [modal_visible, setModal_visible] = useState(false);
+    const [tipo_modal, setTipo_modal] = useState<'eliminar' | 'guardar' | null>(null);
 
     return(
         <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
         
             <View style={{backgroundColor: colores.color_2}}>
             <Header 
-                title="¡Sube un plato!" 
+                title={es_edicion ? "Edita tu plato" : "¡Sube un plato!"} 
                 onBack={() => navigation.goBack()} 
             /> 
             </View>
@@ -42,6 +47,8 @@ const Descripcion = ({route, navigation}: Props) => {
                 <Formu_Descripcion_Pasos
                     datos_receta={{ titulo, archivo, ingredientes, tiempo_preparacion, tipo_tiempo, dificultad }}
                     navigation={navigation}
+                    plato={plato}
+                    Cancelar_Cambios={() => setModal_visible(true)}
                 />
 
             </View>
@@ -49,6 +56,15 @@ const Descripcion = ({route, navigation}: Props) => {
             </ScrollView>
     
             </KeyboardAvoidingView>
+
+            <ModalConfirmacion
+                texto={"¿Quieres deshacer los cambios?"}
+                visible={modal_visible}
+                confirmar={() => {
+                    navigation.pop(2);
+                }}
+                cancelar={() => setModal_visible(false)}
+            />
     
         </SafeAreaView>
     )

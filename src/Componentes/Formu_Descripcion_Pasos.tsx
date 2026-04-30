@@ -7,7 +7,8 @@ import Texto from "./Texto";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 import { AuthContext } from "../utils/Auth_Context";
 
-const Formu_Descripcion_Pasos = ({navigation, datos_receta}: any) => {
+const Formu_Descripcion_Pasos = ({navigation, datos_receta, plato, Cancelar_Cambios}: any) => {
+    const es_edicion = !!plato;
 
     // ================= Funciones para lo editores de texto =================
     const editorRef = useRef<any>(null);
@@ -25,8 +26,8 @@ const Formu_Descripcion_Pasos = ({navigation, datos_receta}: any) => {
     // ================= Estados y Funciones para subir un plato =================
     // Estado del formulario 
     const [form, setForm] = useState({
-        descripcion: "",
-        preparacion: "",
+        descripcion: plato?.descripcion ?? "",
+        preparacion: plato?.preparacion ?? "",
     });
 
     // Handle Change genérico 
@@ -82,11 +83,13 @@ const Formu_Descripcion_Pasos = ({navigation, datos_receta}: any) => {
         }
 
         // ----- Enviar datos a la bbdd-----
-        const res = await fetch('http://35.174.135.238/publicaciones/subir', {
-            method: "POST",
-            headers: {
-                'Authorization': `Bearer ${usuario.token}`
-            },
+        const url = es_edicion
+        ? `http://35.174.135.238/publicaciones/editar/${plato.id_publicacion}`
+        : `http://35.174.135.238/publicaciones/subir`;
+
+        const res = await fetch(url, {
+            method: es_edicion ? "PUT" : "POST",
+            headers: { 'Authorization': `Bearer ${usuario.token}`},
             body: formData
         });
 
@@ -94,7 +97,13 @@ const Formu_Descripcion_Pasos = ({navigation, datos_receta}: any) => {
 
         if(!datos.success) return Mensaje_Toast.info(datos.message);
 
-        navigation.navigate("Foro", { plato_subido: true });
+        if (es_edicion) {
+            navigation.pop(2);
+            navigation.navigate("Perfil", { plato_editado: true });
+        } else {
+            navigation.pop(2);
+            navigation.navigate("Foro", { plato_subido: true });
+        }
     }
 
     return(
@@ -126,6 +135,7 @@ const Formu_Descripcion_Pasos = ({navigation, datos_receta}: any) => {
                 <View style={estilos_formu_subir_receta.input_grande}>
                     <RichEditor
                         ref={editorRef}
+                        initialContentHTML={plato?.descripcion ?? ""} 
                         placeholder="Ej: El arroz paisa es de Antioquia"
                         onChange={(valor) => handleChange("descripcion", valor)}
                         style={estilos_formu_subir_receta.estilos_rich_editor}
@@ -167,7 +177,7 @@ const Formu_Descripcion_Pasos = ({navigation, datos_receta}: any) => {
                 <View style={estilos_formu_subir_receta.input_grande}>
                     <RichEditor
                         ref={pasosRef}
-                        initialContentHTML={`<ol><li></li></ol>`}
+                        initialContentHTML={plato?.preparacion ?? `<ol><li></li></ol>`} 
                         placeholder="Ej: 1. Poner los frijoles en agua"
                         onChange={(valor) => handleChange("preparacion", valor)}
                         style={estilos_formu_subir_receta.estilos_rich_editor}
@@ -189,8 +199,19 @@ const Formu_Descripcion_Pasos = ({navigation, datos_receta}: any) => {
             {/* --- Boton para enviar el formulario --- */}
             <View style={estilos_formu_subir_receta.caja_boton}>
                 <TouchableOpacity style={[estilos_global.btn_1, estilos_formu_subir_receta.boton]} onPress={Subir_Plato}>
-                    <Texto style={estilos_global.texto_btn_1}>Subir</Texto>
+                    <Texto style={estilos_global.texto_btn_1}>
+                        {es_edicion ? "Guardar cambios" : "Subir"}
+                    </Texto>
                 </TouchableOpacity>
+
+                {es_edicion && (
+                    <TouchableOpacity
+                        style={[estilos_global.btn_1, estilos_formu_subir_receta.boton]}
+                        onPress={Cancelar_Cambios}
+                    >
+                        <Texto style={estilos_global.texto_btn_1}>Cancelar</Texto>
+                    </TouchableOpacity>
+                )}
             </View>
         </View>
     )

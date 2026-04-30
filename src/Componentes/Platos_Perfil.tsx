@@ -6,7 +6,7 @@ import PublicacionCard from "./PublicacionCard";
 import Opciones from "./Opciones";
 
 
-const Platos_Perfil = ({navigation, platos, Mostrar_Notificacion}: any) => {
+const Platos_Perfil = ({navigation, platos, Mostrar_Notificacion, Eliminar_Publicacion}: any) => {
 
     // ================= Estados abrir la caja de opciones (editar/eliminar) =================
     const [plato_opciones, setPlato_opciones] = useState<number | null>(null);
@@ -55,7 +55,11 @@ const Platos_Perfil = ({navigation, platos, Mostrar_Notificacion}: any) => {
                             <Opciones
                                 editar={plato_opciones === p.id_publicacion}
                                 setEditar={() => setPlato_opciones(null)}
-                                Ir_Editar={() => navigation.navigate("SubirReceta")}
+                                Ir_Editar={() => navigation.navigate("SubirReceta", {plato: p})}
+                                setElimianr={() => {
+                                    Eliminar_Publicacion(p.id_publicacion);
+                                    setPlato_opciones(null);      
+                                }}
                             />
                         </View>
                     )}

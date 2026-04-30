@@ -6,14 +6,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { colores } from "../estilos_global";
 import estilos_publicaciones from "./css/publicaciones_css";
 
-export default function SubirReceta({ navigation }: any) {
+export default function SubirReceta({ navigation, route }: any) {
+
+  const plato = route.params?.plato; 
+  const es_edicion = !!plato;
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
 
       <View style={{backgroundColor: colores.color_2}}>
         <Header 
-          title="¡Sube un plato!" 
-          onBack={() => navigation.goBack()} 
+          title={es_edicion ? "Edita tu plato" : "¡Sube un plato!"} 
+          onBack={es_edicion ? undefined : () => navigation.goBack()}
         /> 
       </View>
 
@@ -33,6 +37,7 @@ export default function SubirReceta({ navigation }: any) {
 
           <FormSubirReceta 
             navigation={navigation}
+            plato={plato}
           />
 
         </View>

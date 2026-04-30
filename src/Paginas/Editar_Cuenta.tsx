@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { View, ScrollView, KeyboardAvoidingView, Platform, Modal } from "react-native";
+import { View, ScrollView, KeyboardAvoidingView, Platform, ImageSourcePropType } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../Componentes/Header";
 import Formu_Editar_Cuenta from "../Componentes/Formu_Editar_Cuenta";
 import { colores } from "../estilos_global";
-import registro_css from "./css/registro_css";
 import Seleccionar_Avatar from "../Componentes/Seleccionar_Avatar";
+import estilos_publicaciones from "./css/publicaciones_css";
 
 export default function Editar_Cuenta({ navigation }: any) {
 
   // ================= Estados para mostrar el avatar despues de seleccionarlo =================
-  const [avatar, setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState<ImageSourcePropType>({uri: "https://raw.githubusercontent.com/SaraCuellar89/PailApp_Front/main/src/Img/avatar_1.png"});
   const [mostrarAvatares, setMostrarAvatares] = useState(false);
 
   return (
@@ -33,7 +33,7 @@ export default function Editar_Cuenta({ navigation }: any) {
           keyboardShouldPersistTaps="handled"
         >
 
-          <View style={registro_css.contenedor}>    
+          <View style={estilos_publicaciones.container}>    
             <Formu_Editar_Cuenta 
               avatar={avatar} 
               onAbrirAvatares={() => setMostrarAvatares(true)} 

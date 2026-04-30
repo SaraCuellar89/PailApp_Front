@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View,TextInput,TouchableOpacity, Image, Alert, StyleSheet, Linking } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
@@ -7,7 +7,7 @@ import { estilos_formu_subir_receta } from "./css/formu_subir_receta_css";
 import Texto from "./Texto";
 import estilos_global from "../estilos_global";
 
-export default function FormSubirReceta({ navigation }: any) {
+export default function FormSubirReceta({ navigation, plato }: any) {
 
   // ================= Estados y Funciones para subir imagenes desde el dispositivo =================
   const [imagen, setImagen] = useState<ImagePicker.ImagePickerAsset | null>(null);
@@ -68,7 +68,32 @@ export default function FormSubirReceta({ navigation }: any) {
 
 
   // ================= Estados y funciones para agregar o eliminar ingredientes =================
-  const [ingredientes, setIngredientes] = useState([""]);
+  const [ingredientes, setIngredientes] = useState<string[]>(() => {
+    if (plato?.ingredientes) {
+      try {
+          let parsed = JSON.parse(plato.ingredientes);
+          
+          // Doble parse porque viene doblemente serializado desde la bbdd
+          if (typeof parsed === "string") {
+              parsed = JSON.parse(parsed);
+          }
+          
+          if (Array.isArray(parsed)) {
+              return parsed.map((i: string) => i.replace(/^\d+\.\s/, ""));
+          }
+      } catch (e) {
+          return [""];
+      }
+    }
+    return [""];
+  });
+
+  useEffect(() => {
+      const ingredientes_validos = ingredientes.filter(i => i.trim() !== "");
+      handleChange("ingredientes", JSON.stringify(
+          ingredientes_validos.map((i, index) => `${index + 1}. ${i}`)
+      ));
+  }, [ingredientes]);
   
   // Crear un nuevo input para escribir un ingrediente
   const agregar_ingredientes = () => {
@@ -92,7 +117,7 @@ export default function FormSubirReceta({ navigation }: any) {
 
   // ================= Estados para el dropdown de tiempo =================
   const [abrir_tipo_tiempo, setAbrir_tipo_tiempo] = useState(false);
-  const [tipo_tiempo_value, setTipo_tiempo_value] = useState(null);
+  const [tipo_tiempo_value, setTipo_tiempo_value] = useState(plato?.tipo_tiempo ?? null);
 
   const [tipo_tiempo, setTipo_tiempo] = useState([
     { label: 'hr', value: 'h' },
@@ -102,7 +127,7 @@ export default function FormSubirReceta({ navigation }: any) {
 
   // ================= Estados para el dropdown de dificultad =================
   const [abrir_dificultad, setAbrir_dificultad] = useState(false);
-  const [dificultad_value, setDificultad_value] = useState(null);
+  const [dificultad_value, setDificultad_value] = useState(plato?.dificultad ?? null);
 
   const [dificultad, setDificultad] = useState([
     { label: 'Fácil', value: 'facil' },
@@ -111,15 +136,19 @@ export default function FormSubirReceta({ navigation }: any) {
   ]);
 
 
-  // ================= Estados y Funciones para enviar el formulario a la vista Descripcion =================
+  // ================= Estados y Funciones para enviar el formulario a la otra vista =================
   // Estado del formulario 
+  const [imagen_url, setImagen_url] = useState<string | null>(
+      plato?.archivo && plato.archivo !== "" ? plato.archivo : null  
+  );
+
   const [form, setForm] = useState({
-      titulo: "",
-      archivo: "",
-      ingredientes: "",
-      tiempo_preparacion: "",
-      tipo_tiempo: "",
-      dificultad: "",
+      titulo: plato?.titulo ?? "",
+      archivo: plato?.archivo ?? "",
+      ingredientes: plato?.ingredientes ?? "",
+      tiempo_preparacion: plato?.tiempo_preparacion?.toString() ?? "",
+      tipo_tiempo: plato?.tipo_tiempo ?? "",
+      dificultad: plato?.dificultad ?? "",
   });
 
   // Handle Change genérico 
@@ -167,7 +196,8 @@ export default function FormSubirReceta({ navigation }: any) {
             ingredientes
                 .filter(i => i.trim() !== "")
                 .map((i, index) => `${index + 1}. ${i}`)
-        )
+        ),
+        plato: plato ?? undefined,
     };
 
     navigation.navigate("Descripcion", form_final);
@@ -195,14 +225,16 @@ export default function FormSubirReceta({ navigation }: any) {
         <Texto style={estilos_formu_subir_receta.label}>Imagen</Texto>
         <TouchableOpacity style={estilos_formu_subir_receta.imagePicker} onPress={elegirFuente}>
           {imagen ? (
-            <Image 
-              source={{ uri: imagen.uri }} 
-              style={estilos_formu_subir_receta.preview} 
-            />
+              // Imagen nueva seleccionada del dispositivo
+              <Image source={{ uri: imagen.uri }} style={estilos_formu_subir_receta.preview} />
+          ) : imagen_url ? (
+              // Imagen existente del servidor
+              <Image source={{ uri: imagen_url }} style={estilos_formu_subir_receta.preview} />
           ) : (
-            <Texto style={estilos_formu_subir_receta.imagePlaceholder}>Toca para subir una foto</Texto>
+              // Sin imagen
+              <Texto style={estilos_formu_subir_receta.imagePlaceholder}>Toca para subir una foto</Texto>
           )}
-        </TouchableOpacity>
+      </TouchableOpacity>
       </View> 
 
       {/* --- Seccion de ingredientes --- */}
