@@ -124,11 +124,8 @@ const Formu_Lista_Ingredientes = ({ ingredientes_iniciales = [], id_publicacion 
             })
         });
 
-        console.log(id_publicacion)
-
         const data = await res.json();
 
-        console.log(data)
         if (!data.success) return Mensaje_Toast.info(data.message);
 
         Mensaje_Toast.info("¡Lista guardada!");

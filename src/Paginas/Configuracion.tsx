@@ -15,10 +15,13 @@ export default function Configuracion({navigation}: any) {
   // ================= Datos del usuario por un contexto difinido =================
   const authContext = useContext(AuthContext);
   if (!authContext) throw new Error("AuthContext no está disponible");
-  const { setUsuario } = authContext;
+  const { usuario, setUsuario } = authContext;
+
 
   // ================= Estados para ver la notificacion o el modal de confirmacion =================
   const [modal_Visible, setModal_Visible] = useState(false);
+  const [tipo_modal, setTipo_Modal] = useState<'cerrar_sesion' | 'eliminar_cuenta' | null>(null);
+
 
   // ================= Funciones y estados para cerrar sesion =================
   const Cerrar_Sesion = async () => {
@@ -32,6 +35,23 @@ export default function Configuracion({navigation}: any) {
         console.log("Error:", error);
         Mensaje_Toast.error("No se pudo cerrar sesión");
     }
+  }
+
+
+  // ================= Funciones y estados para eliminar la cuenta =================
+  const Eliminar_Cuenta = async () => {
+    const res = await fetch(`http://35.174.135.238/usuarios/eliminar_cuenta`, {
+      method: "DELETE",
+      headers: {
+          'Authorization': `Bearer ${usuario.token}`
+      }
+    });
+
+    const data = await res.json();
+
+    if(!data.success) return Mensaje_Toast.info(data.message);
+
+    navigation.navigate("Inicio") 
   }
 
   return (
@@ -53,7 +73,8 @@ export default function Configuracion({navigation}: any) {
 
         <View style={estilos_publicaciones.container}>
           <ConfiguracionOpciones 
-            Cerrar_Sesion={() => setModal_Visible(true)}
+            Cerrar_Sesion={() => { setTipo_Modal('cerrar_sesion'); setModal_Visible(true); }}
+            Eliminar_Cuenta={() => { setTipo_Modal('eliminar_cuenta'); setModal_Visible(true); }}
           />
         </View>
 
@@ -61,9 +82,13 @@ export default function Configuracion({navigation}: any) {
 
       {/* Renderizado de modal de confirmacion */}
       <ModalConfirmacion
-        texto={"¿Quieres salir de tu cuenta?"}
+        texto={tipo_modal === 'cerrar_sesion' ? ("¿Quieres salir de tu cuenta?") : ("¿Quiere eliminar tu cuenta?")}
         visible={modal_Visible}
-        confirmar={() => [setModal_Visible(false), Cerrar_Sesion()]}
+        confirmar={() => {
+          setModal_Visible(false);
+          if (tipo_modal === 'cerrar_sesion') Cerrar_Sesion();
+          if (tipo_modal === 'eliminar_cuenta') Eliminar_Cuenta();
+        }}
         cancelar={() => [setModal_Visible(false)]}
       />
 

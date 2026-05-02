@@ -28,6 +28,7 @@ import Notificaciones from './src/Paginas/Notificaciones';
 import { Configuracion_Toast } from './src/utils/Configuracion_Toast';
 import Lista_Ingredientes from './src/Paginas/Lista_Ingredientes';
 import Editar_Cuenta from './src/Paginas/Editar_Cuenta';
+import Editar_Contrasena from './src/Paginas/Edtiar_Contrasena';
 
 
 export type RootStackParamList = {
@@ -63,6 +64,7 @@ export type RootStackParamList = {
   Perfil: { plato_editado?: boolean };
   Configuracion: undefined;
   Editar_Cuenta: undefined;
+  Editar_Contrasena: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>(); 
@@ -104,6 +106,7 @@ export default function App() {
           <Stack.Screen name="Perfil" component={Perfil} />
           <Stack.Screen name="Configuracion" component={Configuracion} />
           <Stack.Screen name="Editar_Cuenta" component={Editar_Cuenta} />
+          <Stack.Screen name="Editar_Contrasena" component={Editar_Contrasena} />
         </Stack.Navigator>
 
         <Toast config={Configuracion_Toast}/>

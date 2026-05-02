@@ -6,23 +6,20 @@ import estilos_global from "../estilos_global";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 import DropDownPicker from "react-native-dropdown-picker";
 import { AuthContext } from "../utils/Auth_Context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Formu_Editar_Cuenta = ({ avatar, onAbrirAvatares}: any) => {
+const Formu_Editar_Cuenta = ({navigation, avatar, onAbrirAvatares}: any) => {
 
   // ================= Datos del usuario por un contexto difinido =================
   const authContext = useContext(AuthContext);
   if (!authContext) throw new Error("AuthContext no está disponible");
   const { usuario, setUsuario } = authContext;
-
-
-  // ================= Estados para ver y ocultar contraseñas =================
-  const [mostrar_contrasena, setMostrar_contrasena] = useState(false);
   
 
   // ================= Funciones y estados para editar la cuenta =================
   // Estados para el dropdown de sexo
   const [abrir_sexo, setAbrir_sexo] = useState(false);
-  const [sexo_value, setSexo_value] = useState(null);
+  const [sexo_value, setSexo_value] = useState(usuario?.sexo ?? null);
 
   const [sexo, setSexo] = useState([
     { label: 'Masculino', value: 'Masculino' },
@@ -34,7 +31,6 @@ const Formu_Editar_Cuenta = ({ avatar, onAbrirAvatares}: any) => {
   const [form, setForm] = useState({
     nombre_usuario: usuario?.nombre ?? "",
     correo: usuario?.correo ?? "",
-    contrasena: "",
     avatar: usuario?.avatar ?? "",
     sexo: usuario?.sexo ?? "",
     edad: usuario?.edad ?? "",
@@ -49,19 +45,21 @@ const Formu_Editar_Cuenta = ({ avatar, onAbrirAvatares}: any) => {
 
   // Obtener la url del avatar
   useEffect(() => {
-    handleChange("avatar", avatar.uri);
+    if (avatar?.uri) {
+      handleChange("avatar", avatar.uri);
+    }
   }, [avatar]);
 
+  // Funcion de editar datos
   const Editar_Cuenta = async () => {
 
     // Validaciones
-    const { nombre_usuario, correo, contrasena, avatar, edad, peso, altura } = form;
+    const { nombre_usuario, correo, avatar, edad, peso, altura } = form;
     const emailRegex = /^[^@\s]+@[^@\s]+\.(com)$/;
 
-    if (!nombre_usuario || !correo || !contrasena || !avatar || !edad || !peso || !altura) return Mensaje_Toast.error("Todos los campos son obligatorios");
+    if (!nombre_usuario || !correo || !avatar || !edad || !peso || !altura) return Mensaje_Toast.error("Todos los campos son obligatorios");
     if (nombre_usuario.length < 5) return Mensaje_Toast.error("El nombre de usuario debe tener minimo 5 caracteres"); 
     if (!emailRegex.test(correo)) return Mensaje_Toast.error("Correo invalido");
-    if (contrasena.length < 5) return Mensaje_Toast.error("La contraseña debe tener minimo 5 caracteres");
 
     const edadNum = Number(edad);
     const pesoNum = Number(peso);
@@ -75,7 +73,7 @@ const Formu_Editar_Cuenta = ({ avatar, onAbrirAvatares}: any) => {
 
     // Envio de los datos
     const res = await fetch('http://35.174.135.238/usuarios/editar_cuenta', {
-      method: "POST",
+      method: "PUT",
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${usuario.token}`
@@ -83,9 +81,25 @@ const Formu_Editar_Cuenta = ({ avatar, onAbrirAvatares}: any) => {
       body: JSON.stringify(form)
     });
 
-    if(!res.ok) return Mensaje_Toast.error("Error al registrar");
+    const data = await res.json();
 
-    navigation.navigate("Perfil");
+    if (!data.success) return Mensaje_Toast.info(data.message);
+
+    // Actualizar contexto con los nuevos datos
+    const usuario_actualizado = { 
+      ...usuario, 
+      nombre: form.nombre_usuario, 
+      correo: form.correo,
+      avatar: form.avatar,
+      sexo: form.sexo,
+      edad: form.edad,
+      peso: form.peso,
+      altura: form.altura
+    };
+    setUsuario(usuario_actualizado);                             
+    await AsyncStorage.setItem("usuario", JSON.stringify(usuario_actualizado));
+
+    navigation.navigate("Configuracion");
   }
 
   return (
@@ -110,30 +124,23 @@ const Formu_Editar_Cuenta = ({ avatar, onAbrirAvatares}: any) => {
         <View style={estilo_formu_inicio_sesion_css.contenedor_input}>
           <Texto style={estilo_formu_inicio_sesion_css.texto_label}>Avatar</Texto>
           
-          {avatar ?
-          (
-            <TouchableOpacity onPress={onAbrirAvatares}>
-              <Image
-                source={avatar}
-                style={{ width: 80, height: 80, borderRadius: 40 }}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          ) : 
-          (
-            <TouchableOpacity onPress={onAbrirAvatares}>
-              <Image
-                source={require('../Img/icono-usuario.png')}
-                style={{ width: 80, height: 80, borderRadius: 40 }}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity onPress={onAbrirAvatares}>
+            <Image
+              source={
+                avatar?.uri
+                  ? { uri: avatar.uri }          
+                  : form.avatar
+                  ? { uri: form.avatar } 
+                  : require('../Img/icono-usuario.png')  
+              }
+              style={{ width: 80, height: 80, borderRadius: 40 }}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
 
         </View>
 
         {/* --- Input de Correo electronico --- */}
-
         <View style={estilo_formu_inicio_sesion_css.contenedor_input}>
           <Texto style={estilo_formu_inicio_sesion_css.texto_label}>Correo Electronico</Texto>
           <TextInput 
@@ -146,28 +153,7 @@ const Formu_Editar_Cuenta = ({ avatar, onAbrirAvatares}: any) => {
           />
         </View>
 
-        {/* --- Input de Contraseña --- */}
-
-        <View style={estilo_formu_inicio_sesion_css.contenedor_input}>
-          <Texto style={estilo_formu_inicio_sesion_css.texto_label}>Contraseña</Texto>
-          
-          <View style={estilo_formu_inicio_sesion_css.caja_contrasena}>
-            <TextInput 
-              secureTextEntry={!mostrar_contrasena}
-              placeholder="••••••••" 
-              placeholderTextColor={"grey"} 
-              style={estilo_formu_inicio_sesion_css.caja_input_contrasena}
-            />
-            <TouchableOpacity onPress={() => setMostrar_contrasena(!mostrar_contrasena)}>
-              <Image
-                source={require("../Img/oculto.png")}
-                style={mostrar_contrasena ? estilo_formu_inicio_sesion_css.no_ver_contrasena : estilo_formu_inicio_sesion_css.ver_contrasena}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-
+        {/* --- Input del sexo --- */}
         <View style={estilo_formu_inicio_sesion_css.contenedor_input}>
             <Texto style={estilo_formu_inicio_sesion_css.texto_label}>Sexo</Texto>
             <DropDownPicker
@@ -185,7 +171,6 @@ const Formu_Editar_Cuenta = ({ avatar, onAbrirAvatares}: any) => {
         </View>
 
         {/* --- Input de la edad --- */}
-
         <View style={estilo_formu_inicio_sesion_css.contenedor_input}>
             <Texto style={estilo_formu_inicio_sesion_css.texto_label}>Edad</Texto>
             <TextInput 
@@ -223,7 +208,7 @@ const Formu_Editar_Cuenta = ({ avatar, onAbrirAvatares}: any) => {
 
         {/* --- Boton para enviar el Formulario --- */}
 
-        <TouchableOpacity style={estilos_global.btn_1}>
+        <TouchableOpacity style={estilos_global.btn_1} onPress={Editar_Cuenta}>
          <Texto style={estilos_global.texto_btn_1}>Guardar</Texto> 
         </TouchableOpacity>
 

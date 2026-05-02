@@ -7,6 +7,7 @@ import Formu_Correo from "../Componentes/Formu_Correo";
 import estilos_publicaciones from "./css/publicaciones_css";
 
 const Correo_Recuperacion = ({navigation}: any) => {
+    
     return(
         <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
             <View style={[estilos_global.fondo_2, { flex: 1 }]}>

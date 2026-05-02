@@ -5,7 +5,7 @@ import Texto from "./Texto";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 
 
-export default function ConfiguracionOpciones({Cerrar_Sesion}: any) {
+export default function ConfiguracionOpciones({Cerrar_Sesion, Eliminar_Cuenta}: any) {
 
   const navigation = useNavigation<any>();
 
@@ -29,6 +29,13 @@ export default function ConfiguracionOpciones({Cerrar_Sesion}: any) {
         </Texto>
       </TouchableOpacity>
 
+      {/* --- Boton para editar solo la contraseña del cuenta --- */}
+      <TouchableOpacity style={estilos_configuracion_opciones.card} onPress={() => navigation.navigate('Editar_Contrasena')}>
+        <Texto style={estilos_configuracion_opciones.titulo}>Cambiar Contraseña</Texto>
+        <Texto style={estilos_configuracion_opciones.descripcion}>
+          Cambia tu contraseña aquí
+        </Texto>
+      </TouchableOpacity>
 
       {/* --- Boton para cerrar sesion --- */}
       <TouchableOpacity style={estilos_configuracion_opciones.card} onPress={Cerrar_Sesion}>
@@ -40,7 +47,7 @@ export default function ConfiguracionOpciones({Cerrar_Sesion}: any) {
 
   
       {/* --- Boton para eliminar la cuenta de manera permanente --- */}
-      <TouchableOpacity style={estilos_configuracion_opciones.card}>
+      <TouchableOpacity style={estilos_configuracion_opciones.card} onPress={Eliminar_Cuenta}>
         <Texto style={estilos_configuracion_opciones.titulo}>Eliminar Cuenta</Texto>
         <Texto style={estilos_configuracion_opciones.descripcion}>
           Esta acción es permanente e irreversible
