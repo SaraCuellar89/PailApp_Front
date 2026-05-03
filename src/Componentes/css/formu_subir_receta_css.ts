@@ -77,7 +77,8 @@ export const estilos_formu_subir_receta = StyleSheet.create({
     caja_boton: {
         width: "100%",
         alignItems: "center",
-        marginVertical: 20
+        marginVertical: 20,
+        gap: 20,
     },
     boton: {
         width: width * 0.5

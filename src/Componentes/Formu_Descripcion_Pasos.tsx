@@ -4,10 +4,8 @@ import { RichEditor, RichToolbar, actions } from 'react-native-pell-rich-editor'
 import { estilos_formu_subir_receta } from "./css/formu_subir_receta_css";
 import estilos_global, { colores } from "../estilos_global";
 import Texto from "./Texto";
-import { Mensaje_Toast } from "../utils/Mensaje_Toast";
-import { AuthContext } from "../utils/Auth_Context";
 
-const Formu_Descripcion_Pasos = ({navigation, datos_receta, plato, Cancelar_Cambios}: any) => {
+const Formu_Descripcion_Pasos = ({plato, Cancelar_Cambios, handleChange, Subir_Plato}: any) => {
     const es_edicion = !!plato;
 
     // ================= Funciones para lo editores de texto =================
@@ -16,95 +14,6 @@ const Formu_Descripcion_Pasos = ({navigation, datos_receta, plato, Cancelar_Camb
 
     const [activar_opciones, setActivar_opciones] = useState([]);
 
-
-    // ================= Datos del usuario por un contexto difinido =================
-    const authContext = useContext(AuthContext);
-    if (!authContext) throw new Error("AuthContext no está disponible");
-    const { usuario } = authContext;
-
-
-    // ================= Estados y Funciones para subir un plato =================
-    // Estado del formulario 
-    const [form, setForm] = useState({
-        descripcion: plato?.descripcion ?? "",
-        preparacion: plato?.preparacion ?? "",
-    });
-
-    // Handle Change genérico 
-    const handleChange = (campo: string, valor: string) => {
-        setForm(prev => ({ ...prev, [campo]: valor }));
-    };
-
-    // Enviar formulario a la bbdd
-    const Subir_Plato = async () => {
-
-        // ----- Validaciones -----
-        const campos = [
-            { nombre: "Título", valor: form.descripcion },
-            { nombre: "Tiempo aprox. de preparación",valor: form.preparacion }
-        ];
-    
-        // Campos obligatorios
-        for (const campo of campos) {
-            if (!campo.valor.trim()) {
-                Mensaje_Toast.error(`"${campo.nombre}" es un campo obligatorio`);
-                return;
-            }
-        };
-
-        // ----- Construir FormData -----
-        const formData = new FormData();
-
-        const ahora = new Date();
-        const fecha_creacion = ahora.toISOString().slice(0, 19).replace("T", " ");
-
-        // Datos de texto
-        formData.append("titulo", datos_receta.titulo);
-        formData.append("ingredientes", datos_receta.ingredientes);
-        formData.append("tiempo_preparacion", datos_receta.tiempo_preparacion);
-        formData.append("tipo_tiempo", datos_receta.tipo_tiempo);
-        formData.append("dificultad", datos_receta.dificultad);
-        formData.append("descripcion", form.descripcion);
-        formData.append("preparacion", form.preparacion);
-        formData.append("fecha_creacion", fecha_creacion);
-
-        // Archivo de imagen (si existe)
-        if (datos_receta.archivo) {
-            const uri = datos_receta.archivo;
-            const nombre = uri.split("/").pop() ?? "foto.jpg";
-            const extension = nombre.split(".").pop();
-            const tipo = `image/${extension === "jpg" ? "jpeg" : extension}`;
-
-            formData.append("archivo", {
-                uri,
-                name: nombre,
-                type: tipo,
-            } as any);
-        }
-
-        // ----- Enviar datos a la bbdd-----
-        const url = es_edicion
-        ? `http://35.174.135.238/publicaciones/editar/${plato.id_publicacion}`
-        : `http://35.174.135.238/publicaciones/subir`;
-
-        const res = await fetch(url, {
-            method: es_edicion ? "PUT" : "POST",
-            headers: { 'Authorization': `Bearer ${usuario.token}`},
-            body: formData
-        });
-
-        const datos = await res.json();
-
-        if(!datos.success) return Mensaje_Toast.info(datos.message);
-
-        if (es_edicion) {
-            navigation.pop(2);
-            navigation.navigate("Perfil", { plato_editado: true });
-        } else {
-            navigation.pop(2);
-            navigation.navigate("Foro", { plato_subido: true });
-        }
-    }
 
     return(
         <View style={estilos_formu_subir_receta.contenedor}>

@@ -37,6 +37,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
   const { usuario, setUsuario } = authContext;
 
 
+
   // ================= Estados para ver la notificacion o el modal de confirmacion =================
   const [modalVisible, setModalVisible] = useState(false);
   const [tipo_eliminacion, setTipo_eliminacion] = useState<'comentario' | 'respuesta' | null>(null);
@@ -51,6 +52,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
     setMensaje_notificacion(mensaje);
     setNotificacion_exito(true);
   }
+
 
 
   // ================= Funciones y estados para obtener la informacion de un solo plato =================
@@ -74,8 +76,6 @@ export default function DetallePublicacion({ route, navigation }: any) {
 
     if(!data.success) return Mensaje_Toast.info(data.message);
 
-    console.log(data.data)
-
     setPlato(data.data.publicacion);
     setTotal_reacciones(data.data.total_reacciones);
     setComentarios(data.data.comentarios);
@@ -87,6 +87,13 @@ export default function DetallePublicacion({ route, navigation }: any) {
   useEffect(() => {
     Obtener_Info_Plato();
   }, [refetch]);
+
+
+
+
+  // =============================================================================================================
+  // =============================================================================================================
+  // =============================================================================================================
 
 
   // ================= Funciones y estados para subir un comentario =================
@@ -171,6 +178,12 @@ export default function DetallePublicacion({ route, navigation }: any) {
   }
 
 
+
+  // =============================================================================================================
+  // =============================================================================================================
+  // =============================================================================================================
+
+
   // ================= Funciones y estados para responder a un comentario =================
   // Estado del formulario 
   const [contenido_respuesta, setcontenido_respuesta] = useState("");
@@ -251,6 +264,8 @@ export default function DetallePublicacion({ route, navigation }: any) {
     setRefetch(prev => prev + 1);
   }
 
+
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
 
@@ -307,7 +322,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
             )}
 
             {total_comentarios === 0 ? 
-            ( <Texto>Se la primera persona en comentar</Texto>)
+            ( <Texto style={estilos_publicaciones.texto_vacio}>Se la primera persona en comentar</Texto>)
             :
             (
               <>

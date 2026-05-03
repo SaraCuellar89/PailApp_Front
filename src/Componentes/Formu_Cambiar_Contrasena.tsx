@@ -1,67 +1,10 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import { Image, TextInput, TouchableOpacity, View } from "react-native";
 import estilo_formu_inicio_sesion_css from "./css/formu_inicio_sesion_css";
 import estilos_global from "../estilos_global";
 import Texto from "./Texto";
-import { AuthContext } from "../utils/Auth_Context";
-import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 
-const Formu_Cambiar_Contrasena = ({navigation}: any) => {
-
-    // ================= Datos del usuario por un contexto difinido =================
-        const authContext = useContext(AuthContext);
-        if (!authContext) throw new Error("AuthContext no está disponible");
-        const { usuario, setUsuario } = authContext;
-    
-
-    // ================= Estados para ver y ocultar contraseñas =================
-    const [mostrar_contrasena, setMostrar_contrasena] = useState(false);
-    const [mostrar_confirmar_contrasena, setMostrar_confirmar_contrasena] = useState(false);
-
-
-    // ================= Funciones y estados para solicitar la un codigo de recuperacion de contrasena =================
-    // Estado del formulario 
-    const [form, setForm] = useState({
-        token: "", 
-        contrasena: "", 
-        confirmacion_contrasena: ""
-    });
-
-    // Handle Change genérico 
-    const handleChange = (campo: string, valor: string) => {
-        setForm(prev => ({ ...prev, [campo]: valor }));
-    };
-
-    // Envio de los datos
-    const Restablecer_Contrasena = async () => {
-
-        // Validaciones
-        const { contrasena, confirmacion_contrasena } = form;
-
-        if (!contrasena || !confirmacion_contrasena) return Mensaje_Toast.error("Todos los campos son obligatorios");
-        if (contrasena.length < 5) return Mensaje_Toast.error("La contraseña debe tener minimo 5 caracteres");
-        if (contrasena !== confirmacion_contrasena) return Mensaje_Toast.error("Las contraseñas no coinciden");
-
-        const res = await fetch('http://35.174.135.238/usuarios/restablecer_contrasena', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(form)
-        });
-        
-        const data = await res.json();
-
-        console.log(data)
-
-        if(!data.success) return Mensaje_Toast.info(data.message);
-
-        navigation.reset({
-            index: 0,
-            routes: [{ name: "Login" }],
-        });
-    }
-
+const Formu_Cambiar_Contrasena = ({form, handleChange, mostrar_contrasena, setMostrar_contrasena, mostrar_confirmar_contrasena, setMostrar_confirmar_contrasena, Restablecer_Contrasena}: any) => {
 
     return(
         <View style={estilo_formu_inicio_sesion_css.content}>

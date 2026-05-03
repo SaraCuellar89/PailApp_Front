@@ -62,7 +62,10 @@ export type RootStackParamList = {
     nombre_publicacion: string;
   };
   Perfil: { plato_editado?: boolean };
-  Configuracion: undefined;
+  Configuracion: {
+    cuenta_editada?: boolean;
+    contrasena_editada?: boolean;
+  };
   Editar_Cuenta: undefined;
   Editar_Contrasena: undefined;
 };

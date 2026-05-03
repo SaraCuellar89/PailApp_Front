@@ -11,12 +11,16 @@ import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 const Respuestas = ({id_respuesta, avatar_respuesta, usuario_respuesta, fecha_respuesta, texto_respuesta, id_usuario_respuesta, eliminar_respuesta, setEliminar_respuesta, Editar_Respuesta}: any) => {
 
     // ================= Datos del usuario por un contexto difinido =================
-        const authContext = useContext(AuthContext);
-        if (!authContext) throw new Error("AuthContext no está disponible");
-        const { usuario, setUsuario } = authContext;
+    const authContext = useContext(AuthContext);
+    if (!authContext) throw new Error("AuthContext no está disponible");
+    const { usuario, setUsuario } = authContext;
 
-    // ================= Variable para mostrar caja de oopciones dependiendo de si el usuario realizo el comentario =================
+
+
+    // ================= Variable para mostrar caja de oopciones dependiendo de si el usuario realiza la respuesta =================
     const es_autor = usuario.id === id_usuario_respuesta;
+
+
 
     // ================= Estados y funciones para editar una respuesta =================
     const [caja_opciones, setCaja_opciones] = useState(false);
@@ -29,10 +33,12 @@ const Respuestas = ({id_respuesta, avatar_respuesta, usuario_respuesta, fecha_re
     }, [editar]);
 
 
+
     // ================= Funciones y estados para editar una respuesta =================
     const [respuesta_editada, setRespuesta_editada] = useState(texto_respuesta);
 
 
+    
     return(
         <View style={[estilos_comentarios.contenedor_componente_respuestas, estilos_comentarios.contenedor]}>
             <View style={estilos_comentarios.contenedor_info}>

@@ -6,56 +6,7 @@ import Texto from "./Texto";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 import { AuthContext } from "../utils/Auth_Context";
 
-const Formu_Editar_Contrasena = ({navigation}: any) => {
-
-    // ================= Datos del usuario por un contexto difinido =================
-    const authContext = useContext(AuthContext);
-    if (!authContext) throw new Error("AuthContext no está disponible");
-    const { usuario, setUsuario } = authContext;
-
-    // ================= Estados para ver y ocultar contraseñas =================
-    const [mostrar_contrasena_actual, setMostrar_contrasena_actual] = useState(false);
-    const [mostrar_contrasena_nueva, setMostrar_contrasena_nueva] = useState(false);
-    const [mostrar_confirmar_contrasena, setMostrar_confirmar_contrasena] = useState(false);
-
-    // ================= Funciones y estados para el inicio de sesion =================
-    // Estado del formulario 
-    const [form, setForm] = useState({
-        contrasena_actual: "", 
-        contrasena_nueva: "", 
-        confirmacion_contrasena:""
-    });
-
-    // Handle Change genérico 
-    const handleChange = (campo: string, valor: string) => {
-        setForm(prev => ({ ...prev, [campo]: valor }));
-    };
-
-    // Envio de los datos
-    const Editar_Contrasena = async () => {
-
-        // Validaciones
-        const { contrasena_actual, contrasena_nueva, confirmacion_contrasena} = form;
-        if (!contrasena_actual || !contrasena_nueva || !confirmacion_contrasena) return Mensaje_Toast.error("Todos los campos son obligatorios");
-        if(contrasena_nueva.trim().length < 5){
-            return Mensaje_Toast.error("La contraseña debe tener al menos 5 caracteres");
-        }
-
-        const res = await fetch('http://35.174.135.238/usuarios/editar_contrasena', {
-        method: "PUT",
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${usuario.token}`
-        },
-        body: JSON.stringify(form)
-        });
-
-        const data = await res.json();
-
-        if(data.success === false) return Mensaje_Toast.info(data.message);
-
-        Mensaje_Toast.exito('Cambio exitoso')
-    }
+const Formu_Editar_Contrasena = ({mostrar_contrasena_actual, setMostrar_contrasena_actual, mostrar_contrasena_nueva, setMostrar_contrasena_nueva, mostrar_confirmar_contrasena, setMostrar_confirmar_contrasena, form, handleChange, Editar_Contrasena}: any) => {
 
     return(
         <View style={estilo_formu_inicio_sesion_css.content}>

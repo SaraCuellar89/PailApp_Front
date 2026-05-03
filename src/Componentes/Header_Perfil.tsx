@@ -4,6 +4,7 @@ import Texto from "./Texto";
 import estilos_header_perfil from "./css/header_perfil_css";
 
 const Header_Perfil = ({nombre_usuario, edad, sexo, altura, peso, avatar}: any) => {
+    
     return(
         <View style={estilos_header_perfil.contenedor}>
 

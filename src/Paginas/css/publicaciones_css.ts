@@ -23,6 +23,19 @@ const estilos_publicaciones = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         borderColor: colores.color_4
+    },
+
+    caja_vacio: {
+        alignItems: "center",
+        gap: 10,
+        marginVertical: 20
+    },
+    img_vacio: {
+        width: 25,
+        height: 25,
+    },
+    texto_vacio: {
+        textAlign: "center"
     }
 
 })

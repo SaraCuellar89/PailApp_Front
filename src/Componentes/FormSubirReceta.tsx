@@ -12,6 +12,8 @@ export default function FormSubirReceta({ navigation, plato }: any) {
   // ================= Estados y Funciones para subir imagenes desde el dispositivo =================
   const [imagen, setImagen] = useState<ImagePicker.ImagePickerAsset | null>(null);
 
+
+
   // =================== Abrir la Galería ===================
   const seleccionarImagen = async () => {
     // Esperar a que el Alert se cierre completamente
@@ -45,6 +47,8 @@ export default function FormSubirReceta({ navigation, plato }: any) {
     };
   };
 
+
+
   // =================== Abrir la camara ===================
   const tomarFoto = async () => {
     await new Promise(resolve => setTimeout(resolve, 300));
@@ -57,6 +61,8 @@ export default function FormSubirReceta({ navigation, plato }: any) {
     if (!result.canceled) setImagen(result.assets[0]);
   };
 
+
+
   // =================== Elegir opciones para la imagen (Galeria, Camara o Cancelar) ===================
   const elegirFuente = () => {
       Alert.alert("Agregar imagen", "¿De dónde quieres subir la foto?", [
@@ -65,6 +71,7 @@ export default function FormSubirReceta({ navigation, plato }: any) {
       { text: "Cancelar", style: "cancel" },
       ]);
   };
+
 
 
   // ================= Estados y funciones para agregar o eliminar ingredientes =================
@@ -88,17 +95,20 @@ export default function FormSubirReceta({ navigation, plato }: any) {
     return [""];
   });
 
+
   useEffect(() => {
       const ingredientes_validos = ingredientes.filter(i => i.trim() !== "");
       handleChange("ingredientes", JSON.stringify(
           ingredientes_validos.map((i, index) => `${index + 1}. ${i}`)
       ));
   }, [ingredientes]);
+
   
   // Crear un nuevo input para escribir un ingrediente
   const agregar_ingredientes = () => {
     setIngredientes([...ingredientes, ""]);
   };
+
 
   // Poder reescribir en un ingrediente
   const actualizar_ingrediente = (texto: string, index: number) => {
@@ -107,12 +117,14 @@ export default function FormSubirReceta({ navigation, plato }: any) {
     setIngredientes(nuevo);
   };
 
+
   // Eliminar ingrediente de las lista
   const eliminar_ingrediente = (index: number) => {
     const nuevo = [...ingredientes];  
     nuevo.splice(index, 1);           
     setIngredientes(nuevo);           
   };
+
 
 
   // ================= Estados para el dropdown de tiempo =================
@@ -123,6 +135,7 @@ export default function FormSubirReceta({ navigation, plato }: any) {
     { label: 'hr', value: 'h' },
     { label: 'min', value: 'min' }
   ]);
+
 
 
   // ================= Estados para el dropdown de dificultad =================
@@ -136,11 +149,13 @@ export default function FormSubirReceta({ navigation, plato }: any) {
   ]);
 
 
+
   // ================= Estados y Funciones para enviar el formulario a la otra vista =================
   // Estado del formulario 
   const [imagen_url, setImagen_url] = useState<string | null>(
       plato?.archivo && plato.archivo !== "" ? plato.archivo : null  
   );
+
 
   const [form, setForm] = useState({
       titulo: plato?.titulo ?? "",
@@ -151,10 +166,12 @@ export default function FormSubirReceta({ navigation, plato }: any) {
       dificultad: plato?.dificultad ?? "",
   });
 
+
   // Handle Change genérico 
   const handleChange = (campo: string, valor: string) => {
       setForm(prev => ({ ...prev, [campo]: valor }));
   };
+  
 
   const Enviar_Siguiente = async () => {
 

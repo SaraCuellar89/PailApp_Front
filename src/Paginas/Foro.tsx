@@ -13,7 +13,7 @@ import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 import Texto from "../Componentes/Texto";
 import { useFocusEffect } from "@react-navigation/native";
 
-// Tipos de los platos publicados
+// Interfaz de los platos
 interface Plato {
   publicacion_id: number,
   publicacion_titulo: string;
@@ -39,6 +39,7 @@ export default function Foro({ navigation, route }: any) {
   const { usuario } = authContext;
 
 
+
   // ================= Funciones y Estados para mostrar la notificaciones de exito =================
   const { plato_subido} = route.params ?? {};
 
@@ -57,14 +58,17 @@ export default function Foro({ navigation, route }: any) {
   }
 
 
+
   // ================= Estados para los filtros =================
   const [filtro, setFiltro] = useState<"recientes" | "antiguas" | "populares">("recientes");
+
 
 
   // ================= Funciones y estados para obtener todas los platos =================
   // Estado para guardar los platos
   const [platos, setPlatos] = useState<Plato[]>([]);
 
+  // Funcion para cargar todos los datos y actualizarlos cuando se reaccione o se guarde
   useFocusEffect(
     useCallback(() => {
       const Obtener_Todos_Platos = async () => {
@@ -84,6 +88,7 @@ export default function Foro({ navigation, route }: any) {
       Obtener_Todos_Platos();
     }, [usuario.token, filtro])
   );
+  
   
 
   return (
@@ -124,6 +129,7 @@ export default function Foro({ navigation, route }: any) {
               <>
                 {platos.map((p) => (
                   <PublicacionCard
+                    navigation={navigation}
                     key={p.publicacion_id}
                     id_publicacion={p.publicacion_id}
                     guardar_ejemplo={false}

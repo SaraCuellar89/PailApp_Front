@@ -142,7 +142,7 @@ export default function MisPlatoss({ navigation }: any) {
               </>
             ) : 
             (
-              <Texto>No hay platos guardados</Texto>
+              <Texto style={estilos_publicaciones.texto_vacio}>No hay platos guardados</Texto>
             )}
         </View>
 

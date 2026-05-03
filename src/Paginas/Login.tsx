@@ -1,18 +1,84 @@
-import React, { useState } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import React, { useContext, useState } from "react";
+import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../Componentes/Header";
 import Formu_Inicio from "../Componentes/Formu_Inicio";
-import estilos_global, { colores } from "../estilos_global";
+import { colores } from "../estilos_global";
 import Notificacion from "../Componentes/Notificacion";
 import estilos_publicaciones from "./css/publicaciones_css";
+import { AuthContext } from "../utils/Auth_Context";
+import { Mensaje_Toast } from "../utils/Mensaje_Toast";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login({ navigation, route }: any) {
+
+  // ================= Datos del usuario por un contexto difinido =================
+  const authContext = useContext(AuthContext);
+  if (!authContext) throw new Error("AuthContext no está disponible");
+  const { setUsuario } = authContext;
+
+
 
   // ================= Estados para mostrar registro exitoso =================
   const [mensaje_cerrar_sesion, setMensaje_cerrar_sesion] = useState(
       route.params?.registro_exitoso ?? false
   );
+
+
+
+  // ================= Estados para ver y ocultar contraseña =================
+  const [mostrar_contrasena, setMostrar_contrasena] = useState(false);
+
+
+
+  // ================= Funciones y estados para iniciar sesion de manera local =================
+  // Estado del formulario 
+  const [form, setForm] = useState({
+      correo: "",
+      contrasena: "",
+  });
+
+
+  // Handle Change genérico 
+  const handleChange = (campo: string, valor: string) => {
+      setForm(prev => ({ ...prev, [campo]: valor }));
+  };
+
+
+  // Envio de los datos
+  const Iniciar_Sesion = async () => {
+
+    // Validaciones
+    const { correo, contrasena } = form;
+    if (!correo || !contrasena) return Mensaje_Toast.error("Todos los campos son obligatorios");
+
+    const res = await fetch('http://35.174.135.238/usuarios/iniciar_sesion', {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(form)
+    });
+
+    const data = await res.json();
+
+    if(data.success === false) return Mensaje_Toast.info(data.message);
+
+    // Guardar la informacion del usuario
+    await AsyncStorage.setItem("usuario", JSON.stringify(data.data));
+    setUsuario(data.data);
+
+    if (data.data.altura == null || data.data.peso == null || data.data.edad == null) navigation.navigate("Datos_Adicionales");
+    else {
+      // Evita que el usuario se devuelva
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Chatbot" }],
+      });
+    }  
+  }
+
+
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
@@ -41,7 +107,14 @@ export default function Login({ navigation, route }: any) {
       >
         <View style={estilos_publicaciones.container}>
 
-          <Formu_Inicio/>
+          <Formu_Inicio
+            navigation={navigation}
+            form={form} 
+            handleChange={handleChange} 
+            mostrar_contrasena={mostrar_contrasena} 
+            setMostrar_contrasena={setMostrar_contrasena}
+            Iniciar_Sesion={Iniciar_Sesion}
+          />
 
         </View>
 

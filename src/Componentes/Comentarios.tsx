@@ -8,7 +8,6 @@ import Opciones from "./Opciones";
 import estilos_global from "../estilos_global";
 import { useContext } from "react";
 import { AuthContext } from "../utils/Auth_Context";
-import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 
 
 const Comentarios = ({Editar_Comentario, eliminar_comentario, setEliminar_comentario, id_comentario, avatar, nombre_usuario, fecha, contenido, contenido_respuesta, setcontenido_respuesta, Responder, total_respuestas, respuestas, id_usuario_comentario, setEliminar_respuesta, Editar_Respuesta}: any) => {
@@ -18,13 +17,17 @@ const Comentarios = ({Editar_Comentario, eliminar_comentario, setEliminar_coment
     if (!authContext) throw new Error("AuthContext no está disponible");
     const { usuario, setUsuario } = authContext;
 
+
     
     // ================= Variable para mostrar caja de oopciones dependiendo de si el usuario realizo el comentario =================
     const es_autor = usuario.id === id_usuario_comentario;
 
+
+
     // ================= Estados para abrir el input de responder y para abrir las respuestas del comentario =================
     const [formu_respuesta, setFormu_respuesta] = useState(false);
     const [caja_respuestas, setCaja_respuestas] = useState(false);
+
 
 
     // ================= Estados y funciones para abrir la caja de editar/eliminar y para abrir el input de editar comentario =================
@@ -38,10 +41,12 @@ const Comentarios = ({Editar_Comentario, eliminar_comentario, setEliminar_coment
     }, [editar]);
 
 
-     // ================= Estados para editar un comentario =================
-      const [comentario_editado, setComentario_editado] = useState(contenido);
+
+    // ================= Estados para editar un comentario =================
+    const [comentario_editado, setComentario_editado] = useState(contenido);
     
 
+    
     return(
         <View style={estilos_comentarios.contenedor}>
 
@@ -142,7 +147,7 @@ const Comentarios = ({Editar_Comentario, eliminar_comentario, setEliminar_coment
                 <>
                     {respuestas.length === 0 ? 
                     (
-                        <Texto style={estilos_comentarios.texto}>No hay respuestas</Texto>
+                        <Texto style={{textAlign: "center", marginVertical: 10, fontSize: 12}}>No hay respuestas</Texto>
                     ) : 
                     (
                         respuestas.map((r: any) => (

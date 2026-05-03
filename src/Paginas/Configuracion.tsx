@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import ConfiguracionOpciones from "../Componentes/ConfiguracionOpciones";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,13 +9,34 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../utils/Auth_Context";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 import ModalConfirmacion from "../Componentes/ModalConfirmacion";
+import Notificacion from "../Componentes/Notificacion";
 
-export default function Configuracion({navigation}: any) {
+export default function Configuracion({navigation, route}: any) {
 
   // ================= Datos del usuario por un contexto difinido =================
   const authContext = useContext(AuthContext);
   if (!authContext) throw new Error("AuthContext no está disponible");
   const { usuario, setUsuario } = authContext;
+
+
+
+  // ================= Funciones y Estados para mostrar la notificaciones de exito =================
+  const {cuenta_editada} = route.params ?? {};
+  const {contrasena_editada} = route.params ?? {};
+
+  const [notificacion_exito, setNotificacion_exito] = useState(false);
+  const [mensaje_notificacion, setMensaje_notificacion] = useState("");
+
+  useEffect(() => {
+    if (cuenta_editada) Mostrar_Notificacion("¡Cuenta editada!");
+    else if (contrasena_editada) Mostrar_Notificacion("¡Contraseña editada!");
+  }, [cuenta_editada]);
+  
+  const Mostrar_Notificacion = (mensaje: string) => {
+    setMensaje_notificacion(mensaje);
+    setNotificacion_exito(true);
+  }
+
 
 
   // ================= Estados para ver la notificacion o el modal de confirmacion =================
@@ -63,6 +84,15 @@ export default function Configuracion({navigation}: any) {
           onBack={() => navigation.goBack()} 
           /> 
       </View>
+
+      {/* Renderizado de notificacion de plato subido */}
+      {notificacion_exito && ( 
+          <Notificacion
+              mensaje={mensaje_notificacion}
+              onFinish={() => setNotificacion_exito(false)}
+              icono={require('../Img/icono-correcto.png')}
+          />
+      )}
 
       <ScrollView
           style={{ flex: 1, backgroundColor: '#000000' }}

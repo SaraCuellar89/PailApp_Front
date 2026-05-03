@@ -85,7 +85,7 @@ const Notificaciones = ({navigation}: any) => {
 
                     {notificaciones.length === 0 ? 
                     (
-                        <Texto>No tienes notificaciones</Texto>
+                        <Texto style={estilos_publicaciones.texto_vacio}>No tienes notificaciones</Texto>
                     ) : 
                     (
                         <>

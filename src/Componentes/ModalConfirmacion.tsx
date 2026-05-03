@@ -4,6 +4,7 @@ import { estilos_modal_confirmacion } from "./css/modal_confirmacion_css";
 import Texto from "./Texto";
 
 export default function ModalConfirmacion({texto, visible, confirmar, cancelar}: any) {
+  
   return (
     <Modal transparent visible={visible} animationType="fade">
       <View style={estilos_modal_confirmacion.overlay}>

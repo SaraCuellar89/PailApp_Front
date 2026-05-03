@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colores } from "../estilos_global";
 import Header from "../Componentes/Header";
@@ -71,8 +71,6 @@ const Perfil = ({ navigation, route }: any) => {
                 'Authorization': `Bearer ${usuario.token}`
                 }
             });
-
-            if(!res.ok) return console.log('Backend' + res.json());
 
             const data = await res.json();
 
@@ -149,7 +147,15 @@ const Perfil = ({ navigation, route }: any) => {
 
             {mis_platos.length === 0 ? 
             (
-                <Texto>¡Sube un plato!</Texto>
+                <View style={estilos_publicaciones.caja_vacio}>
+                    <Texto>¡Sube un plato!</Texto>
+                    <TouchableOpacity onPress={() => navigation.navigate('SubirReceta')}>
+                        <Image 
+                            source={require('../Img/icono-mas.png')} 
+                            style={estilos_publicaciones.img_vacio}
+                        />
+                    </TouchableOpacity>
+                </View>
             ) : 
             (
                 <Platos_Perfil

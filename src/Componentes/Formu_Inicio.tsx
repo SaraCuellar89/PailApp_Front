@@ -1,71 +1,10 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import { View, TouchableOpacity, TextInput, Image } from "react-native";
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Texto from "./Texto";
 import estilo_formu_inicio_sesion_css from "./css/formu_inicio_sesion_css"
 import estilos_global from "../estilos_global";
-import { Mensaje_Toast } from "../utils/Mensaje_Toast";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthContext } from "../utils/Auth_Context";
 
-const Formu_Inicio = () => {
-
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
-
-  // ================= Datos del usuario por un contexto difinido =================
-  const authContext = useContext(AuthContext);
-  if (!authContext) throw new Error("AuthContext no está disponible");
-  const { setUsuario } = authContext;
-
-  // ================= Estados para ver y ocultar contraseña =================
-  const [mostrar_contrasena, setMostrar_contrasena] = useState(false);
-
-  // ================= Funciones y estados para el inicio de sesion =================
-  // Estado del formulario 
-  const [form, setForm] = useState({
-      correo: "",
-      contrasena: "",
-  });
-
-  // Handle Change genérico 
-  const handleChange = (campo: string, valor: string) => {
-      setForm(prev => ({ ...prev, [campo]: valor }));
-  };
-
-  // Envio de los datos
-  const Iniciar_Sesion = async () => {
-
-    // Validaciones
-    const { correo, contrasena } = form;
-    if (!correo || !contrasena) return Mensaje_Toast.error("Todos los campos son obligatorios");
-
-    const res = await fetch('http://35.174.135.238/usuarios/iniciar_sesion', {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(form)
-    });
-
-    const data = await res.json();
-
-    if(data.success === false) return Mensaje_Toast.info(data.message);
-
-    // Guardar la informacion del usuario
-    await AsyncStorage.setItem("usuario", JSON.stringify(data.data));
-    setUsuario(data.data);
-
-    if (data.data.altura == null || data.data.peso == null || data.data.edad == null) navigation.navigate("Datos_Adicionales");
-    else {
-      // Evita que el usuario se devuelva
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "Chatbot" }],
-      });
-    }
-    
-  }
+const Formu_Inicio = ({navigation, form, handleChange, mostrar_contrasena, setMostrar_contrasena, Iniciar_Sesion}: any) => {
 
   return (
     <View style={estilo_formu_inicio_sesion_css.content}>

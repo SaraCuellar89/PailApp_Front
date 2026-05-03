@@ -5,6 +5,7 @@ import estilos_global, { colores } from "../estilos_global";
 import Texto from "./Texto";
 
 export default function Header({ title, onBack, navegar, icono }: any) {
+  
   return (
     <View style={[header_css.contenedor, { backgroundColor: colores.color_1 }, estilos_global.sombra_contenedor]}>
       {onBack && (
