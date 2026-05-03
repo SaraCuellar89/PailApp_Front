@@ -40,7 +40,8 @@
           "photosPermission": "La app necesita acceso a tu galería para subir fotos de recetas.",
           "cameraPermission": "La app necesita acceso a tu cámara para tomar fotos de recetas."
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "extra": {
       "eas": {

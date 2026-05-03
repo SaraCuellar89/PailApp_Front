@@ -4,7 +4,7 @@ import Texto from "./Texto";
 import estilo_formu_inicio_sesion_css from "./css/formu_inicio_sesion_css"
 import estilos_global from "../estilos_global";
 
-const Formu_Inicio = ({navigation, form, handleChange, mostrar_contrasena, setMostrar_contrasena, Iniciar_Sesion}: any) => {
+const Formu_Inicio = ({navigation, form, handleChange, mostrar_contrasena, setMostrar_contrasena, Iniciar_Sesion, Iniciar_Sesion_Google}: any) => {
 
   return (
     <View style={estilo_formu_inicio_sesion_css.content}>
@@ -61,7 +61,7 @@ const Formu_Inicio = ({navigation, form, handleChange, mostrar_contrasena, setMo
       </View>
 
       {/* --- Boton para Iniciar Sesion con Google --- */}
-      <TouchableOpacity style={estilo_formu_inicio_sesion_css.googleBtn}>
+      <TouchableOpacity style={estilo_formu_inicio_sesion_css.googleBtn} onPress={Iniciar_Sesion_Google}>
         <Texto>Continuar con Google</Texto>
       </TouchableOpacity>
 

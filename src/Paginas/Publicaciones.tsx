@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { View, ScrollView, KeyboardAvoidingView, Platform, Keyboard } from "react-native";
-import Header from "../Componentes/Header";
+import Header_Publicacion from "../Componentes/Header_Publicacion";
 import Notificacion from "../Componentes/Notificacion";
 import { colores } from "../estilos_global";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,6 +16,8 @@ import Texto from "../Componentes/Texto";
 // Interfaz de los platos
 interface Plato {
   publicacion_id: number;
+  autor_post_nombre: string;
+  autor_post_avatar: any;
   publicacion_titulo: string;
   publicacion_archivo: string;
   publicacion_descripcion: string;
@@ -73,6 +75,8 @@ export default function DetallePublicacion({ route, navigation }: any) {
     });
 
     const data = await res.json();
+
+    console.log(data)
 
     if(!data.success) return Mensaje_Toast.info(data.message);
 
@@ -270,9 +274,10 @@ export default function DetallePublicacion({ route, navigation }: any) {
     <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
 
       <View style={{backgroundColor: colores.color_2}}>
-        <Header 
-          title="Foro" 
+        <Header_Publicacion 
+          title={plato?.autor_post_nombre} 
           onBack={() => navigation.goBack()} 
+          icono={{ uri: plato?.autor_post_avatar }}
         /> 
       </View>
 

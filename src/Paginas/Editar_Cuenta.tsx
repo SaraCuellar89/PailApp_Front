@@ -18,7 +18,7 @@ export default function Editar_Cuenta({ navigation }: any) {
   if (!authContext) throw new Error("AuthContext no está disponible");
   const { usuario, setUsuario } = authContext;
 
-
+  console.log(usuario)
 
   // ================= Funciones y Estados para mostrar la notificaciones de exito =================
   const [notificacion_exito, setNotificacion_exito] = useState(false);
@@ -58,9 +58,9 @@ export default function Editar_Cuenta({ navigation }: any) {
     correo: usuario?.correo ?? "",
     avatar: usuario?.avatar ?? "",
     sexo: usuario?.sexo ?? "",
-    edad: usuario?.edad ?? "",
-    peso: usuario?.peso ?? "",
-    altura: usuario?.altura ?? "",
+    edad: usuario?.edad ? String(usuario.edad) : "",  
+    peso: usuario?.peso ? String(usuario.peso) : "",  
+    altura: usuario?.altura ? String(usuario.altura) : "", 
   });
 
 

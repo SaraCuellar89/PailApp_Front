@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../Componentes/Header";
@@ -9,6 +9,11 @@ import estilos_publicaciones from "./css/publicaciones_css";
 import { AuthContext } from "../utils/Auth_Context";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
+GoogleSignin.configure({
+  webClientId: '354612197459-c5q1pro6hi6nicq41lelu9ishds5a8qj.apps.googleusercontent.com',
+});
 
 export default function Login({ navigation, route }: any) {
 
@@ -80,6 +85,44 @@ export default function Login({ navigation, route }: any) {
 
 
 
+  // ================= Funciones y estados para iniciar sesion con google =================
+  const Iniciar_Sesion_Google = async () => {
+    await GoogleSignin.hasPlayServices();
+    await GoogleSignin.signOut(); 
+
+    const userInfo = await GoogleSignin.signIn();
+    const idToken = userInfo.data?.idToken;
+
+    if (!idToken) return Mensaje_Toast.info('Error al obtener token de Google');
+
+    const res = await fetch('http://35.174.135.238/usuarios/iniciar_sesion_google', {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ token: idToken })
+    });
+
+    const data = await res.json();
+
+    if(data.success === false) return Mensaje_Toast.info(data.message);
+
+    // Guardar la informacion del usuario
+    await AsyncStorage.setItem("usuario", JSON.stringify(data.data));
+    setUsuario(data.data);
+
+    if (data.data.altura == null || data.data.peso == null || data.data.edad == null) navigation.navigate("Datos_Adicionales");
+    else {
+      // Evita que el usuario se devuelva
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Chatbot" }],
+      });
+    }  
+  }
+
+
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
   
@@ -114,6 +157,7 @@ export default function Login({ navigation, route }: any) {
             mostrar_contrasena={mostrar_contrasena} 
             setMostrar_contrasena={setMostrar_contrasena}
             Iniciar_Sesion={Iniciar_Sesion}
+            Iniciar_Sesion_Google={Iniciar_Sesion_Google}
           />
 
         </View>

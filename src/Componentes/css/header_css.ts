@@ -37,6 +37,13 @@ const header_css = StyleSheet.create({
         width: 30,
         height: 30,
     },
+
+    autor_avatar: {
+        width: 35,
+        height: 35,
+        borderRadius: 50,
+        borderWidth: 2
+    }
 });
 
 export default header_css;
