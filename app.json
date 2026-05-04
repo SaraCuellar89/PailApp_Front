@@ -1,8 +1,6 @@
 {
   "expo": {
     "name": "PailApp",
-    "jsEngine": "hermes",
-    "developmentClient": false,
     "slug": "PailApp",
     "version": "1.0.0",
     "orientation": "portrait",
