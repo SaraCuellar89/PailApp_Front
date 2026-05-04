@@ -10,6 +10,7 @@ import { AuthContext } from "../utils/Auth_Context";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { obtener_token_fcm } from '../utils/Notificaciones';
 
 GoogleSignin.configure({
   webClientId: '354612197459-c5q1pro6hi6nicq41lelu9ishds5a8qj.apps.googleusercontent.com',
@@ -73,6 +74,19 @@ export default function Login({ navigation, route }: any) {
     await AsyncStorage.setItem("usuario", JSON.stringify(data.data));
     setUsuario(data.data);
 
+    const token_fcm = await obtener_token_fcm();
+
+    if (token_fcm) {
+      await fetch('http://35.174.135.238/tokenFCM/guardar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${data.data.token}`
+        },
+        body: JSON.stringify({ fcm_token: token_fcm })
+      });
+    }
+
     if (data.data.altura == null || data.data.peso == null || data.data.edad == null) navigation.navigate("Datos_Adicionales");
     else {
       // Evita que el usuario se devuelva
@@ -80,7 +94,7 @@ export default function Login({ navigation, route }: any) {
         index: 0,
         routes: [{ name: "Chatbot" }],
       });
-    }  
+    } 
   }
 
 
@@ -110,6 +124,19 @@ export default function Login({ navigation, route }: any) {
     // Guardar la informacion del usuario
     await AsyncStorage.setItem("usuario", JSON.stringify(data.data));
     setUsuario(data.data);
+
+    const token_fcm = await obtener_token_fcm();
+
+    if (token_fcm) {
+      await fetch('http://35.174.135.238/tokenFCM/guardar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${data.data.token}`
+        },
+        body: JSON.stringify({ fcm_token: token_fcm })
+      });
+    }
 
     if (data.data.altura == null || data.data.peso == null || data.data.edad == null) navigation.navigate("Datos_Adicionales");
     else {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts, JetBrainsMono_400Regular, JetBrainsMono_700Bold } from '@expo-google-fonts/jetbrains-mono';
@@ -29,6 +29,7 @@ import { Configuracion_Toast } from './src/utils/Configuracion_Toast';
 import Lista_Ingredientes from './src/Paginas/Lista_Ingredientes';
 import Editar_Cuenta from './src/Paginas/Editar_Cuenta';
 import Editar_Contrasena from './src/Paginas/Edtiar_Contrasena';
+import { escuchar_notificaciones, obtener_token_fcm } from './src/utils/Notificaciones';
 
 
 export type RootStackParamList = {
@@ -78,6 +79,14 @@ export default function App() {
     JetBrainsMono_400Regular,
     JetBrainsMono_700Bold,
   });
+
+
+  // Recibir notificaciones
+  useEffect(() => {
+    const unsubscribe = escuchar_notificaciones();
+    return () => unsubscribe();
+  }, []);
+
 
   if (!fuentes_cargadas) return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

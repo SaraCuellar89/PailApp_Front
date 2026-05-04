@@ -6,20 +6,22 @@
     "slug": "PailApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo-aplicacion.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/logo-aplicacion.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#FFDB0C"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.adso.PailApp"
+      "bundleIdentifier": "com.adso.PailApp",
+      "icon": "./assets/icon.png"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo-aplicacion.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFDB0C"
       },
       "package": "com.adso.PailApp",
@@ -33,6 +35,8 @@
     },
     "plugins": [
       "expo-build-properties",
+      "@react-native-firebase/app",
+      "@react-native-firebase/messaging",
       "expo-font",
       [
         "expo-image-picker",
