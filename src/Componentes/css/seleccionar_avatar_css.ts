@@ -1,3 +1,7 @@
+/**
+ * Modulo de estilos asociado a componentes reutilizables de la interfaz.
+ */
+
 import { Dimensions, StyleSheet } from "react-native";
 import { colores } from "../../estilos_global";
 

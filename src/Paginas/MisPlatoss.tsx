@@ -1,4 +1,8 @@
 import React, { useCallback, useContext, useState } from "react";
+/**
+ * Pantalla que muestra las publicaciones guardadas por el usuario y permite quitarlas de favoritos.
+ */
+
 import { View, ScrollView, TouchableOpacity } from "react-native";
 import ModalConfirmacion from "../Componentes/ModalConfirmacion";
 import Notificacion from "../Componentes/Notificacion"; 

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, KeyboardAvoidingView, Platform, ImageURISource, ImageSourcePropType } from "react-native";
+/**
+ * Pantalla de registro que integra el formulario y el selector modal de avatar.
+ */
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../Componentes/Header";
 import Formu_Registro from "../Componentes/Formu_Registro";

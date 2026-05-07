@@ -1,4 +1,7 @@
-import React from "react";
+/**
+ * Formulario de inicio de sesion con accesos a registro y entrada al chatbot.
+ */
+import React, { useContext, useState } from "react";
 import { View, TouchableOpacity, TextInput, Image } from "react-native";
 import Texto from "./Texto";
 import estilo_formu_inicio_sesion_css from "./css/formu_inicio_sesion_css"

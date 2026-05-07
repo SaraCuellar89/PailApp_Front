@@ -1,3 +1,7 @@
+/**
+ * Paleta y estilos compartidos en toda la aplicacion para mantener consistencia visual.
+ */
+
 import { StyleSheet } from 'react-native';
 
 export const colores = {

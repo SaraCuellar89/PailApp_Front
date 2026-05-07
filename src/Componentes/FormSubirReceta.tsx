@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from "react";
+/**
+ * Formulario para capturar titulo, descripcion e informacion de una receta antes de publicarla.
+ */
+
 import { View,TextInput,TouchableOpacity, Image, Alert, StyleSheet, Linking } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";

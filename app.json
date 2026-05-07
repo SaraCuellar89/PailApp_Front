@@ -43,6 +43,8 @@
       "@react-native-firebase/app",
       "@react-native-firebase/messaging",
       "expo-font",
+      "expo-speech-recognition",
+      "expo-audio",
       [
         "expo-image-picker",
         {

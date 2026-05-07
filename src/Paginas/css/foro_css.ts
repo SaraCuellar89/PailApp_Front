@@ -1,3 +1,7 @@
+/**
+ * Modulo de estilos exclusivo de una pantalla. Centraliza colores, espacios y distribucion visual.
+ */
+
 import { StyleSheet, Dimensions } from "react-native";
 import { colores } from "../../estilos_global";
 

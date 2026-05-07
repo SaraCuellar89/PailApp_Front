@@ -1,3 +1,7 @@
+/**
+ * Pantalla alternativa de conversacion del chatbot. Mantiene una estructura separada del flujo principal.
+ */
+
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import ChatBotConver from "../../Componentes/Chatbot/ChatbotConver";

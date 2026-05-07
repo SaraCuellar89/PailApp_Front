@@ -1,3 +1,7 @@
+/**
+ * Modulo de estilos exclusivo de una pantalla. Centraliza colores, espacios y distribucion visual.
+ */
+
 import { StyleSheet, Dimensions } from "react-native";
 
 const { height, width } = Dimensions.get('window');
