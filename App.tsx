@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
  * Aqui se cargan las fuentes, se montan los providers globales
  * y se declara el stack de navegacion completo.
  */
-import React from 'react';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts, JetBrainsMono_400Regular, JetBrainsMono_700Bold } from '@expo-google-fonts/jetbrains-mono';
