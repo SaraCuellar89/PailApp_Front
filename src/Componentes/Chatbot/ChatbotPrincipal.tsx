@@ -4,7 +4,7 @@
  * la reproduccion de voz, la transcripcion del microfono
  * y la transicion visual entre modo chat y modo voz.
  */
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState, useContext } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -26,12 +26,14 @@ import { API_BASE_URL } from "../../../config/api";
 import ChatbotVoz from "./ChatbotVoz";
 import ChatbotUsageBar from "./ChatbotUsageBar";
 import { chatbotPrincipalStyles as styles } from "../../Estilos/Chatbot/ChatbotPrincipal";
+import { AuthContext } from "../../utils/Auth_Context";
 
 let speechRecognitionModule: any = null;
 
 try {
   // Se carga de forma segura porque este modulo puede no existir en algunas builds.
-  speechRecognitionModule = require("expo-speech-recognition").ExpoSpeechRecognitionModule;
+  speechRecognitionModule =
+    require("expo-speech-recognition").ExpoSpeechRecognitionModule;
 } catch {
   speechRecognitionModule = null;
 }
@@ -69,6 +71,37 @@ export default function ChatbotPrincipal({
 }: ChatbotPrincipalProps) {
   const route = useRoute<any>();
   const { width, height } = useWindowDimensions();
+
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    throw new Error("AuthContext no está disponible");
+  }
+
+const { usuario, cargando } = authContext!
+
+// Pantalla de carga mientras AsyncStorage no ha terminado
+if (cargando) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.loadingText}>Cargando sesión...</Text>
+    </View>
+  )
+}
+
+// Bloquea si no hay usuario o si el objeto no tiene id
+const idUsuario: number | null =
+  usuario?.idusuario ?? usuario?.id ?? usuario?.idUsuario ?? null
+
+if (!idUsuario) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.loadingText}>
+        Inicia sesión para usar el asistente.
+      </Text>
+    </View>
+  )
+}
+
   const scrollRef = useRef<ScrollView | null>(null);
   const soundRef = useRef<ReturnType<typeof createAudioPlayer> | null>(null);
   const lastAudioUriRef = useRef<string | null>(null);
@@ -76,6 +109,7 @@ export default function ChatbotPrincipal({
   const initialMessageRef = useRef<string | null>(
     route.params?.mensajeInicial?.trim() || null,
   );
+
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [focusProgress, setFocusProgress] = useState(0);
@@ -110,6 +144,7 @@ export default function ChatbotPrincipal({
   const chatHidden = voiceMode || focusProgress > 0.82;
   const chatOpacity = clamp(1 - focusProgress * 1.35, 0, 1);
   const speechRecognitionAvailable = Boolean(speechRecognitionModule);
+
   const usedTokens = useMemo(
     () =>
       messages.reduce(
@@ -125,7 +160,7 @@ export default function ChatbotPrincipal({
     Math.floor(remainingTokens / TOKENS_PER_INTERACTION),
   );
 
-  // Estas utilidades permiten actualizar el mensaje del asistente mientras llega el stream.
+  // Actualizar contenido de mensajes durante stream
   const replaceMessageContent = (id: string, content: string) => {
     setMessages((prev) =>
       prev.map((msg) => (msg.id === id ? { ...msg, content } : msg)),
@@ -145,12 +180,18 @@ export default function ChatbotPrincipal({
     if (!soundRef.current) return;
 
     try {
-      // Se limpia el reproductor anterior para evitar audios superpuestos.
       soundRef.current.pause();
       soundRef.current.remove();
     } catch {}
 
     soundRef.current = null;
+  };
+
+  const playAudioFromUri = async (audioUri: string) => {
+    await stopAudio();
+    const sound = createAudioPlayer({ uri: audioUri });
+    sound.play();
+    soundRef.current = sound;
   };
 
   const speakText = async (text: string) => {
@@ -159,7 +200,6 @@ export default function ChatbotPrincipal({
 
     await stopAudio();
 
-    // Convierte la respuesta del asistente a voz llamando el endpoint TTS del backend.
     const response = await fetch(`${API_BASE_URL}/api/tts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -187,28 +227,19 @@ export default function ChatbotPrincipal({
     await playAudioFromUri(fileUri);
   };
 
-  const playAudioFromUri = async (audioUri: string) => {
-    // Siempre se reinicia el reproductor para que el audio empiece desde cero.
-    await stopAudio();
-
-    const sound = createAudioPlayer({ uri: audioUri });
-    sound.play();
-    soundRef.current = sound;
-  };
-
   const replayLastAudio = async () => {
     const lastAudioUri = lastAudioUriRef.current;
     if (!lastAudioUri || loading) return;
-
     await playAudioFromUri(lastAudioUri);
   };
 
+  // ----------- Llamadas al backend de chat -----------
+
   const requestChatNonStream = async (mensaje: string) => {
-    // Fallback: se usa si el stream falla o no esta disponible.
     const response = await fetch(`${API_BASE_URL}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ mensaje, tipoUsuario: "free" }),
+      body: JSON.stringify({ mensaje, idUsuario }),
     });
 
     const rawBody = await response.text();
@@ -234,11 +265,13 @@ export default function ChatbotPrincipal({
     assistantId: string,
     onFirstChunk?: () => void,
   ) => {
-    // Intenta mostrar la respuesta del asistente en tiempo real.
     const response = await fetch(`${API_BASE_URL}/api/chat/stream`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ mensaje, tipoUsuario: "free" }),
+      body: JSON.stringify({
+        mensaje,
+        idUsuario: usuario.id_usuario,
+      }),
     });
 
     if (!response.ok) throw new Error("Streaming no disponible");
@@ -263,7 +296,6 @@ export default function ChatbotPrincipal({
         stream: !doneReading,
       });
 
-      // El backend responde como Server-Sent Events: cada bloque termina en doble salto de linea.
       let separatorIndex = buffer.indexOf("\n\n");
       while (separatorIndex !== -1) {
         const rawEvent = buffer.slice(0, separatorIndex);
@@ -296,7 +328,6 @@ export default function ChatbotPrincipal({
             if (delta) {
               if (!firstChunk) {
                 firstChunk = true;
-                // Se usa para ocultar el loader apenas llega la primera parte del texto.
                 onFirstChunk?.();
               }
               fullText += delta;
@@ -322,6 +353,8 @@ export default function ChatbotPrincipal({
     return finalText;
   };
 
+  // ---------------------------------------------------------------------------
+
   const stopListening = () => {
     if (!speechRecognitionModule) return;
     speechRecognitionModule.stop();
@@ -338,7 +371,6 @@ export default function ChatbotPrincipal({
       return;
     }
 
-    // Primero se valida el permiso del microfono para evitar fallos silenciosos.
     const permission = await speechRecognitionModule.requestPermissionsAsync();
     if (!permission.granted) {
       setSpeechError("Debes permitir el uso del microfono para transcribir.");
@@ -352,7 +384,6 @@ export default function ChatbotPrincipal({
       return;
     }
 
-    // Al entrar en modo voz se vacia la transcripcion previa y se inicia el reconocimiento.
     setVoiceMode(true);
     setLiveTranscript("");
     speechRecognitionModule.start({
@@ -365,7 +396,6 @@ export default function ChatbotPrincipal({
   };
 
   const toggleVoiceMode = () => {
-    // El mismo boton abre o cierra el modo voz segun el estado actual.
     if (voiceMode) {
       if (isListening) {
         stopListening();
@@ -393,7 +423,6 @@ export default function ChatbotPrincipal({
     const userMessage = createMessage("user", mensaje);
     const assistantPlaceholder = createMessage("assistant", "");
 
-    // Se agrega un placeholder vacio del asistente para rellenarlo con stream o fallback.
     setMessages((prev) => [...prev, userMessage, assistantPlaceholder]);
     setInput("");
     setLiveTranscript("");
@@ -403,21 +432,17 @@ export default function ChatbotPrincipal({
       let respuestaFinal = "";
 
       try {
-        // Si el backend soporta streaming, el texto aparece progresivamente en pantalla.
         respuestaFinal = await requestChatStream(
           mensaje,
           assistantPlaceholder.id,
-          () =>
-          setLoading(false),
+          () => setLoading(false),
         );
       } catch {
-        // Si el stream falla, se pide la respuesta completa de forma tradicional.
         respuestaFinal = await requestChatNonStream(mensaje);
         replaceMessageContent(assistantPlaceholder.id, respuestaFinal);
       }
 
       await speakText(respuestaFinal);
-      // Se guarda el ultimo mensaje hablado para permitir reproduccion manual si se necesita.
       lastSpokenMessageIdRef.current = assistantPlaceholder.id;
     } catch (error: any) {
       replaceMessageContent(
@@ -434,7 +459,6 @@ export default function ChatbotPrincipal({
     let startValue = focusProgress;
 
     return PanResponder.create({
-      // El gesto vertical controla la transicion entre chat compacto y robot expandido.
       onStartShouldSetPanResponder: () => !voiceMode,
       onMoveShouldSetPanResponder: (_, gestureState) =>
         !voiceMode && Math.abs(gestureState.dy) > Math.abs(gestureState.dx),
@@ -442,7 +466,6 @@ export default function ChatbotPrincipal({
         startValue = focusProgress;
       },
       onPanResponderMove: (_, gestureState) => {
-        // El progreso se traduce en tamano del robot y visibilidad del panel de chat.
         const next = startValue + -gestureState.dy / 220;
         setFocusProgress(clamp(next, 0, 1));
       },
@@ -455,7 +478,6 @@ export default function ChatbotPrincipal({
   }, [focusProgress, voiceMode]);
 
   useEffect(() => {
-    // Permite reproducir audio aunque el telefono este en modo silencio.
     setAudioModeAsync({
       playsInSilentMode: true,
       shouldPlayInBackground: false,
@@ -463,7 +485,6 @@ export default function ChatbotPrincipal({
   }, []);
 
   useEffect(() => {
-    // Si la pantalla recibe un mensaje inicial por navegacion, lo envia una sola vez.
     const initialMessage = initialMessageRef.current;
     if (!initialMessage) return;
     initialMessageRef.current = null;
@@ -479,14 +500,12 @@ export default function ChatbotPrincipal({
   }, [initialVoiceMode, speechRecognitionAvailable]);
 
   useEffect(() => {
-    // Mantiene visible el ultimo mensaje cada vez que cambia la conversacion.
     scrollRef.current?.scrollToEnd({ animated: true });
   }, [messages, loading]);
 
   useEffect(() => {
     if (!speechRecognitionModule) return;
 
-    // Sincroniza el estado de React con los eventos nativos del reconocimiento de voz.
     const subscriptions: NativeEventSubscription[] = [
       speechRecognitionModule.addListener("start", () => {
         setIsListening(true);
@@ -496,7 +515,6 @@ export default function ChatbotPrincipal({
         setIsListening(false);
       }),
       speechRecognitionModule.addListener("result", (event: any) => {
-        // La transcripcion parcial se refleja tanto en el panel de voz como en el input.
         const nextTranscript = event.results
           ?.map((item: any) => item.transcript)
           .join(" ")
@@ -521,7 +539,6 @@ export default function ChatbotPrincipal({
 
   useEffect(() => {
     return () => {
-      // Limpieza final para no dejar audio vivo al salir de la pantalla.
       stopAudio();
     };
   }, []);
@@ -534,7 +551,6 @@ export default function ChatbotPrincipal({
     >
       <View style={styles.content}>
         {voiceMode ? (
-          // La vista de voz vive en un componente aparte para mantener separada esa experiencia.
           <ChatbotVoz
             expandedMode={expandedMode}
             voiceMode={voiceMode}
@@ -561,7 +577,6 @@ export default function ChatbotPrincipal({
                 styles={styles}
               />
 
-              {/* El robot funciona como elemento visual y tambien como zona gestual. */}
               <Text
                 style={[styles.gestureHint, expandedMode && styles.hiddenHint]}
               >
@@ -579,7 +594,6 @@ export default function ChatbotPrincipal({
               />
             </View>
 
-            {/* El chat se va ocultando a medida que el robot ocupa mas espacio. */}
             <View
               style={[styles.chatBox, { width: chatWidth, opacity: chatOpacity }]}
             >
@@ -670,10 +684,11 @@ export default function ChatbotPrincipal({
       </View>
 
       <View style={styles.inputContainer}>
-        {/* El input sirve tanto para escribir como para reflejar la transcripcion detectada. */}
         <TextInput
           style={[styles.input, voiceMode && styles.inputVoiceMode]}
-          placeholder={voiceMode ? "Tu voz aparecera aqui..." : "Escribe tu mensaje..."}
+          placeholder={
+            voiceMode ? "Tu voz aparecera aqui..." : "Escribe tu mensaje..."
+          }
           placeholderTextColor="#666"
           value={input}
           onChangeText={setInput}

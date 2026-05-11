@@ -1,43 +1,50 @@
-// ================= Automatizar el guardado y lectura de los datos del usuario en sesion =================
+import React, { createContext, useState, useEffect, ReactNode } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import React, { createContext, useState, useEffect, ReactNode } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-type Usuario = any;
+type Usuario = Record<string, any> | null
 
 type AuthContextType = {
-    usuario: Usuario | null;
-    setUsuario: (user: Usuario | null) => void;
-    cargando: boolean;
-};
+  usuario: Usuario
+  setUsuario: (user: Usuario) => void
+  cargando: boolean
+  logout: () => Promise<void>
+}
 
-export const AuthContext = createContext<AuthContextType | null>(null);
+export const AuthContext = createContext<AuthContextType | null>(null)
 
-type Props = {
-    children: ReactNode;
-};
+type Props = { children: ReactNode }
 
 export const AuthProvider = ({ children }: Props) => {
-    const [usuario, setUsuario] = useState<Usuario | null>(null);
-    const [cargando, setLoading] = useState(true);
+  const [usuario, setUsuarioState] = useState<Usuario>(null)
+  const [cargando, setCargando] = useState(true)
 
-    const cargarUsuario = async () => {
-        const info_usuario = await AsyncStorage.getItem("usuario");
+  const cargarUsuario = async () => {
+    try {
+      const info = await AsyncStorage.getItem('usuario')
+      if (info) setUsuarioState(JSON.parse(info))
+    } catch (_) {}
+    setCargando(false)
+  }
 
-        if (info_usuario) {
-        setUsuario(JSON.parse(info_usuario));
-        }
+  const setUsuario = async (user: Usuario) => {
+    setUsuarioState(user)
+    if (user) {
+      await AsyncStorage.setItem('usuario', JSON.stringify(user))
+    } else {
+      await AsyncStorage.removeItem('usuario')
+    }
+  }
 
-        setLoading(false);
-    };
+  const logout = async () => {
+    setUsuarioState(null)
+    await AsyncStorage.removeItem('usuario')
+  }
 
-    useEffect(() => {
-        cargarUsuario();
-    }, []);
+  useEffect(() => { cargarUsuario() }, [])
 
-    return (
-        <AuthContext.Provider value={{ usuario, setUsuario, cargando }}>
-            {children}
-        </AuthContext.Provider>
-    );
-};
+  return (
+    <AuthContext.Provider value={{ usuario, setUsuario, cargando, logout }}>
+      {children}
+    </AuthContext.Provider>
+  )
+}
