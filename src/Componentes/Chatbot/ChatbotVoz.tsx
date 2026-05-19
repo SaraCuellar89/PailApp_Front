@@ -1,42 +1,83 @@
+/**
+ * Vista simplificada del chatbot cuando la experiencia esta centrada en voz.
+ * Se encarga de mostrar el robot, el estado del microfono y la transcripcion en vivo.
+ */
 import React from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { styles } from "../../Estilos/Chatbot/Chatbotvoz";
+import { Image, PanResponderInstance, Text, View } from "react-native";
+import { chatbotVozStyles as styles } from "../../Estilos/Chatbot/ChatbotVoz";
+import ChatbotUsageBar from "./ChatbotUsageBar";
 
-export default function ChatVoz() {
+type ChatbotVozProps = {
+  expandedMode: boolean;
+  voiceMode: boolean;
+  isListening: boolean;
+  liveTranscript: string;
+  speechError: string;
+  robotSize: number;
+  panHandlers: PanResponderInstance["panHandlers"];
+  usageProgress: number;
+  remainingInteractions: number;
+};
 
-  const navigation = useNavigation<any>();
+const formatTranscript = (transcript: string) =>
+  transcript.trim() || "Empieza a hablar, te estoy escuchando...";
 
+export default function ChatbotVoz({
+  expandedMode,
+  voiceMode,
+  isListening,
+  liveTranscript,
+  speechError,
+  robotSize,
+  panHandlers,
+  usageProgress,
+  remainingInteractions,
+}: ChatbotVozProps) {
   return (
-    <View style={styles.container}>
+    <>
+      <View
+        style={[
+          styles.robotGestureArea,
+          expandedMode && styles.robotGestureAreaExpanded,
+        ]}
+        {...panHandlers}
+      >
+        <ChatbotUsageBar
+          progress={usageProgress}
+          remainingInteractions={remainingInteractions}
+          styles={styles}
+        />
 
-      <View style={styles.statusBar}>
-        <Text style={{ color: "#fff" }}>Escuchando...</Text>
-      </View>
+        {/* El mismo gesto sirve para expandir o contraer el personaje cuando no esta fijo en voz. */}
+        <Text style={[styles.gestureHint, expandedMode && styles.hiddenHint]}>
+          {voiceMode
+            ? "Habla y veras tu mensaje en vivo"
+            : "Desliza el personaje hacia arriba o abajo"}
+        </Text>
 
-      <View style={styles.content}>
         <Image
-          source={require("../../Img/robotito2.png")}
-          style={styles.robot}
+          source={require("../../Img/robotito1.png")}
+          style={[
+            styles.robot,
+            expandedMode && styles.robotExpanded,
+            voiceMode && styles.robotVoiceMode,
+            { width: robotSize, height: robotSize * 0.78 },
+          ]}
           resizeMode="contain"
         />
-
-        <TouchableOpacity>
-        <Image
-          source={require("../../Img/icono-micro.png")}
-          style={{ width: 80, height: 80 }}
-        />
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate("Chatbot")} >
-            <Image
-          source={require("../../Img/icono-teclado.png")}
-          style={{ width: 80, height: 80, margin: 30 }}
-        />
-            </TouchableOpacity>
       </View>
 
-    </View>
+      <View style={styles.voicePanel}>
+        <Text style={styles.voiceStatus}>
+          {isListening ? "Escuchando..." : "Microfono listo"}
+        </Text>
+        <Text style={styles.voiceTranscript}>
+          {formatTranscript(liveTranscript)}
+        </Text>
+        {speechError ? (
+          <Text style={styles.voiceError}>{speechError}</Text>
+        ) : null}
+      </View>
+    </>
   );
 }
-

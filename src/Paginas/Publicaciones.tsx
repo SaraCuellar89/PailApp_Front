@@ -12,6 +12,7 @@ import ModalConfirmacion from "../Componentes/ModalConfirmacion";
 import { AuthContext } from "../utils/Auth_Context";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 import Texto from "../Componentes/Texto";
+import Imagen_Completa from "../Componentes/Imagen_Completa";
 
 // Interfaz de los platos
 interface Plato {
@@ -69,21 +70,24 @@ export default function DetallePublicacion({ route, navigation }: any) {
 
   // Funcion para la informacion del plato
   const Obtener_Info_Plato = async () => {
-    const res = await fetch(`http://35.174.135.238/publicaciones/una/${id_publicacion}`, {
-      method: 'GET',
-      headers: { 'Authorization': `Bearer ${usuario.token}` }
-    });
+    try {
+      const res = await fetch(`http://35.174.135.238/publicaciones/una/${id_publicacion}`, {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${usuario.token}` }
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    console.log(data)
+      if(!data.success) return Mensaje_Toast.info(data.message);
 
-    if(!data.success) return Mensaje_Toast.info(data.message);
-
-    setPlato(data.data.publicacion);
-    setTotal_reacciones(data.data.total_reacciones);
-    setComentarios(data.data.comentarios);
-    setTotal_comentarios(data.data.total_comentarios);
+      setPlato(data.data.publicacion);
+      setTotal_reacciones(data.data.total_reacciones);
+      setComentarios(data.data.comentarios);
+      setTotal_comentarios(data.data.total_comentarios);
+    } catch (error) {
+      console.error('Error obteniendo la informacion del plato:', error);
+      Mensaje_Toast.error('No se pudo obtener la informacion del plato');
+    }
   };
 
   // Llamar la funcion y recargar la informacion
@@ -92,6 +96,14 @@ export default function DetallePublicacion({ route, navigation }: any) {
     Obtener_Info_Plato();
   }, [refetch]);
 
+
+
+  // ================= Funciones y estados para visualizar la imagen completa de una publicacion =================
+  const [imagen_seleccionada, setImagen_seleccionada] = useState<string | null>(null);
+  
+  const Mostrar_Imagen = (archivo: string) => {
+    setImagen_seleccionada(archivo);
+  }
 
 
 
@@ -106,58 +118,66 @@ export default function DetallePublicacion({ route, navigation }: any) {
 
   // Funcion para enviar los datos a la bbdd
   const Comentar = async () => {
+    try {
+      // Validaciones
+      if(!contenido.trim()) return Mensaje_Toast.error("El comentario no puede estar vacio");
 
-    // Validaciones
-    if(!contenido.trim()) return Mensaje_Toast.error("El comentario no puede estar vacio");
+      const ahora = new Date();
+      const fecha_creacion = ahora.toISOString().slice(0, 19).replace("T", " ");
+      
+      const res = await fetch(`http://35.174.135.238/comentarios/subir/${id_publicacion}`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${usuario.token}`
+        },
+        body: JSON.stringify({contenido, fecha_creacion})
+      });
 
-    const ahora = new Date();
-    const fecha_creacion = ahora.toISOString().slice(0, 19).replace("T", " ");
-    
-    const res = await fetch(`http://35.174.135.238/comentarios/subir/${id_publicacion}`, {
-      method: "POST",
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${usuario.token}`
-      },
-      body: JSON.stringify({contenido, fecha_creacion})
-    });
+      const data = await res.json();
 
-    const data = await res.json();
+      if(!data.success) return Mensaje_Toast.info(data.message);
 
-    if(!data.success) return Mensaje_Toast.info(data.message);
+      Keyboard.dismiss();
+      setcontenido("");
+      Mostrar_Notificacion("¡Comentario hecho!");
 
-    Keyboard.dismiss();
-    setcontenido("");
-    Mostrar_Notificacion("¡Comentario hecho!");
-
-    setRefetch(prev => prev + 1);
+      setRefetch(prev => prev + 1);
+    } catch (error) {
+      console.error('Error subiendo el comentario:', error);
+      Mensaje_Toast.error('No se pudo subir el comentario');
+    }
   }
 
 
   // ================= Funciones y estados para editar un comentario =================
   const Editar_Comentario = async (id_comentario: number, nuevo_comentario: string) => {
+    try {
+      // Validaciones
+      if(!nuevo_comentario.trim()) return Mensaje_Toast.error("El comentario no puede estar vacio");
 
-    // Validaciones
-    if(!nuevo_comentario.trim()) return Mensaje_Toast.error("El comentario no puede estar vacio");
+      const res = await fetch(`http://35.174.135.238/comentarios/editar/${id_comentario}`, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${usuario.token}`
+        },
+        body: JSON.stringify({contenido: nuevo_comentario})
+      });
 
-    const res = await fetch(`http://35.174.135.238/comentarios/editar/${id_comentario}`, {
-      method: "PUT",
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${usuario.token}`
-      },
-      body: JSON.stringify({contenido: nuevo_comentario})
-    });
+      const data = await res.json();
 
-    const data = await res.json();
+      if(!data.success) return Mensaje_Toast.info(data.message);
 
-    if(!data.success) return Mensaje_Toast.info(data.message);
+      Keyboard.dismiss();
+      setcontenido("");
+      Mostrar_Notificacion("¡Comentario editado!");
 
-    Keyboard.dismiss();
-    setcontenido("");
-    Mostrar_Notificacion("¡Comentario editado!");
-
-    setRefetch(prev => prev + 1);
+      setRefetch(prev => prev + 1);
+    } catch (error) {
+      console.error('Error editando el comentario:', error);
+      Mensaje_Toast.error('No se pudo editar el comentario');
+    }
   }
 
 
@@ -165,20 +185,25 @@ export default function DetallePublicacion({ route, navigation }: any) {
   const [id_comentario, setId_comentario] = useState<number | null>(null);
 
   const Eliminar_Comentario = async () => {
-    const res = await fetch(`http://35.174.135.238/comentarios/eliminar/${id_comentario}`, {
-      method: "DELETE",
-      headers: {
-          'Authorization': `Bearer ${usuario.token}`
-      }
-    });
+    try {
+      const res = await fetch(`http://35.174.135.238/comentarios/eliminar/${id_comentario}`, {
+        method: "DELETE",
+        headers: {
+            'Authorization': `Bearer ${usuario.token}`
+        }
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if(!data.success) return Mensaje_Toast.info(data.message);
+      if(!data.success) return Mensaje_Toast.info(data.message);
 
-    Mostrar_Notificacion("Comentario eliminado");
+      Mostrar_Notificacion("Comentario eliminado");
 
-    setRefetch(prev => prev + 1);
+      setRefetch(prev => prev + 1);
+    } catch (error) {
+      console.error('Error eliminado el comentario:', error);
+      Mensaje_Toast.error('No se pudo eliminar el comentario');
+    }
   }
 
 
@@ -194,57 +219,65 @@ export default function DetallePublicacion({ route, navigation }: any) {
 
   // Funcion para enviar los datos a la bbdd
   const Responder = async (id_comentario: number) => {
+    try {
+      // Validaciones
+      if(!contenido_respuesta.trim()) return Mensaje_Toast.error("La respuesta no puede estar vacia");
 
-    // Validaciones
-    if(!contenido_respuesta.trim()) return Mensaje_Toast.error("La respuesta no puede estar vacia");
+      const ahora = new Date();
+      const fecha_creacion = ahora.toISOString().slice(0, 19).replace("T", " ");
+      
+      const res = await fetch(`http://35.174.135.238/respuestas/contestar/${id_comentario}`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${usuario.token}`
+        },
+        body: JSON.stringify({contenido: contenido_respuesta, fecha_creacion})
+      });
 
-    const ahora = new Date();
-    const fecha_creacion = ahora.toISOString().slice(0, 19).replace("T", " ");
-    
-    const res = await fetch(`http://35.174.135.238/respuestas/contestar/${id_comentario}`, {
-      method: "POST",
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${usuario.token}`
-      },
-      body: JSON.stringify({contenido: contenido_respuesta, fecha_creacion})
-    });
+      const data = await res.json();
 
-    const data = await res.json();
+      if(!data.success) return Mensaje_Toast.info(data.message);
 
-    if(!data.success) return Mensaje_Toast.info(data.message);
+      Keyboard.dismiss();
+      setcontenido_respuesta("");
+      Mostrar_Notificacion("¡Respuesta hecha!");
 
-    Keyboard.dismiss();
-    setcontenido_respuesta("");
-    Mostrar_Notificacion("¡Respuesta hecha!");
-
-    setRefetch(prev => prev + 1);
+      setRefetch(prev => prev + 1);
+    } catch (error) {
+      console.error('Error respondiendo al comentario:', error);
+      Mensaje_Toast.error('No se pudo responder al comentario');
+    }
   }
 
 
   // ================= Funciones y estados para editar una respuesta =================
   const Editar_Respuesta = async (id_respuesta: number, nueva_respuesta: string) => {
+    try {
+      // Validaciones
+      if(!nueva_respuesta.trim()) return Mensaje_Toast.error("La respuesta no puede estar vacia");
 
-    // Validaciones
-    if(!nueva_respuesta.trim()) return Mensaje_Toast.error("La respuesta no puede estar vacia");
+      const res = await fetch(`http://35.174.135.238/respuestas/editar/${id_respuesta}`, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${usuario.token}`
+        },
+        body: JSON.stringify({contenido: nueva_respuesta})
+      });
 
-    const res = await fetch(`http://35.174.135.238/respuestas/editar/${id_respuesta}`, {
-      method: "PUT",
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${usuario.token}`
-      },
-      body: JSON.stringify({contenido: nueva_respuesta})
-    });
-
-    const data = await res.json();
-    
-    if(!data.success) return Mensaje_Toast.info(data.message);
-    
-    Keyboard.dismiss();
-    Mostrar_Notificacion("¡Respuesta editada!");
-    
-    setRefetch(prev => prev + 1);
+      const data = await res.json();
+      
+      if(!data.success) return Mensaje_Toast.info(data.message);
+      
+      Keyboard.dismiss();
+      Mostrar_Notificacion("¡Respuesta editada!");
+      
+      setRefetch(prev => prev + 1);
+    } catch (error) {
+      console.error('Error editando la respuesta:', error);
+      Mensaje_Toast.error('No se pudo editar la respuesta');
+    }
   }
 
 
@@ -252,20 +285,25 @@ export default function DetallePublicacion({ route, navigation }: any) {
   const [id_respuesta, setId_respuesta] = useState<number | null>(null);
 
   const Eliminar_Respuesta = async () => {
-    const res = await fetch(`http://35.174.135.238/respuestas/eliminar/${id_respuesta}`, {
-      method: "DELETE",
-      headers: {
-          'Authorization': `Bearer ${usuario.token}`
-      }
-    });
+    try {
+      const res = await fetch(`http://35.174.135.238/respuestas/eliminar/${id_respuesta}`, {
+        method: "DELETE",
+        headers: {
+            'Authorization': `Bearer ${usuario.token}`
+        }
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if(!data.success) return Mensaje_Toast.info(data.message);
+      if(!data.success) return Mensaje_Toast.info(data.message);
 
-    Mostrar_Notificacion("Respuesta eliminada");
+      Mostrar_Notificacion("Respuesta eliminada");
 
-    setRefetch(prev => prev + 1);
+      setRefetch(prev => prev + 1);
+    } catch (error) {
+      console.error('Error eliminando la respuesta:', error);
+      Mensaje_Toast.error('No se pudo eliminar la respuesta');
+    }
   }
 
 
@@ -290,6 +328,13 @@ export default function DetallePublicacion({ route, navigation }: any) {
           />
       )}
 
+      {imagen_seleccionada && (
+        <Imagen_Completa
+            imagen={imagen_seleccionada}
+            Cerrar_Imagen={() => setImagen_seleccionada(null)}
+        />
+      )}
+
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -306,6 +351,8 @@ export default function DetallePublicacion({ route, navigation }: any) {
 
             {plato && (
               <PublicacionCard
+                navigation={navigation} 
+                
                 key={plato.publicacion_id}
                 id_publicacion={plato.publicacion_id}
                 titulo={plato.publicacion_titulo}
@@ -323,6 +370,8 @@ export default function DetallePublicacion({ route, navigation }: any) {
                 SetNotificacion_reaccion={() => Mostrar_Notificacion("¡Reacción agregada!")}
                 guardado_inicial={plato.ya_guardo}
                 Setnotificacion_guardado={() => Mostrar_Notificacion("¡Receta guardada!")}
+
+                Mostrar_Imagen={Mostrar_Imagen}
               />
             )}
 

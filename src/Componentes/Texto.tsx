@@ -1,3 +1,7 @@
+/**
+ * Wrapper de Text que unifica la tipografia usada en la aplicacion.
+ */
+
 // Componente necesario para que se aplique la misma tipografia en toda la aplicacion
 
 import React from 'react';

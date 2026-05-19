@@ -50,72 +50,76 @@ const Descripcion = ({route, navigation}: Props) => {
 
     // Enviar formulario a la bbdd
     const Subir_Plato = async () => {
+        try {
+            // ----- Validaciones -----
+            const campos = [
+                { nombre: "Título", valor: form.descripcion },
+                { nombre: "Tiempo aprox. de preparación",valor: form.preparacion }
+            ];
+        
+            // Campos obligatorios
+            for (const campo of campos) {
+                if (!campo.valor.trim()) {
+                    Mensaje_Toast.error(`"${campo.nombre}" es un campo obligatorio`);
+                    return;
+                }
+            };
 
-        // ----- Validaciones -----
-        const campos = [
-            { nombre: "Título", valor: form.descripcion },
-            { nombre: "Tiempo aprox. de preparación",valor: form.preparacion }
-        ];
-    
-        // Campos obligatorios
-        for (const campo of campos) {
-            if (!campo.valor.trim()) {
-                Mensaje_Toast.error(`"${campo.nombre}" es un campo obligatorio`);
-                return;
+            // ----- Construir FormData -----
+            const formData = new FormData();
+
+            const ahora = new Date();
+            const fecha_creacion = ahora.toISOString().slice(0, 19).replace("T", " ");
+
+            // Datos de texto
+            formData.append("titulo", titulo);
+            formData.append("ingredientes", ingredientes);
+            formData.append("tiempo_preparacion", tiempo_preparacion);
+            formData.append("tipo_tiempo", tipo_tiempo);
+            formData.append("dificultad", dificultad);
+            formData.append("descripcion", form.descripcion);
+            formData.append("preparacion", form.preparacion);
+            formData.append("fecha_creacion", fecha_creacion);
+
+            // Archivo de imagen (si existe)
+            if (archivo) {
+                const uri = archivo;
+                const nombre = uri.split("/").pop() ?? "foto.jpg";
+                const extension = nombre.split(".").pop();
+                const tipo = `image/${extension === "jpg" ? "jpeg" : extension}`;
+
+                formData.append("archivo", {
+                    uri,
+                    name: nombre,
+                    type: tipo,
+                } as any);
             }
-        };
 
-        // ----- Construir FormData -----
-        const formData = new FormData();
+            // ----- Enviar datos a la bbdd-----
+            const url = es_edicion
+            ? `http://35.174.135.238/publicaciones/editar/${plato.id_publicacion}`
+            : `http://35.174.135.238/publicaciones/subir`;
 
-        const ahora = new Date();
-        const fecha_creacion = ahora.toISOString().slice(0, 19).replace("T", " ");
+            const res = await fetch(url, {
+                method: es_edicion ? "PUT" : "POST",
+                headers: { 'Authorization': `Bearer ${usuario.token}`},
+                body: formData
+            });
 
-        // Datos de texto
-        formData.append("titulo", titulo);
-        formData.append("ingredientes", ingredientes);
-        formData.append("tiempo_preparacion", tiempo_preparacion);
-        formData.append("tipo_tiempo", tipo_tiempo);
-        formData.append("dificultad", dificultad);
-        formData.append("descripcion", form.descripcion);
-        formData.append("preparacion", form.preparacion);
-        formData.append("fecha_creacion", fecha_creacion);
+            const datos = await res.json();
 
-        // Archivo de imagen (si existe)
-        if (archivo) {
-            const uri = archivo;
-            const nombre = uri.split("/").pop() ?? "foto.jpg";
-            const extension = nombre.split(".").pop();
-            const tipo = `image/${extension === "jpg" ? "jpeg" : extension}`;
+            if(!datos.success) return Mensaje_Toast.info(datos.message);
 
-            formData.append("archivo", {
-                uri,
-                name: nombre,
-                type: tipo,
-            } as any);
-        }
-
-        // ----- Enviar datos a la bbdd-----
-        const url = es_edicion
-        ? `http://35.174.135.238/publicaciones/editar/${plato.id_publicacion}`
-        : `http://35.174.135.238/publicaciones/subir`;
-
-        const res = await fetch(url, {
-            method: es_edicion ? "PUT" : "POST",
-            headers: { 'Authorization': `Bearer ${usuario.token}`},
-            body: formData
-        });
-
-        const datos = await res.json();
-
-        if(!datos.success) return Mensaje_Toast.info(datos.message);
-
-        if (es_edicion) {
-            navigation.pop(2);
-            navigation.navigate("Perfil", { plato_editado: true });
-        } else {
-            navigation.pop(2);
-            navigation.navigate("Foro", { plato_subido: true });
+            if (es_edicion) {
+                navigation.pop(2);
+                navigation.navigate("Perfil", { plato_editado: true });
+            } else {
+                navigation.pop(2);
+                navigation.navigate("Foro", { plato_subido: true });
+            }
+        } catch (error) {
+            console.error('Error subiendo el plato:', error);
+            Mensaje_Toast.error('No se pudo subir el plato');
         }
     }
 
@@ -130,43 +134,32 @@ const Descripcion = ({route, navigation}: Props) => {
                 onBack={() => navigation.goBack()} 
             /> 
             </View>
-    
+
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            >
-            
-            <ScrollView
-                style={{ flex: 1, backgroundColor: '#000000' }}
-                contentContainerStyle={{ flexGrow: 1 }}
-                showsVerticalScrollIndicator={true}
-                keyboardShouldPersistTaps="handled"
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             >
     
-            <View style={estilos_publicaciones.container}>
-                
-                <Formu_Descripcion_Pasos
-                    plato={plato}
-                    Cancelar_Cambios={() => setModal_visible(true)}
-                    handleChange={handleChange}
-                    Subir_Plato={Subir_Plato}
-                />
+                <ScrollView
+                    style={{ flex: 1, backgroundColor: '#000000' }} 
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    showsVerticalScrollIndicator={true}
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <View style={estilos_publicaciones.container}>
+                        
+                        <Formu_Descripcion_Pasos
+                            plato={plato}
+                            Cancelar_Cambios={() => setModal_visible(true)}
+                            handleChange={handleChange}
+                            Subir_Plato={Subir_Plato}
+                        />
 
-            </View>
-    
-            </ScrollView>
-    
+                    </View>
+
+                </ScrollView>
+
             </KeyboardAvoidingView>
-
-            <ModalConfirmacion
-                texto={"¿Quieres deshacer los cambios?"}
-                visible={modal_visible}
-                confirmar={() => {
-                    navigation.pop(2);
-                }}
-                cancelar={() => setModal_visible(false)}
-            />
-    
         </SafeAreaView>
     )
 }

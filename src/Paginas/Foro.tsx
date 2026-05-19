@@ -12,6 +12,7 @@ import { AuthContext } from "../utils/Auth_Context";
 import { Mensaje_Toast } from "../utils/Mensaje_Toast";
 import Texto from "../Componentes/Texto";
 import { useFocusEffect } from "@react-navigation/native";
+import Imagen_Completa from "../Componentes/Imagen_Completa";
 
 // Interfaz de los platos
 interface Plato {
@@ -72,17 +73,22 @@ export default function Foro({ navigation, route }: any) {
   useFocusEffect(
     useCallback(() => {
       const Obtener_Todos_Platos = async () => {
-        const res = await fetch(`http://35.174.135.238/filtros/${filtro}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${usuario.token}`
-          }
-        });
+        try {
+          const res = await fetch(`http://35.174.135.238/filtros/${filtro}`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${usuario.token}`
+            }
+          });
 
-        const data = await res.json();
-        if(!data.success) return Mensaje_Toast.info(data.message);
+          const data = await res.json();
+          if(!data.success) return Mensaje_Toast.info(data.message);
 
-        setPlatos(data.data);
+          setPlatos(data.data);
+        } catch (error) {
+          console.error('Error obtenindo los platos:', error);
+          Mensaje_Toast.error('No se pudo obtener los platos');
+        }
       };
 
       Obtener_Todos_Platos();
@@ -91,10 +97,19 @@ export default function Foro({ navigation, route }: any) {
   
   
 
+  // ================= Funciones y estados para visualizar la imagen completa de una publicacion =================
+  const [imagen_seleccionada, setImagen_seleccionada] = useState<string | null>(null);
+  
+  const Mostrar_Imagen = (archivo: string) => {
+    setImagen_seleccionada(archivo);
+  }
+  
+
+
   return (
 
     <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
-    
+
       <View style={{backgroundColor: colores.color_2}}>
         <Header 
           title="Foro" 
@@ -109,6 +124,13 @@ export default function Foro({ navigation, route }: any) {
               onFinish={() => setNotificacion_exito(false)}
               icono={require('../Img/icono-correcto.png')}
           />
+      )}
+
+      {imagen_seleccionada && (
+        <Imagen_Completa
+            imagen={imagen_seleccionada}
+            Cerrar_Imagen={() => setImagen_seleccionada(null)}
+        />
       )}
 
       <ScrollView
@@ -149,6 +171,8 @@ export default function Foro({ navigation, route }: any) {
                     SetNotificacion_reaccion={() => Mostrar_Notificacion("¡Reacción agregada!")}
                     guardado_inicial={p.usuario_ya_guardo}
                     Setnotificacion_guardado={() => Mostrar_Notificacion("¡Receta guardada!")}
+
+                    Mostrar_Imagen={Mostrar_Imagen}
                   />
                 ))}
               </>

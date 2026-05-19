@@ -1,4 +1,9 @@
 import React, { useContext } from "react";
+/**
+ * Barra inferior de navegacion con accesos al chatbot, foro, guardados y perfil.
+ */
+
+
 import { View, TouchableOpacity, Image, StyleSheet } from "react-native";
 import estilos_navbar from "./css/navbar_css";
 import estilos_global from "../estilos_global";
@@ -15,7 +20,7 @@ export default function Navbar({ navigation }: any) {
     <View style={[estilos_navbar.container, estilos_global.sombra_contenedor]}>
 
       {/* --- Boton para ir al inicio (o chatbot) --- */}
-      <TouchableOpacity onPress={() => navigation.navigate("ChatbotVoz")}>
+      <TouchableOpacity onPress={() => navigation.navigate("Chatbot")}>
         <Image
           source={require("../Img/icono-robot.png")}
           style={estilos_navbar.icon}

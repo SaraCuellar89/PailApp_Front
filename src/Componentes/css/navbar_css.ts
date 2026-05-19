@@ -1,3 +1,7 @@
+/**
+ * Modulo de estilos asociado a componentes reutilizables de la interfaz.
+ */
+
 import { StyleSheet } from 'react-native';
 import { colores } from '../../estilos_global';
 
@@ -12,7 +16,7 @@ const estilos_navbar = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     borderTopEndRadius: 10,
-    borderTopStartRadius: 10
+    borderTopStartRadius: 10,
   },
 
   icon: {

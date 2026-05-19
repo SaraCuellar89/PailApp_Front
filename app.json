@@ -43,6 +43,8 @@
       "@react-native-firebase/app",
       "@react-native-firebase/messaging",
       "expo-font",
+      "expo-speech-recognition",
+      "expo-audio",
       [
         "expo-image-picker",
         {
@@ -50,7 +52,9 @@
           "cameraPermission": "La app necesita acceso a tu cámara para tomar fotos de recetas."
         }
       ],
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-asset",
+      "expo-video"
     ],
     "extra": {
       "eas": {

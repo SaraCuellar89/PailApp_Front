@@ -1,3 +1,7 @@
+/**
+ * Modulo de estilos asociado a componentes reutilizables de la interfaz.
+ */
+
 // Estilos de los formularios de inicio de sesion y registro de usuario
 
 import { StyleSheet, Dimensions } from "react-native";
