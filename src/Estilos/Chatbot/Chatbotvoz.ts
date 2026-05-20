@@ -5,7 +5,7 @@
 import { StyleSheet } from "react-native";
 
 export const chatbotVozStyles = StyleSheet.create({
-  robotGestureArea: {zz
+  robotGestureArea: {
     width: "100%",
     alignItems: "center",
     justifyContent: "center",

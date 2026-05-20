@@ -4,8 +4,8 @@
  */
 import React from "react";
 import { Text, View } from "react-native";
-import estilos_usage_bar from "../css/chatbot_usage_bar";
-import Texto from "../Texto";
+import estilos_usage_bar from "../../Estilos/Chatbot/chatbot_usage_bar";
+import Texto from "../Compartidos/Texto";
 
 type ChatbotUsageBarProps = {
   progress: number;

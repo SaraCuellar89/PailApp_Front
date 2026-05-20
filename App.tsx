@@ -13,27 +13,26 @@ import Toast from 'react-native-toast-message';
 import { AuthProvider } from "./src/utils/Auth_Context";
 
 
-import Carga from './src/Paginas/Carga';
-import Inicio from './src/Paginas/Inicio';
-import Login from './src/Paginas/Login';
-import Correo_Recuperacion from './src/Paginas/Correo_Recuperacion';
-import Registro from './src/Paginas/Registro';
+import Carga from './src/Paginas/Inicio/Carga';
+import Inicio from './src/Paginas/Inicio/Inicio';
+import Login from './src/Paginas/Autenticacion/Login';
+import Correo_Recuperacion from './src/Paginas/Autenticacion/Correo_Recuperacion';
+import Registro from './src/Paginas/Autenticacion/Registro';
 import Chatbot from './src/Paginas/Chatbot/Chatbot';
-// import ChatbotVoz from './src/Paginas/Chatbot/Chatbot_Voz';
-import Foro from './src/Paginas/Foro';
-import SubirReceta from './src/Paginas/SubirReceta';
-import DetallePublicacion from './src/Paginas/Publicaciones';
-import MisPlatoss from './src/Paginas/MisPlatoss';
-import Perfil, { Plato } from './src/Paginas/Perfil';
-import Configuracion from './src/Paginas/Configuracion';
-import Descripcion from './src/Paginas/Descripcion';
-import Datos_Adicionales from './src/Paginas/Datos_Adicionales';
-import Cambiar_Contrasena from './src/Paginas/Cambiar_Contrasena';
-import Notificaciones from './src/Paginas/Notificaciones';
+import Foro from './src/Paginas/Comunidad/Foro';
+import SubirReceta from './src/Paginas/Recetas/SubirReceta';
+import DetallePublicacion from './src/Paginas/Comunidad/Publicaciones';
+import MisPlatoss from './src/Paginas/Perfil/MisPlatoss';
+import Perfil, { Plato } from './src/Paginas/Perfil/Perfil';
+import Configuracion from './src/Paginas/Configuracion/Configuracion';
+import Descripcion from './src/Paginas/Recetas/Descripcion';
+import Datos_Adicionales from './src/Paginas/Recetas/Datos_Adicionales';
+import Cambiar_Contrasena from './src/Paginas/Autenticacion/Cambiar_Contrasena';
+import Notificaciones from './src/Paginas/Notificaciones/Notificaciones';
 import { Configuracion_Toast } from './src/utils/Configuracion_Toast';
-import Lista_Ingredientes from './src/Paginas/Lista_Ingredientes';
-import Editar_Cuenta from './src/Paginas/Editar_Cuenta';
-import Editar_Contrasena from './src/Paginas/Edtiar_Contrasena';
+import Lista_Ingredientes from './src/Paginas/Recetas/Lista_Ingredientes';
+import Editar_Cuenta from './src/Paginas/Configuracion/Editar_Cuenta';
+import Editar_Contrasena from './src/Paginas/Configuracion/Edtiar_Contrasena';
 import { escuchar_notificaciones, obtener_token_fcm } from './src/utils/Notificaciones';
 
 
@@ -45,7 +44,7 @@ export type RootStackParamList = {
   Correo_Recuperacion: undefined;
   Cambiar_Contrasena: undefined;
   Datos_Adicionales: undefined;
-  Chatbot: undefined;
+  Chatbot: { mensajeInicial?: string; initialVoiceMode?: boolean } | undefined;
   Notificaciones: undefined;
   Foro: { plato_subido?: boolean };
   SubirReceta: { plato?: Plato } | undefined;
@@ -111,7 +110,6 @@ export default function App() {
           <Stack.Screen name="Datos_Adicionales" component={Datos_Adicionales} />
           <Stack.Screen name="Chatbot" component={Chatbot} />
           <Stack.Screen name="Notificaciones" component={Notificaciones} />
-          {/* <Stack.Screen name="ChatbotVoz" component={ChatbotVoz} /> */}
           <Stack.Screen name="Foro" component={Foro} />
           <Stack.Screen name="SubirReceta" component={SubirReceta} />
           <Stack.Screen name="Descripcion" component={Descripcion} />

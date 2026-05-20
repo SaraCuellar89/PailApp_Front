@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colores } from '../estilos_global';
+import { colores } from '../Estilos/Global/estilos_global';
 
 export const Configuracion_Toast = {
   success: ({ text1 }: any) => (

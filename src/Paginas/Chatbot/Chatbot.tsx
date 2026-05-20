@@ -1,19 +1,34 @@
-import React, { useState, useMemo, useContext, useEffect, useCallback } from "react";
-import { View, KeyboardAvoidingView, Platform, ScrollView, PanResponder, useWindowDimensions } from "react-native";
-import Header_pailapp from "../../Componentes/Header_pailapp";
-import Navbar from "../../Componentes/Navbar";
+import React, { useState, useContext, useCallback } from "react";
+import { View } from "react-native";
+import Header_pailapp from "../../Componentes/Navegacion/Header_pailapp";
+import Navbar from "../../Componentes/Navegacion/Navbar";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { colores } from "../../estilos_global";
-import estilos_publicaciones from "../css/publicaciones_css";
-import Robot from "../../Componentes/Robot";
-import Prueba_ChatBot from "../../Componentes/Prueba_ChatBot";
+import { colores } from "../../Estilos/Global/estilos_global";
+import estilos_publicaciones from "../../Estilos/Publicaciones/publicaciones_css";
+import Robot from "../../Componentes/Chatbot/Robot";
+import ChatBot from "../../Componentes/Chatbot/ChatBot";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import ChatbotUsageBar from "../../Componentes/Chatbot/ChatbotUsageBar";
 import { AuthContext } from "../../utils/Auth_Context";
 import { useFocusEffect } from "@react-navigation/native";
+import { ChatbotUsage } from "../../Componentes/Chatbot/types";
 
 
-export default function Chatbot({navigation}: any) {
+const initialUsage: ChatbotUsage = {
+  usedTokens: 0,
+  remainingTokens: 6000,
+  progress: 0,
+  remainingInteractions: 13,
+};
+
+const obtenerIdUsuario = (usuario: any) =>
+  usuario?.idusuario ??
+  usuario?.id_usuario ??
+  usuario?.idUsuario ??
+  usuario?.id ??
+  null;
+
+export default function Chatbot({navigation, route}: any) {
 
    // ================= Datos del usuario por un contexto difinido =================
   const authContext = useContext(AuthContext);
@@ -46,9 +61,9 @@ export default function Chatbot({navigation}: any) {
 
 
   const [cambiar_tamano, setCambiar_tamano] = useState(false);
-  
-
   const [intencion, setIntencion] = useState<string | null>(null);
+  const [chatUsage, setChatUsage] = useState<ChatbotUsage>(initialUsage);
+  const idUsuario = obtenerIdUsuario(usuario);
 
 
   return (
@@ -61,8 +76,8 @@ export default function Chatbot({navigation}: any) {
 
       <View style={{ backgroundColor: colores.color_2, alignItems: "center" }}>
         <ChatbotUsageBar
-            progress={0.7}
-            remainingInteractions={15}
+            progress={chatUsage.progress}
+            remainingInteractions={chatUsage.remainingInteractions}
         />
       </View>
 
@@ -82,9 +97,14 @@ export default function Chatbot({navigation}: any) {
         extraScrollHeight={80}
       >
         <View style={estilos_publicaciones.container}>
-          <Prueba_ChatBot 
+          <ChatBot 
+            avatarUsuario={usuario?.avatar ?? null}
+            idUsuario={idUsuario}
+            initialMessage={route?.params?.mensajeInicial}
+            initialVoiceMode={Boolean(route?.params?.initialVoiceMode)}
             setCambiar_tamano={setCambiar_tamano} 
             onIntencion={setIntencion}
+            onUsageChange={setChatUsage}
           />
         </View>
       </KeyboardAwareScrollView>
