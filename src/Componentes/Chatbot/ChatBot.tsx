@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Easing,
@@ -14,6 +14,9 @@ import Texto from "../Compartidos/Texto";
 import estilos_prueba_chatbot from "../../Estilos/Chatbot/prueba_chatbot_css";
 import { ChatbotUsage } from "./types";
 import { useChatbotConversation } from "./hooks/useChatbotConversation";
+import { saveAssistantRecipe } from "./api/saveAssistantRecipe";
+import { Mensaje_Toast } from "../../utils/Mensaje_Toast";
+import AssistantRecipeSaveModal from "./AssistantRecipeSaveModal";
 
 const TypingIndicator = () => {
   const dots = useRef([
@@ -89,6 +92,7 @@ const TypingIndicator = () => {
 type ChatBotProps = {
   avatarUsuario?: string | null;
   idUsuario?: number | string | null;
+  tokenUsuario?: string | null;
   initialMessage?: string;
   initialVoiceMode?: boolean;
   onIntencion?: (intencion: string | null) => void;
@@ -99,6 +103,7 @@ type ChatBotProps = {
 export default function ChatBot({
   avatarUsuario,
   idUsuario,
+  tokenUsuario,
   initialMessage,
   initialVoiceMode = false,
   onIntencion,
@@ -107,6 +112,12 @@ export default function ChatBot({
 }: ChatBotProps) {
   const { height } = useWindowDimensions();
   const scrollRef = useRef<ScrollView | null>(null);
+  const [mensajes_guardados, setMensajes_guardados] = useState<string[]>([]);
+  const [mensaje_guardando, setMensaje_guardando] = useState<string | null>(null);
+  const [mensaje_para_guardar, setMensaje_para_guardar] = useState<{
+    id: string;
+    content: string;
+  } | null>(null);
   const chatbot = useChatbotConversation({
     idUsuario,
     initialMessage,
@@ -121,6 +132,26 @@ export default function ChatBot({
 
   const enviar = () => {
     chatbot.sendMessage();
+  };
+
+  const guardar_receta = async (
+    idMensaje: string,
+    contenido: string,
+    options: Parameters<typeof saveAssistantRecipe>[3],
+  ) => {
+    if (!tokenUsuario || mensaje_guardando) return;
+
+    try {
+      setMensaje_guardando(idMensaje);
+      await saveAssistantRecipe(contenido, tokenUsuario, idUsuario, options);
+      setMensajes_guardados((prev) => [...prev, idMensaje]);
+      setMensaje_para_guardar(null);
+      Mensaje_Toast.exito("Receta guardada en Mis Platos");
+    } catch (error: any) {
+      Mensaje_Toast.error(error?.message || "No se pudo guardar la receta");
+    } finally {
+      setMensaje_guardando(null);
+    }
   };
 
   const avatarSource = avatarUsuario
@@ -161,27 +192,61 @@ export default function ChatBot({
                   </Texto>
 
                   {mensaje.role === "assistant" ? (
-                    <View style={estilos_prueba_chatbot.fila_acciones_mensaje}>
-                      <TouchableOpacity
-                        onPress={() =>
-                          chatbot
-                            .repeatAssistantAudio(mensaje.id, mensaje.content)
-                            .catch(() => {})
-                        }
-                        disabled={chatbot.loading}
-                        style={estilos_prueba_chatbot.boton_accion_mensaje}
-                      >
-                        <Image
-                          source={require("../../Img/escuchar.png")}
-                          resizeMode="contain"
-                          style={[
-                            estilos_prueba_chatbot.icono_accion_mensaje,
-                            chatbot.loading &&
-                              estilos_prueba_chatbot.icono_deshabilitado,
-                          ]}
-                        />
-                      </TouchableOpacity>
-                    </View>
+                    <>
+                      <View style={estilos_prueba_chatbot.fila_acciones_mensaje}>
+                        <TouchableOpacity
+                          onPress={() =>
+                            chatbot
+                              .repeatAssistantAudio(mensaje.id, mensaje.content)
+                              .catch(() => {})
+                          }
+                          disabled={chatbot.loading}
+                          style={estilos_prueba_chatbot.boton_accion_mensaje}
+                        >
+                          <Image
+                            source={require("../../Img/escuchar.png")}
+                            resizeMode="contain"
+                            style={[
+                              estilos_prueba_chatbot.icono_accion_mensaje,
+                              chatbot.loading &&
+                                estilos_prueba_chatbot.icono_deshabilitado,
+                            ]}
+                          />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                          onPress={() =>
+                            setMensaje_para_guardar({
+                              id: mensaje.id,
+                              content: mensaje.content,
+                            })
+                          }
+                          disabled={
+                            chatbot.loading ||
+                            !tokenUsuario ||
+                            mensaje_guardando === mensaje.id ||
+                            mensajes_guardados.includes(mensaje.id)
+                          }
+                          style={estilos_prueba_chatbot.boton_accion_mensaje}
+                        >
+                          <Image
+                            source={
+                              mensajes_guardados.includes(mensaje.id)
+                                ? require("../../Img/icono-guardar-relleno.png")
+                                : require("../../Img/icono-guardar.png")
+                            }
+                            resizeMode="contain"
+                            style={[
+                              estilos_prueba_chatbot.icono_accion_mensaje,
+                              (chatbot.loading ||
+                                !tokenUsuario ||
+                                mensaje_guardando === mensaje.id) &&
+                                estilos_prueba_chatbot.icono_deshabilitado,
+                            ]}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </>
                   ) : (
                     <View style={estilos_prueba_chatbot.fila_acciones_mensaje}>
                       <TouchableOpacity
@@ -309,6 +374,23 @@ export default function ChatBot({
           </TouchableOpacity>
         </View>
       )}
+
+      <AssistantRecipeSaveModal
+        visible={!!mensaje_para_guardar}
+        content={mensaje_para_guardar?.content || ""}
+        saving={!!mensaje_guardando}
+        onCancel={() => {
+          if (!mensaje_guardando) setMensaje_para_guardar(null);
+        }}
+        onConfirm={(options) => {
+          if (!mensaje_para_guardar) return;
+          guardar_receta(
+            mensaje_para_guardar.id,
+            mensaje_para_guardar.content,
+            options,
+          );
+        }}
+      />
     </View>
   );
 }

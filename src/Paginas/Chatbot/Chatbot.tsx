@@ -100,6 +100,7 @@ export default function Chatbot({navigation, route}: any) {
           <ChatBot 
             avatarUsuario={usuario?.avatar ?? null}
             idUsuario={idUsuario}
+            tokenUsuario={usuario?.token}
             initialMessage={route?.params?.mensajeInicial}
             initialVoiceMode={Boolean(route?.params?.initialVoiceMode)}
             setCambiar_tamano={setCambiar_tamano} 

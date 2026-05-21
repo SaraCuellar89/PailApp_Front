@@ -53,10 +53,6 @@ export const useChatbotAudio = () => {
       const data = await response.json();
       const audioBase64 = String(data?.audioBase64 || "");
 
-      if (!audioBase64) {
-        throw new Error(data?.error || "La respuesta TTS no incluyo audio");
-      }
-
       const fileUri = `${FileSystem.cacheDirectory}tts-${Date.now()}.mp3`;
       await FileSystem.writeAsStringAsync(fileUri, audioBase64, {
         encoding: FileSystem.EncodingType.Base64,
