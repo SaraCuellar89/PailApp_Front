@@ -15,7 +15,6 @@ export const useChatbotAudio = () => {
 
     try {
       soundRef.current.pause();
-      // expo-audio usa .release(), no .remove()
       soundRef.current.release();
     } catch {}
 
@@ -52,14 +51,21 @@ export const useChatbotAudio = () => {
       }
 
       const data = await response.json();
-      const audioBase64 = String(data?.audioBase64 || "");
+
+      // Si el backend indica que el audio no está disponible (key agotada, etc.)
+      // simplemente salimos sin lanzar error para no interrumpir el chat
+      if (!data?.audioDisponible || !data?.audioBase64) {
+        console.warn("TTS omitido por el servidor:", data?.reason ?? "sin_razon");
+        return;
+      }
+
+      const audioBase64 = String(data.audioBase64);
 
       const fileUri = `${FileSystem.cacheDirectory}tts-${Date.now()}.mp3`;
       await FileSystem.writeAsStringAsync(fileUri, audioBase64, {
         encoding: FileSystem.EncodingType.Base64,
       });
 
-      // Primero reproducir; solo marcar lastSpokenMessageId si el play no falla
       await playAudioFromUri(fileUri);
       lastAudioUriRef.current = fileUri;
       setLastSpokenMessageId(messageId);
@@ -74,7 +80,6 @@ export const useChatbotAudio = () => {
   }, [playAudioFromUri]);
 
   useEffect(() => {
-    // Props correctas para expo-audio v2+
     setAudioModeAsync({
       playsInSilentModeIOS: true,
       allowsRecordingIOS: false,
