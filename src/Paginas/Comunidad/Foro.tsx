@@ -82,29 +82,31 @@ export default function Foro({ navigation, route }: any) {
 
   // renderItem memoizado para que FlatList no re-cree la funcion en cada render
   const renderItem = useCallback(({ item: p }: { item: Plato }) => (
-    <PublicacionCard
-      navigation={navigation}
-      key={p.publicacion_id}
-      id_publicacion={p.publicacion_id}
-      guardar_ejemplo={false}
-      setGuardar_Ejemplo={() => {}}
-      titulo={p.publicacion_titulo}
-      archivo={p.publicacion_archivo}
-      descripcion={p.publicacion_descripcion}
-      ingredientes={p.publicacion_ingredientes}
-      preparacion={p.publicacion_preparacion}
-      tiempo_preparacion={p.publicacion_tiempo_preparacion}
-      tipo_tiempo={p.publicacion_tipo_tiempo}
-      dificultad={p.publicacion_dificultad}
-      total_reacciones={p.total_reacciones}
-      total_comentarios={p.total_comentarios}
-      fecha_creacion={p.publicacion_fecha}
-      corazon_inicial={p.usuario_ya_reacciono}
-      SetNotificacion_reaccion={() => Mostrar_Notificacion("¡Reacción agregada!")}
-      guardado_inicial={p.usuario_ya_guardo}
-      Setnotificacion_guardado={() => Mostrar_Notificacion("¡Receta guardada!")}
-      Mostrar_Imagen={setImagen_seleccionada}
-    />
+    <View style={{ paddingHorizontal: 20, paddingBottom: 20 }}>
+      <PublicacionCard
+        navigation={navigation}
+        key={p.publicacion_id}
+        id_publicacion={p.publicacion_id}
+        guardar_ejemplo={false}
+        setGuardar_Ejemplo={() => {}}
+        titulo={p.publicacion_titulo}
+        archivo={p.publicacion_archivo}
+        descripcion={p.publicacion_descripcion}
+        ingredientes={p.publicacion_ingredientes}
+        preparacion={p.publicacion_preparacion}
+        tiempo_preparacion={p.publicacion_tiempo_preparacion}
+        tipo_tiempo={p.publicacion_tipo_tiempo}
+        dificultad={p.publicacion_dificultad}
+        total_reacciones={p.total_reacciones}
+        total_comentarios={p.total_comentarios}
+        fecha_creacion={p.publicacion_fecha}
+        corazon_inicial={p.usuario_ya_reacciono}
+        SetNotificacion_reaccion={() => Mostrar_Notificacion("¡Reacción agregada!")}
+        guardado_inicial={p.usuario_ya_guardo}
+        Setnotificacion_guardado={() => Mostrar_Notificacion("¡Receta guardada!")}
+        Mostrar_Imagen={setImagen_seleccionada}
+      />
+    </View>
   ), [navigation]);
 
   const keyExtractor = useCallback(
@@ -113,7 +115,7 @@ export default function Foro({ navigation, route }: any) {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colores.color_2 }}>
 
       <View style={{ backgroundColor: colores.color_2 }}>
         <Header title="Foro" onBack={() => navigation.goBack()} />
@@ -134,22 +136,25 @@ export default function Foro({ navigation, route }: any) {
         />
       )}
 
-      {/* FlatList renderiza solo los cards visibles en pantalla */}
       <FlatList
         data={platos}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
-        contentContainerStyle={[
-          estilos_foro.contenedor,
-          { backgroundColor: '#000000', flexGrow: 1 },
-        ]}
+        style={{ flex: 1, backgroundColor: colores.color_2 }}
+        contentContainerStyle={{
+          backgroundColor: colores.color_2,
+          flexGrow: 1,
+          paddingBottom: 10,
+        }}
         ListHeaderComponent={
           <View style={estilos_foro.contenedor_filtros}>
             <Filtros filtro={filtro} setFiltro={setFiltro} />
           </View>
         }
         ListEmptyComponent={
-          <Texto>No hay platos subidos</Texto>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 40 }}>
+            <Texto>No hay platos subidos</Texto>
+          </View>
         }
         showsVerticalScrollIndicator
         keyboardShouldPersistTaps="handled"
@@ -157,7 +162,6 @@ export default function Foro({ navigation, route }: any) {
         initialNumToRender={4}
         maxToRenderPerBatch={4}
         windowSize={7}
-        style={{ flex: 1, backgroundColor: '#000000' }}
       />
 
       <View style={{ backgroundColor: colores.color_2 }}>
