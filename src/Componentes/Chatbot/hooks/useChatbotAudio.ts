@@ -15,7 +15,8 @@ export const useChatbotAudio = () => {
 
     try {
       soundRef.current.pause();
-      soundRef.current.remove();
+      // expo-audio usa .release(), no .remove()
+      soundRef.current.release();
     } catch {}
 
     soundRef.current = null;
@@ -58,9 +59,10 @@ export const useChatbotAudio = () => {
         encoding: FileSystem.EncodingType.Base64,
       });
 
+      // Primero reproducir; solo marcar lastSpokenMessageId si el play no falla
+      await playAudioFromUri(fileUri);
       lastAudioUriRef.current = fileUri;
       setLastSpokenMessageId(messageId);
-      await playAudioFromUri(fileUri);
     },
     [playAudioFromUri, stopAudio],
   );
@@ -72,9 +74,11 @@ export const useChatbotAudio = () => {
   }, [playAudioFromUri]);
 
   useEffect(() => {
+    // Props correctas para expo-audio v2+
     setAudioModeAsync({
-      playsInSilentMode: true,
-      shouldPlayInBackground: false,
+      playsInSilentModeIOS: true,
+      allowsRecordingIOS: false,
+      staysActiveInBackground: false,
     }).catch(() => {});
   }, []);
 
