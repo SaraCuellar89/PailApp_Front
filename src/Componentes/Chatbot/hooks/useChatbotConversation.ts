@@ -180,7 +180,13 @@ export const useChatbotConversation = ({
         }
 
         onIntencion?.(inferChatbotIntent(`${mensaje} ${respuestaFinal}`));
-        await speakText(assistantPlaceholder.id, respuestaFinal);
+
+        // TTS en su propio try/catch: si falla no interrumpe el flujo del chat
+        try {
+          await speakText(assistantPlaceholder.id, respuestaFinal);
+        } catch (ttsError) {
+          console.warn("TTS fallo, se continua sin audio:", ttsError);
+        }
       } catch (error: any) {
         replaceMessageContent(
           assistantPlaceholder.id,
