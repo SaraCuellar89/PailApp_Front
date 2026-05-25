@@ -32,7 +32,7 @@ import Notificaciones from './src/Paginas/Notificaciones/Notificaciones';
 import { Configuracion_Toast } from './src/utils/Configuracion_Toast';
 import Lista_Ingredientes from './src/Paginas/Recetas/Lista_Ingredientes';
 import Editar_Cuenta from './src/Paginas/Configuracion/Editar_Cuenta';
-import Editar_Contrasena from './src/Paginas/Configuracion/Edtiar_Contrasena';
+import Editar_Contrasena from './src/Paginas/Configuracion/Editar_Contrasena';
 import { escuchar_notificaciones, obtener_token_fcm } from './src/utils/Notificaciones';
 
 
@@ -75,22 +75,21 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>(); 
 
-// Funcion para cargar la tipografia de la aplicacion
 export default function App() {
   const [fuentes_cargadas] = useFonts({
     JetBrainsMono_400Regular,
     JetBrainsMono_700Bold,
   });
 
-
-  // Recibir notificaciones
+  // Iniciar listeners de notificaciones y registrar token FCM
   useEffect(() => {
+    obtener_token_fcm().catch((err) =>
+      console.warn('No se pudo obtener token FCM:', err)
+    );
     const unsubscribe = escuchar_notificaciones();
     return () => unsubscribe();
   }, []);
 
-
-  // La app espera a que la tipografia este lista para evitar saltos visuales.
   if (!fuentes_cargadas) return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <ActivityIndicator size="large" />

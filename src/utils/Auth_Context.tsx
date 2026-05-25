@@ -22,13 +22,18 @@ export const AuthProvider = ({ children }: Props) => {
     const [cargando, setLoading] = useState(true);
 
     const cargarUsuario = async () => {
-        const info_usuario = await AsyncStorage.getItem("usuario");
-
-        if (info_usuario) {
-        setUsuario(JSON.parse(info_usuario));
+        try {
+            const info_usuario = await AsyncStorage.getItem("usuario");
+            if (info_usuario) {
+                setUsuario(JSON.parse(info_usuario));
+            }
+        } catch (err) {
+            // Si AsyncStorage falla (storage corrupto o permisos), continuamos sin sesion
+            console.warn("Error al leer usuario de AsyncStorage:", err);
+        } finally {
+            // Siempre desbloquear la pantalla de carga
+            setLoading(false);
         }
-
-        setLoading(false);
     };
 
     useEffect(() => {
