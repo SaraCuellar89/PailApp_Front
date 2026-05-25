@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import { View, ScrollView } from "react-native";
+import { View, FlatList } from "react-native";
 import Filtros from "../../Componentes/Publicaciones/Filtros";
 import BotonAgregar from "../../Componentes/Compartidos/BotonAgregar";
 import Notificacion from "../../Componentes/Compartidos/Notificacion";
@@ -14,9 +14,8 @@ import Texto from "../../Componentes/Compartidos/Texto";
 import { useFocusEffect } from "@react-navigation/native";
 import Imagen_Completa from "../../Componentes/Compartidos/Imagen_Completa";
 
-// Interfaz de los platos
 interface Plato {
-  publicacion_id: number,
+  publicacion_id: number;
   publicacion_titulo: string;
   publicacion_archivo: string;
   publicacion_descripcion: string;
@@ -34,161 +33,136 @@ interface Plato {
 
 export default function Foro({ navigation, route }: any) {
 
-  // ================= Datos del usuario por un contexto difinido =================
   const authContext = useContext(AuthContext);
   if (!authContext) throw new Error("AuthContext no está disponible");
   const { usuario } = authContext;
 
-
-
-  // ================= Funciones y Estados para mostrar la notificaciones de exito =================
-  const { plato_subido} = route.params ?? {};
-
+  // Notificacion de exito
+  const { plato_subido } = route.params ?? {};
   const [notificacion_exito, setNotificacion_exito] = useState(false);
   const [mensaje_notificacion, setMensaje_notificacion] = useState("");
 
   useEffect(() => {
-    if (plato_subido) {
-      Mostrar_Notificacion("¡Plato Subido!");
-    }
+    if (plato_subido) Mostrar_Notificacion("¡Plato Subido!");
   }, [plato_subido]);
-  
+
   const Mostrar_Notificacion = (mensaje: string) => {
     setMensaje_notificacion(mensaje);
     setNotificacion_exito(true);
-  }
+  };
 
-
-
-  // ================= Estados para los filtros =================
+  // Filtros
   const [filtro, setFiltro] = useState<"recientes" | "antiguas" | "populares">("recientes");
 
-
-
-  // ================= Funciones y estados para obtener todas los platos =================
-  // Estado para guardar los platos
+  // Lista de platos
   const [platos, setPlatos] = useState<Plato[]>([]);
 
-  // Funcion para cargar todos los datos y actualizarlos cuando se reaccione o se guarde
   useFocusEffect(
     useCallback(() => {
       const Obtener_Todos_Platos = async () => {
         try {
           const res = await fetch(`http://35.174.135.238/filtros/${filtro}`, {
             method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${usuario.token}`
-            }
+            headers: { 'Authorization': `Bearer ${usuario.token}` },
           });
-
           const data = await res.json();
-          if(!data.success) return Mensaje_Toast.info(data.message);
-
+          if (!data.success) return Mensaje_Toast.info(data.message);
           setPlatos(data.data);
         } catch (error) {
-          console.error('Error obtenindo los platos:', error);
+          console.error('Error obteniendo los platos:', error);
           Mensaje_Toast.error('No se pudo obtener los platos');
         }
       };
-
       Obtener_Todos_Platos();
     }, [usuario.token, filtro])
   );
-  
-  
 
-  // ================= Funciones y estados para visualizar la imagen completa de una publicacion =================
+  // Imagen ampliada
   const [imagen_seleccionada, setImagen_seleccionada] = useState<string | null>(null);
-  
-  const Mostrar_Imagen = (archivo: string) => {
-    setImagen_seleccionada(archivo);
-  }
-  
 
+  // renderItem memoizado para que FlatList no re-cree la funcion en cada render
+  const renderItem = useCallback(({ item: p }: { item: Plato }) => (
+    <PublicacionCard
+      navigation={navigation}
+      key={p.publicacion_id}
+      id_publicacion={p.publicacion_id}
+      guardar_ejemplo={false}
+      setGuardar_Ejemplo={() => {}}
+      titulo={p.publicacion_titulo}
+      archivo={p.publicacion_archivo}
+      descripcion={p.publicacion_descripcion}
+      ingredientes={p.publicacion_ingredientes}
+      preparacion={p.publicacion_preparacion}
+      tiempo_preparacion={p.publicacion_tiempo_preparacion}
+      tipo_tiempo={p.publicacion_tipo_tiempo}
+      dificultad={p.publicacion_dificultad}
+      total_reacciones={p.total_reacciones}
+      total_comentarios={p.total_comentarios}
+      fecha_creacion={p.publicacion_fecha}
+      corazon_inicial={p.usuario_ya_reacciono}
+      SetNotificacion_reaccion={() => Mostrar_Notificacion("¡Reacción agregada!")}
+      guardado_inicial={p.usuario_ya_guardo}
+      Setnotificacion_guardado={() => Mostrar_Notificacion("¡Receta guardada!")}
+      Mostrar_Imagen={setImagen_seleccionada}
+    />
+  ), [navigation]);
+
+  const keyExtractor = useCallback(
+    (item: Plato) => String(item.publicacion_id),
+    []
+  );
 
   return (
-
     <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
 
-      <View style={{backgroundColor: colores.color_2}}>
-        <Header 
-          title="Foro" 
-          onBack={() => navigation.goBack()} 
-        /> 
-      </View> 
+      <View style={{ backgroundColor: colores.color_2 }}>
+        <Header title="Foro" onBack={() => navigation.goBack()} />
+      </View>
 
-      {/* Renderizado de notificacion de plato subido */}
-      {notificacion_exito && ( 
-          <Notificacion
-              mensaje={mensaje_notificacion}
-              onFinish={() => setNotificacion_exito(false)}
-              icono={require('../../Img/icono-correcto.png')}
-          />
+      {notificacion_exito && (
+        <Notificacion
+          mensaje={mensaje_notificacion}
+          onFinish={() => setNotificacion_exito(false)}
+          icono={require('../../Img/icono-correcto.png')}
+        />
       )}
 
       {imagen_seleccionada && (
         <Imagen_Completa
-            imagen={imagen_seleccionada}
-            Cerrar_Imagen={() => setImagen_seleccionada(null)}
+          imagen={imagen_seleccionada}
+          Cerrar_Imagen={() => setImagen_seleccionada(null)}
         />
       )}
 
-      <ScrollView
-        style={{ flex: 1, backgroundColor: '#000000' }}
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={true}
-        keyboardShouldPersistTaps="handled"
-      >
-        <View style={estilos_foro.contenedor}>
-
+      {/* FlatList renderiza solo los cards visibles en pantalla */}
+      <FlatList
+        data={platos}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        contentContainerStyle={[
+          estilos_foro.contenedor,
+          { backgroundColor: '#000000', flexGrow: 1 },
+        ]}
+        ListHeaderComponent={
           <View style={estilos_foro.contenedor_filtros}>
             <Filtros filtro={filtro} setFiltro={setFiltro} />
           </View>
+        }
+        ListEmptyComponent={
+          <Texto>No hay platos subidos</Texto>
+        }
+        showsVerticalScrollIndicator
+        keyboardShouldPersistTaps="handled"
+        removeClippedSubviews
+        initialNumToRender={4}
+        maxToRenderPerBatch={4}
+        windowSize={7}
+        style={{ flex: 1, backgroundColor: '#000000' }}
+      />
 
-          <View style={estilos_foro.contenedor_publicaciones}>
-            {platos ? 
-            (
-              <>
-                {platos.map((p) => (
-                  <PublicacionCard
-                    navigation={navigation}
-                    key={p.publicacion_id}
-                    id_publicacion={p.publicacion_id}
-                    guardar_ejemplo={false}
-                    setGuardar_Ejemplo={() => {}}
-                    titulo={p.publicacion_titulo}
-                    archivo={p.publicacion_archivo}
-                    descripcion={p.publicacion_descripcion}
-                    ingredientes={p.publicacion_ingredientes}
-                    preparacion={p.publicacion_preparacion}
-                    tiempo_preparacion={p.publicacion_tiempo_preparacion}
-                    tipo_tiempo={p.publicacion_tipo_tiempo}
-                    dificultad={p.publicacion_dificultad}
-                    total_reacciones={p.total_reacciones}
-                    total_comentarios={p.total_comentarios}
-                    fecha_creacion={p.publicacion_fecha}
-                    corazon_inicial={p.usuario_ya_reacciono}
-                    SetNotificacion_reaccion={() => Mostrar_Notificacion("¡Reacción agregada!")}
-                    guardado_inicial={p.usuario_ya_guardo}
-                    Setnotificacion_guardado={() => Mostrar_Notificacion("¡Receta guardada!")}
-
-                    Mostrar_Imagen={Mostrar_Imagen}
-                  />
-                ))}
-              </>
-            ) : 
-            (
-              <Texto>No hay platos subidos</Texto>
-            )}
-          </View>
-
-        </View>
-
-    </ScrollView>
-
-    <View style={{backgroundColor: colores.color_2}}>
-      <BotonAgregar onPress={() => navigation.navigate("SubirReceta")} />
-    </View> 
+      <View style={{ backgroundColor: colores.color_2 }}>
+        <BotonAgregar onPress={() => navigation.navigate("SubirReceta")} />
+      </View>
 
     </SafeAreaView>
   );
