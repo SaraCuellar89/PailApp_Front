@@ -14,6 +14,7 @@ import Texto from "../../Componentes/Compartidos/Texto";
 import Notificacion from "../../Componentes/Compartidos/Notificacion";
 import ModalConfirmacion from "../../Componentes/Compartidos/ModalConfirmacion";
 import Imagen_Completa from "../../Componentes/Compartidos/Imagen_Completa";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface Plato {
     id_publicacion: number;

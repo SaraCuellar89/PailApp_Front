@@ -342,8 +342,6 @@ export default function ChatBot({
               placeholder="Escribe algo..."
               placeholderTextColor="grey"
               editable={!chatbot.loading}
-              onSubmitEditing={enviar}
-              returnKeyType="send"
             />
 
             <TouchableOpacity

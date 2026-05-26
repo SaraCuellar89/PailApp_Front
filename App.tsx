@@ -83,9 +83,6 @@ export default function App() {
 
   // Iniciar listeners de notificaciones y registrar token FCM
   useEffect(() => {
-    obtener_token_fcm().catch((err) =>
-      console.warn('No se pudo obtener token FCM:', err)
-    );
     const unsubscribe = escuchar_notificaciones();
     return () => unsubscribe();
   }, []);
