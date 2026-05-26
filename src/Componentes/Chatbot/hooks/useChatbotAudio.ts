@@ -52,7 +52,7 @@ export const useChatbotAudio = () => {
 
       const data = await response.json();
 
-      // Si el backend indica que el audio no está disponible (key agotada, etc.)
+      // Si el backend indica que el audio no esta disponible (key agotada, etc.)
       // simplemente salimos sin lanzar error para no interrumpir el chat
       if (!data?.audioDisponible || !data?.audioBase64) {
         console.warn("TTS omitido por el servidor:", data?.reason ?? "sin_razon");
@@ -80,17 +80,17 @@ export const useChatbotAudio = () => {
   }, [playAudioFromUri]);
 
   useEffect(() => {
+    // expo-audio v2+: la prop correcta es playsInSilentMode (sin sufijo iOS)
     setAudioModeAsync({
-      playsInSilentModeIOS: true,
-      allowsRecordingIOS: false,
+      playsInSilentMode: true,
+      allowsRecording: false,
       staysActiveInBackground: false,
     }).catch(() => {});
   }, []);
 
   useEffect(() => {
-    return () => {
-      stopAudio();
-    };
+    // stopAudio es async: usar void para que el cleanup no retorne una Promise
+    return () => void stopAudio();
   }, [stopAudio]);
 
   return {
