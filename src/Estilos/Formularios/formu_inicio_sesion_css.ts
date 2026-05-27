@@ -69,6 +69,9 @@ const estilo_formu_inicio_sesion_css = StyleSheet.create({
         alignItems: "center",
         marginTop: 25,
     },
+    texto_googleBtn: {
+        textAlign: "center"
+    },
 
     register: {
         marginTop: 20,
