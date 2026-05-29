@@ -65,7 +65,32 @@ const findSection = (lines: string[], sectionNames: string[]) => {
   return sectionLines.map(cleanLine).filter(Boolean);
 };
 
-const getTitle = (lines: string[]) => {
+// Emojis de comida que el agente pone al inicio del nombre del plato
+const FOOD_EMOJI_REGEX =
+  /[\u{1F32E}-\u{1F37F}\u{1F950}-\u{1F96F}\u{1F980}-\u{1F9FF}\u{2615}\u{1F374}\u{1F35C}-\u{1F364}\u{1F372}\u{1F373}]/u;
+
+const ALL_EMOJI_REGEX = /[\u{1F300}-\u{1FFFF}]/gu;
+
+/**
+ * Extrae el nombre del plato buscando la línea con emoji de comida
+ * (formato del agente: "🍲 Nombre del plato / Variante").
+ * Si no encuentra esa línea, usa la primera línea útil como fallback.
+ */
+const getTitle = (lines: string[]): string => {
+  // Intento 1: buscar línea con emoji de comida (formato principal del agente)
+  for (const line of lines) {
+    if (FOOD_EMOJI_REGEX.test(line)) {
+      const nombre = line
+        .replace(FOOD_EMOJI_REGEX, "")  // quitar emoji de comida inicial
+        .split("/")[0]                   // tomar solo primer nombre
+        .replace(ALL_EMOJI_REGEX, "")   // quitar emojis restantes
+        .replace(/:$/u, "")
+        .trim();
+      if (nombre.length > 2) return nombre.slice(0, 80);
+    }
+  }
+
+  // Fallback: primera línea que no sea sección conocida
   const firstUsefulLine =
     lines.find(
       (line) =>
@@ -80,6 +105,7 @@ const getTitle = (lines: string[]) => {
 
   return (
     cleanLine(firstUsefulLine)
+      .replace(ALL_EMOJI_REGEX, "")
       .replace(/^receta\s*(de|para)?\s*/i, "")
       .replace(/:$/u, "")
       .slice(0, 80)
