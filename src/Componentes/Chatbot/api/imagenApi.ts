@@ -13,8 +13,7 @@ const FOOD_EMOJI_REGEX =
 
 /**
  * Extrae el nombre del plato de la respuesta del agente.
- * Busca la línea que empieza con un emoji de comida (formato del agente: "🍲 Nombre / Variante").
- * Toma solo la primera variante (antes de "/") y limpia emojis y espacios.
+ * Busca la línea que empieza con un emoji de comida.
  */
 export function extraerNombrePlato(respuesta: string): string | null {
   const lineas = respuesta.split("\n");
@@ -22,11 +21,10 @@ export function extraerNombrePlato(respuesta: string): string | null {
   for (const linea of lineas) {
     const stripped = linea.trim();
     if (FOOD_EMOJI_REGEX.test(stripped)) {
-      // Quitar el emoji inicial y tomar solo el primer nombre (antes de "/")
       const sinEmoji = stripped
         .replace(FOOD_EMOJI_REGEX, "")
         .split("/")[0]
-        .replace(/[\u{1F300}-\u{1FFFF}]/gu, "") // quitar cualquier emoji restante
+        .replace(/[\u{1F300}-\u{1FFFF}]/gu, "")
         .trim();
       if (sinEmoji.length > 2) return sinEmoji;
     }
@@ -37,16 +35,35 @@ export function extraerNombrePlato(respuesta: string): string | null {
 
 /**
  * Pide la imagen al endpoint GET /api/imagen?plato=...
- * Retorna la URL o null si no hay resultado o falla la petición.
+ * Retorna la URL o null si no hay resultado o falla la peticin.
+ *
+ * NOTA: No usamos AbortSignal.timeout() porque no est disponible
+ * en todas las versiones de Hermes/React Native. Usamos setTimeout manual.
  */
 export async function fetchImagenPlato(nombrePlato: string): Promise<string | null> {
+  const url = `${API_BASE_URL}/api/imagen?plato=${encodeURIComponent(nombrePlato)}`;
+  console.log(`[IMAGEN] Buscando imagen para: "${nombrePlato}" -> ${url}`);
+
+  // Timeout manual compatible con React Native / Hermes
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 6000);
+
   try {
-    const url = `${API_BASE_URL}/api/imagen?plato=${encodeURIComponent(nombrePlato)}`;
-    const res = await fetch(url, { signal: AbortSignal.timeout(5000) } as any);
-    if (!res.ok) return null;
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      console.warn(`[IMAGEN] HTTP ${res.status} para "${nombrePlato}"`);
+      return null;
+    }
+
     const data = await res.json();
-    return typeof data?.imageUrl === "string" ? data.imageUrl : null;
-  } catch {
+    const imageUrl = typeof data?.imageUrl === "string" ? data.imageUrl : null;
+    console.log(`[IMAGEN] Resultado para "${nombrePlato}": ${imageUrl ?? "null"}`);
+    return imageUrl;
+  } catch (err: any) {
+    clearTimeout(timeoutId);
+    console.warn(`[IMAGEN] Error para "${nombrePlato}": ${err?.message}`);
     return null;
   }
 }
