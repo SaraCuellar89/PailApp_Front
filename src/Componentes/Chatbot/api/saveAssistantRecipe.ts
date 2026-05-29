@@ -15,6 +15,8 @@ export type ParsedAssistantRecipe = {
 type SaveAssistantRecipeOptions = {
   titulo?: string;
   archivo?: ImagePickerAsset | null;
+  /** URL de imagen sugerida por Spoonacular (se usa si no hay archivo propio) */
+  imagenSugeridaUrl?: string | null;
 };
 
 const cleanLine = (line: string) =>
@@ -36,7 +38,6 @@ const hasAnySectionName = (line: string, names: string[]) => {
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
-
   return names.some((name) => normalized.includes(name));
 };
 
@@ -45,19 +46,11 @@ const findSection = (lines: string[], sectionNames: string[]) => {
   if (startIndex < 0) return [];
 
   const sectionLines: string[] = [];
-  const sectionHeaders = [
-    "ingredientes",
-    "preparacion",
-    "pasos",
-    "procedimiento",
-    "descripcion",
-  ];
+  const sectionHeaders = ["ingredientes", "preparacion", "pasos", "procedimiento", "descripcion"];
 
   for (let index = startIndex + 1; index < lines.length; index += 1) {
     const line = lines[index];
-    const isNextSection =
-      /:$/u.test(line) || hasAnySectionName(line, sectionHeaders);
-
+    const isNextSection = /:$/u.test(line) || hasAnySectionName(line, sectionHeaders);
     if (sectionLines.length > 0 && isNextSection) break;
     sectionLines.push(line);
   }
@@ -65,42 +58,26 @@ const findSection = (lines: string[], sectionNames: string[]) => {
   return sectionLines.map(cleanLine).filter(Boolean);
 };
 
-// Emojis de comida que el agente pone al inicio del nombre del plato
 const FOOD_EMOJI_REGEX =
   /[\u{1F32E}-\u{1F37F}\u{1F950}-\u{1F96F}\u{1F980}-\u{1F9FF}\u{2615}\u{1F374}\u{1F35C}-\u{1F364}\u{1F372}\u{1F373}]/u;
-
 const ALL_EMOJI_REGEX = /[\u{1F300}-\u{1FFFF}]/gu;
 
-/**
- * Extrae el nombre del plato buscando la línea con emoji de comida
- * (formato del agente: "🍲 Nombre del plato / Variante").
- * Si no encuentra esa línea, usa la primera línea útil como fallback.
- */
 const getTitle = (lines: string[]): string => {
-  // Intento 1: buscar línea con emoji de comida (formato principal del agente)
   for (const line of lines) {
     if (FOOD_EMOJI_REGEX.test(line)) {
       const nombre = line
-        .replace(FOOD_EMOJI_REGEX, "")  // quitar emoji de comida inicial
-        .split("/")[0]                   // tomar solo primer nombre
-        .replace(ALL_EMOJI_REGEX, "")   // quitar emojis restantes
+        .replace(FOOD_EMOJI_REGEX, "")
+        .split("/")[0]
+        .replace(ALL_EMOJI_REGEX, "")
         .replace(/:$/u, "")
         .trim();
       if (nombre.length > 2) return nombre.slice(0, 80);
     }
   }
 
-  // Fallback: primera línea que no sea sección conocida
   const firstUsefulLine =
     lines.find(
-      (line) =>
-        !hasAnySectionName(line, [
-          "ingredientes",
-          "preparacion",
-          "pasos",
-          "procedimiento",
-          "descripcion",
-        ]),
+      (line) => !hasAnySectionName(line, ["ingredientes", "preparacion", "pasos", "procedimiento", "descripcion"]),
     ) ?? "Receta del asistente";
 
   return (
@@ -116,20 +93,12 @@ const getTitle = (lines: string[]): string => {
 const getEstimatedTime = (text: string) => {
   const match = text.match(/(\d+)\s*(minutos|minuto|min|horas|hora|hrs|hr|h)\b/i);
   if (!match) return { tiempo_preparacion: "30", tipo_tiempo: "min" };
-
   const unit = match[2].toLowerCase();
-  return {
-    tiempo_preparacion: match[1],
-    tipo_tiempo: unit.startsWith("h") ? "h" : "min",
-  };
+  return { tiempo_preparacion: match[1], tipo_tiempo: unit.startsWith("h") ? "h" : "min" };
 };
 
 const getDifficulty = (text: string) => {
-  const lower = text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-
+  const lower = text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   if (lower.includes("dificil")) return "dificil";
   if (lower.includes("media") || lower.includes("intermedia")) return "media";
   return "facil";
@@ -138,24 +107,16 @@ const getDifficulty = (text: string) => {
 const parseAssistantRecipe = (content: string): ParsedAssistantRecipe => {
   const lines = normalizeText(content);
   const ingredientes = findSection(lines, ["ingredientes"]);
-  const preparacion = findSection(lines, [
-    "preparacion",
-    "pasos",
-    "procedimiento",
-  ]);
+  const preparacion = findSection(lines, ["preparacion", "pasos", "procedimiento"]);
   const descripcion = findSection(lines, ["descripcion"]);
   const time = getEstimatedTime(content);
 
   return {
     titulo: getTitle(lines),
-    descripcion:
-      descripcion.join("\n") ||
-      "Receta sugerida por el asistente de cocina de PailApp.",
+    descripcion: descripcion.join("\n") || "Receta sugerida por el asistente de cocina de PailApp.",
     ingredientes: JSON.stringify(
-      (ingredientes.length > 0
-        ? ingredientes
-        : ["Ingredientes sugeridos por el asistente"]
-      ).map((ingrediente, index) => `${index + 1}. ${ingrediente}`),
+      (ingredientes.length > 0 ? ingredientes : ["Ingredientes sugeridos por el asistente"])
+        .map((ingrediente, index) => `${index + 1}. ${ingrediente}`),
     ),
     preparacion: preparacion.join("\n") || content,
     tiempo_preparacion: time.tiempo_preparacion,
@@ -164,25 +125,15 @@ const parseAssistantRecipe = (content: string): ParsedAssistantRecipe => {
   };
 };
 
-export const getAssistantRecipeDraft = (content: string) =>
-  parseAssistantRecipe(content);
+export const getAssistantRecipeDraft = (content: string) => parseAssistantRecipe(content);
 
 const findPublicationId = (payload: any): number | null => {
   if (!payload || typeof payload !== "object") return null;
-
   const candidates = [
-    payload.id_publicacion,
-    payload.publicacion_id,
-    payload.id,
-    payload.insertId,
-    payload?.data?.id_publicacion,
-    payload?.data?.publicacion_id,
-    payload?.data?.id,
-    payload?.data?.insertId,
-    payload?.data?.publicacion?.id_publicacion,
-    payload?.data?.publicacion?.publicacion_id,
+    payload.id_publicacion, payload.publicacion_id, payload.id, payload.insertId,
+    payload?.data?.id_publicacion, payload?.data?.publicacion_id, payload?.data?.id, payload?.data?.insertId,
+    payload?.data?.publicacion?.id_publicacion, payload?.data?.publicacion?.publicacion_id,
   ];
-
   const found = candidates.find((value) => Number.isFinite(Number(value)));
   return found ? Number(found) : null;
 };
@@ -192,12 +143,24 @@ const findUploadedRecipeId = async (token: string, titulo: string) => {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
   });
-
   const data = await response.json();
   if (!response.ok || !data.success || !Array.isArray(data.data)) return null;
-
   const uploadedRecipe = data.data.find((item: any) => item?.titulo === titulo);
   return uploadedRecipe?.id_publicacion ? Number(uploadedRecipe.id_publicacion) : null;
+};
+
+/**
+ * Descarga una imagen desde una URL remota y la convierte a blob
+ * para poder subirla como archivo en el FormData.
+ */
+const urlToBlob = async (url: string): Promise<Blob | null> => {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    return await res.blob();
+  } catch {
+    return null;
+  }
 };
 
 export const saveAssistantRecipe = async (
@@ -221,16 +184,18 @@ export const saveAssistantRecipe = async (
   if (idUsuario) formData.append("id_usuario", String(idUsuario));
 
   if (options.archivo?.uri) {
+    // El usuario eligió una imagen propia: subirla directamente
     const uri = options.archivo.uri;
     const nombre = uri.split("/").pop() ?? "receta.jpg";
     const extension = nombre.split(".").pop() || "jpg";
     const tipo = `image/${extension === "jpg" ? "jpeg" : extension}`;
-
-    formData.append("archivo", {
-      uri,
-      name: nombre,
-      type: tipo,
-    } as any);
+    formData.append("archivo", { uri, name: nombre, type: tipo } as any);
+  } else if (options.imagenSugeridaUrl) {
+    // No hay imagen propia: intentar usar la imagen sugerida por Spoonacular
+    const blob = await urlToBlob(options.imagenSugeridaUrl);
+    if (blob) {
+      formData.append("archivo", blob, "imagen_sugerida.jpg");
+    }
   }
 
   const uploadResponse = await fetch(`${PAILAPP_API_URL}/publicaciones/subir`, {

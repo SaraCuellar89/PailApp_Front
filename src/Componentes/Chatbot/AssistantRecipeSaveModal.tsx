@@ -23,37 +23,43 @@ import { getAssistantRecipeDraft } from "./api/saveAssistantRecipe";
 type AssistantRecipeSaveModalProps = {
   visible: boolean;
   content: string;
+  /** URL de la imagen sugerida por Spoonacular (viene del chat) */
+  sugeridaUrl?: string | null;
   saving: boolean;
   onCancel: () => void;
   onConfirm: (options: {
     titulo: string;
     archivo: ImagePicker.ImagePickerAsset | null;
+    imagenSugeridaUrl: string | null;
   }) => void;
 };
 
 export default function AssistantRecipeSaveModal({
   visible,
   content,
+  sugeridaUrl,
   saving,
   onCancel,
   onConfirm,
 }: AssistantRecipeSaveModalProps) {
   const draft = useMemo(() => getAssistantRecipeDraft(content || ""), [content]);
   const [titulo, setTitulo] = useState("");
+  // null = sin imagen elegida (se usa sugeridaUrl si existe)
+  // ImagePickerAsset = el usuario eligió una propia
   const [imagen, setImagen] = useState<ImagePicker.ImagePickerAsset | null>(null);
 
   useEffect(() => {
     if (!visible) return;
-
     setTitulo(draft.titulo);
-    setImagen(null);
+    setImagen(null); // reset: usar sugerida por defecto
   }, [draft.titulo, visible]);
+
+  // Lo que se muestra en el preview: primero imagen del usuario, si no la sugerida
+  const previewUri = imagen?.uri ?? sugeridaUrl ?? null;
 
   const seleccionarImagen = async () => {
     await new Promise((resolve) => setTimeout(resolve, 300));
-
-    const { status, canAskAgain } =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const { status, canAskAgain } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (status !== "granted") {
       if (!canAskAgain) {
@@ -81,7 +87,6 @@ export default function AssistantRecipeSaveModal({
 
   const tomarFoto = async () => {
     await new Promise((resolve) => setTimeout(resolve, 300));
-
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
       Mensaje_Toast.info("Se necesita permiso para acceder a la camara");
@@ -97,11 +102,20 @@ export default function AssistantRecipeSaveModal({
   };
 
   const elegirFuente = () => {
-    Alert.alert("Agregar imagen", "De donde quieres subir la foto?", [
-      { text: "Galeria", onPress: seleccionarImagen },
-      { text: "Camara", onPress: tomarFoto },
-      { text: "Cancelar", style: "cancel" },
-    ]);
+    Alert.alert(
+      "Imagen del plato",
+      sugeridaUrl && !imagen
+        ? "Tienes una imagen sugerida. \u00bfQuieres usar otra?"
+        : "\u00bfDe dónde quieres subir la foto?",
+      [
+        { text: "Galeria", onPress: seleccionarImagen },
+        { text: "Cámara", onPress: tomarFoto },
+        ...(sugeridaUrl && imagen
+          ? [{ text: "Usar sugerida", onPress: () => setImagen(null) }]
+          : []),
+        { text: "Cancelar", style: "cancel" },
+      ],
+    );
   };
 
   const guardar = () => {
@@ -109,17 +123,17 @@ export default function AssistantRecipeSaveModal({
       Mensaje_Toast.error("El titulo es obligatorio");
       return;
     }
-
-    onConfirm({ titulo, archivo: imagen });
+    onConfirm({
+      titulo,
+      archivo: imagen,
+      imagenSugeridaUrl: imagen ? null : (sugeridaUrl ?? null),
+    });
   };
 
   return (
     <Modal transparent visible={visible} animationType="fade" onRequestClose={onCancel}>
       <View style={styles.overlay}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.keyboard}
-        >
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.keyboard}>
           <View style={styles.box}>
             <ScrollView
               showsVerticalScrollIndicator={false}
@@ -141,23 +155,26 @@ export default function AssistantRecipeSaveModal({
               </View>
 
               <View style={estilos_formu_subir_receta.caja_input}>
-                <Texto style={estilos_formu_subir_receta.label}>Imagen</Texto>
+                <Texto style={estilos_formu_subir_receta.label}>
+                  {previewUri ? "Imagen del plato (toca para cambiar)" : "Imagen"}
+                </Texto>
                 <TouchableOpacity
                   style={[estilos_formu_subir_receta.imagePicker, styles.imagePicker]}
                   onPress={elegirFuente}
                   disabled={saving}
                 >
-                  {imagen ? (
-                    <Image
-                      source={{ uri: imagen.uri }}
-                      style={estilos_formu_subir_receta.preview}
-                    />
+                  {previewUri ? (
+                    <Image source={{ uri: previewUri }} style={estilos_formu_subir_receta.preview} />
                   ) : (
                     <Texto style={estilos_formu_subir_receta.imagePlaceholder}>
                       Toca para subir una foto
                     </Texto>
                   )}
                 </TouchableOpacity>
+
+                {sugeridaUrl && !imagen ? (
+                  <Texto style={styles.sugeridaLabel}>Imagen sugerida automáticamente • Toca para cambiarla</Texto>
+                ) : null}
               </View>
 
               <View style={styles.buttons}>
@@ -194,9 +211,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 18,
   },
-  keyboard: {
-    width: "100%",
-  },
+  keyboard: { width: "100%" },
   box: {
     maxHeight: "88%",
     borderRadius: 10,
@@ -205,29 +220,20 @@ const styles = StyleSheet.create({
     borderColor: colores.color_4,
     overflow: "hidden",
   },
-  content: {
-    padding: 18,
-    gap: 18,
-  },
+  content: { padding: 18, gap: 18 },
   title: {
     fontFamily: "JetBrainsMono_700Bold",
     fontSize: 18,
     textAlign: "center",
   },
-  input: {
-    paddingHorizontal: 10,
-  },
-  imagePicker: {
-    height: 180,
-  },
+  input: { paddingHorizontal: 10 },
+  imagePicker: { height: 180 },
   buttons: {
     flexDirection: "row",
     justifyContent: "center",
     gap: 12,
   },
-  primaryButton: {
-    minWidth: 120,
-  },
+  primaryButton: { minWidth: 120 },
   secondaryButton: {
     minWidth: 120,
     padding: 10,
@@ -241,7 +247,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
   },
-  disabled: {
-    opacity: 0.55,
+  disabled: { opacity: 0.55 },
+  sugeridaLabel: {
+    fontSize: 11,
+    color: "grey",
+    textAlign: "center",
+    marginTop: 4,
   },
 });
