@@ -191,6 +191,21 @@ export default function ChatBot({
                     {mensaje.content}
                   </Texto>
 
+                  {/* IMAGEN: bloque de imagen del plato. Quita este bloque para desactivar */}
+                  {mensaje.role === "assistant" && mensaje.imageUrl ? (
+                    <Image
+                      source={{ uri: mensaje.imageUrl }}
+                      style={{
+                        width: "100%",
+                        height: 180,
+                        borderRadius: 10,
+                        marginTop: 8,
+                      }}
+                      resizeMode="cover"
+                    />
+                  ) : null}
+                  {/* FIN IMAGEN */}
+
                   {mensaje.role === "assistant" ? (
                     <>
                       <View style={estilos_prueba_chatbot.fila_acciones_mensaje}>

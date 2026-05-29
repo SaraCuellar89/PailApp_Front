@@ -6,6 +6,8 @@ import { getChatbotUsage } from "../utils/usage";
 import { inferChatbotIntent } from "../utils/intenciones";
 import { useChatbotAudio } from "./useChatbotAudio";
 import { useSpeechRecognition } from "./useSpeechRecognition";
+// IMAGEN: quita estas dos líneas para desactivar imágenes
+import { extraerNombrePlato, fetchImagenPlato } from "../api/imagenApi";
 
 type UseChatbotConversationProps = {
   idUsuario?: number | string | null;
@@ -61,6 +63,13 @@ export const useChatbotConversation = ({
   const replaceMessageContent = useCallback((id: string, content: string) => {
     setMessages((prev) =>
       prev.map((msg) => (msg.id === id ? { ...msg, content } : msg)),
+    );
+  }, []);
+
+  // IMAGEN: esta función añade imageUrl a un mensaje existente sin tocar el resto
+  const setMessageImage = useCallback((id: string, imageUrl: string | null) => {
+    setMessages((prev) =>
+      prev.map((msg) => (msg.id === id ? { ...msg, imageUrl } : msg)),
     );
   }, []);
 
@@ -135,7 +144,7 @@ export const useChatbotConversation = ({
             }
 
             if (message.id === assistantPlaceholder.id) {
-              return { ...message, content: "" };
+              return { ...message, content: "", imageUrl: null };
             }
 
             return message;
@@ -181,12 +190,21 @@ export const useChatbotConversation = ({
 
         onIntencion?.(inferChatbotIntent(`${mensaje} ${respuestaFinal}`));
 
-        // TTS en su propio try/catch: si falla no interrumpe el flujo del chat
+        // TTS en su propio try/catch
         try {
           await speakText(assistantPlaceholder.id, respuestaFinal);
         } catch (ttsError) {
           console.warn("TTS fallo, se continua sin audio:", ttsError);
         }
+
+        // IMAGEN: buscar imagen del plato en paralelo, no bloquea el chat
+        const nombrePlato = extraerNombrePlato(respuestaFinal);
+        if (nombrePlato) {
+          fetchImagenPlato(nombrePlato)
+            .then((imageUrl) => setMessageImage(assistantPlaceholder.id, imageUrl))
+            .catch(() => {});
+        }
+
       } catch (error: any) {
         replaceMessageContent(
           assistantPlaceholder.id,
@@ -209,6 +227,7 @@ export const useChatbotConversation = ({
       resetTranscript,
       setCambiar_tamano,
       isListening,
+      setMessageImage,
       speakText,
       stopAudio,
       stopListening,

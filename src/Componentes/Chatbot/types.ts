@@ -4,6 +4,9 @@ export type ChatMessage = {
   id: string;
   role: ChatRole;
   content: string;
+  // IMAGEN: campo opcional para la imagen del plato (Spoonacular)
+  // Para quitar la funcionalidad basta con ignorar este campo en ChatBot.tsx
+  imageUrl?: string | null;
 };
 
 export type ChatbotUsage = {
