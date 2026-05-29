@@ -96,8 +96,6 @@ export default function ChatBot({
   const scrollRef = useRef<ScrollView | null>(null);
   const [mensajes_guardados, setMensajes_guardados] = useState<string[]>([]);
   const [mensaje_guardando, setMensaje_guardando] = useState<string | null>(null);
-
-  // Ahora también guardamos imageUrl para pasarla al modal
   const [mensaje_para_guardar, setMensaje_para_guardar] = useState<{
     id: string;
     content: string;
@@ -171,12 +169,20 @@ export default function ChatBot({
                     {mensaje.content}
                   </Texto>
 
-                  {/* IMAGEN: muestra la imagen del plato debajo del texto */}
-                  {mensaje.role === "assistant" && typeof mensaje.imageUrl === "string" && mensaje.imageUrl.length > 0 ? (
+                  {/* IMAGEN: bloque de imagen del plato */}
+                  {mensaje.role === "assistant" && mensaje.imageUrl ? (
                     <Image
+                      // key unico que cambia cuando llega la imagen -> fuerza re-render
+                      key={`img-${mensaje.id}-${mensaje.imageUrl}`}
                       source={{ uri: mensaje.imageUrl }}
-                      style={{ width: "100%", height: 180, borderRadius: 10, marginTop: 8 }}
+                      style={{
+                        width: "100%",
+                        height: 180,
+                        borderRadius: 10,
+                        marginTop: 8,
+                      }}
                       resizeMode="cover"
+                      onError={() => console.warn(`[IMAGEN] Error al renderizar: ${mensaje.imageUrl}`)}
                     />
                   ) : null}
                   {/* FIN IMAGEN */}
@@ -200,7 +206,6 @@ export default function ChatBot({
                           setMensaje_para_guardar({
                             id: mensaje.id,
                             content: mensaje.content,
-                            // IMAGEN: pasamos la imagen del chat al modal
                             imageUrl: mensaje.imageUrl,
                           })
                         }

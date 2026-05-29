@@ -7,6 +7,9 @@ export const createMessage = (
   id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
   role,
   content,
+  // Inicializar imageUrl solo para mensajes del asistente
+  // undefined en user messages para no ocupar espacio
+  ...(role === "assistant" ? { imageUrl: null } : {}),
 });
 
 export const createInitialAssistantMessage = () =>
