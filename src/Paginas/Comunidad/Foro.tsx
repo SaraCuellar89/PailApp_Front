@@ -82,7 +82,7 @@ export default function Foro({ navigation, route }: any) {
 
   // renderItem memoizado para que FlatList no re-cree la funcion en cada render
   const renderItem = useCallback(({ item: p }: { item: Plato }) => (
-    <View style={{ paddingHorizontal: 20, paddingBottom: 20 }}>
+    <View style={estilos_foro.contenedor_publicaciones}>
       <PublicacionCard
         navigation={navigation}
         key={p.publicacion_id}
@@ -115,7 +115,7 @@ export default function Foro({ navigation, route }: any) {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colores.color_2 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
 
       <View style={{ backgroundColor: colores.color_2 }}>
         <Header title="Foro" onBack={() => navigation.goBack()} />
@@ -140,9 +140,8 @@ export default function Foro({ navigation, route }: any) {
         data={platos}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
-        style={{ flex: 1, backgroundColor: colores.color_2 }}
+        style={{ flex: 1, backgroundColor: colores.color_2  }}
         contentContainerStyle={{
-          backgroundColor: colores.color_2,
           flexGrow: 1,
           paddingBottom: 10,
         }}

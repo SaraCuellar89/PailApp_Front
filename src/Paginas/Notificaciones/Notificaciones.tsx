@@ -38,15 +38,14 @@ const Notificaciones = ({navigation}: any) => {
                 headers: { 'Authorization': `Bearer ${usuario.token}` }
             });
 
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
             const data = await res.json();
 
-            if (data.data?.info_notificaciones) {
-                setNotificaciones(data.data.info_notificaciones);
-            } else {
+            if (!data.success) {
                 setNotificaciones([]);
+                return;
             }
+
+            setNotificaciones(data.data?.info_notificaciones ?? []);
 
         } catch (error) {
             console.error('Error obteniendo notificaciones:', error);
@@ -105,7 +104,7 @@ const Notificaciones = ({navigation}: any) => {
                 <View style={estilos_publicaciones.container}>
 
                     {cargando ? (
-                        <Texto>Cargando...</Texto>
+                        <Texto style={estilos_publicaciones.texto_vacio}>Cargando...</Texto>
                     ) : notificaciones.length === 0 ? (
                         <Texto style={estilos_publicaciones.texto_vacio}>No tienes notificaciones</Texto>
                     ) : (
