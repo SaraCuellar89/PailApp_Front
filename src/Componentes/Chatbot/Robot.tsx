@@ -5,11 +5,11 @@ import estilos_robot from "../../Estilos/Chatbot/robot_css";
 import Texto from "../Compartidos/Texto";
 
 // ─── Constantes ───────────────────────────────────────────────
-const VIDEO_TRANSFORMACION   = require('../../Animaciones/transformacion.mp4');
-const DURACION_TRANSFORMACION = 2500;
-const TIEMPO_VOLVER_DEFAULT   = 8000;
-const DURACION_CROSSFADE      = 400;
-const ROTACION_DEFAULT_MS     = 10000;
+const VIDEO_TRANSFORMACION    = require('../../Animaciones/transformacion.mp4');
+const DURACION_TRANSFORMACION  = 2500;
+const TIEMPO_VOLVER_DEFAULT    = 8000;
+const DURACION_CROSSFADE       = 400;
+const ROTACION_DEFAULT_MS      = 10000;
 
 // ─── Videos por intencion ─────────────────────────────────────
 const videos_por_intencion: Record<string, any[]> = {
@@ -71,8 +71,10 @@ const Robot = ({ cambiar_tamano, intencion }: any) => {
 
     const [frase, setFrase] = useState(frases[0]);
 
+    // 0 = playerA activo, 1 = playerB activo
     const activo = useRef<0 | 1>(0);
 
+    // Opacidad de cada player para el crossfade
     const opacidad_A = useRef(new Animated.Value(1)).current;
     const opacidad_B = useRef(new Animated.Value(0)).current;
 
@@ -85,12 +87,12 @@ const Robot = ({ cambiar_tamano, intencion }: any) => {
         p => { p.loop = true; }
     );
 
-    const montado              = useRef(true);
-    const en_transformacion    = useRef(false);
-    const cambiar_tamano_prev  = useRef<boolean>(cambiar_tamano);
-    const timeout_retorno      = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const timeout_transf       = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const intervalo_default    = useRef<ReturnType<typeof setInterval> | null>(null);
+    const montado             = useRef(true);
+    const en_transformacion   = useRef(false);
+    const cambiar_tamano_prev = useRef<boolean>(cambiar_tamano);
+    const timeout_retorno     = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const timeout_transf      = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const intervalo_default   = useRef<ReturnType<typeof setInterval> | null>(null);
 
     useEffect(() => {
         montado.current = true;
@@ -108,14 +110,14 @@ const Robot = ({ cambiar_tamano, intencion }: any) => {
         }
     }, [cambiar_tamano]);
 
-    // ── Funcion principal: crossfade hacia un nuevo video ────────
+    // ── Crossfade al siguiente player ──────────────────────────────
     const reproducir = (video: any, loop = true) => {
         if (!montado.current) return;
 
-        const siguiente: 0 | 1 = activo.current === 0 ? 1 : 0;
-        const player_siguiente  = siguiente === 0 ? playerA : playerB;
-        const opacidad_siguiente = siguiente === 0 ? opacidad_A : opacidad_B;
-        const opacidad_saliente  = siguiente === 0 ? opacidad_B : opacidad_A;
+        const siguiente: 0 | 1    = activo.current === 0 ? 1 : 0;
+        const player_siguiente     = siguiente === 0 ? playerA : playerB;
+        const opacidad_siguiente   = siguiente === 0 ? opacidad_A : opacidad_B;
+        const opacidad_saliente    = siguiente === 0 ? opacidad_B : opacidad_A;
 
         try {
             player_siguiente.replace(video);
@@ -125,14 +127,10 @@ const Robot = ({ cambiar_tamano, intencion }: any) => {
 
         Animated.parallel([
             Animated.timing(opacidad_siguiente, {
-                toValue: 1,
-                duration: DURACION_CROSSFADE,
-                useNativeDriver: true,
+                toValue: 1, duration: DURACION_CROSSFADE, useNativeDriver: true,
             }),
             Animated.timing(opacidad_saliente, {
-                toValue: 0,
-                duration: DURACION_CROSSFADE,
-                useNativeDriver: true,
+                toValue: 0, duration: DURACION_CROSSFADE, useNativeDriver: true,
             }),
         ]).start(() => {
             try {
@@ -144,7 +142,7 @@ const Robot = ({ cambiar_tamano, intencion }: any) => {
         activo.current = siguiente;
     };
 
-    // ── Rotacion de videos idle ──────────────────────────────────
+    // ── Rotacion idle ──────────────────────────────────────────────
     const iniciar_rotacion_default = () => {
         if (intervalo_default.current) clearInterval(intervalo_default.current);
         intervalo_default.current = setInterval(() => {
@@ -170,8 +168,7 @@ const Robot = ({ cambiar_tamano, intencion }: any) => {
             timeout_transf.current = setTimeout(() => {
                 en_transformacion.current = false;
                 if (!montado.current) return;
-                const video = elegir_video_aleatorio(intencion ?? null);
-                reproducir(video, true);
+                reproducir(elegir_video_aleatorio(intencion ?? null), true);
                 if (!intencion) iniciar_rotacion_default();
             }, DURACION_TRANSFORMACION);
         }
@@ -187,7 +184,6 @@ const Robot = ({ cambiar_tamano, intencion }: any) => {
 
         if (intencion) {
             reproducir(elegir_video_aleatorio(intencion), true);
-
             timeout_retorno.current = setTimeout(() => {
                 if (!montado.current) return;
                 reproducir(elegir_video_aleatorio(null), true);
@@ -204,7 +200,7 @@ const Robot = ({ cambiar_tamano, intencion }: any) => {
     }, [intencion]);
 
     // ── Render ───────────────────────────────────────────────────
-    const estilo_robot = cambiar_tamano ? estilos_robot.robot_pequeno : estilos_robot.robot;
+    const estilo_video = cambiar_tamano ? estilos_robot.robot_pequeno : estilos_robot.robot;
     const estilo_caja  = cambiar_tamano ? estilos_robot.caja_robot_pequeno : estilos_robot.caja_robot;
 
     return (
@@ -215,16 +211,19 @@ const Robot = ({ cambiar_tamano, intencion }: any) => {
                 </View>
             )}
 
+            {/* Caja con altura fija — los dos players apilados con position absolute */}
             <View style={estilo_caja}>
+
                 {/* Player A */}
-                <Animated.View style={[estilos_robot.player_overlay, { opacity: opacidad_A }]}>
-                    <VideoView player={playerA} nativeControls={false} style={estilo_robot} />
+                <Animated.View style={[estilos_robot.player_wrap, { opacity: opacidad_A, height: estilo_caja.height }]}>
+                    <VideoView player={playerA} nativeControls={false} style={estilo_video} />
                 </Animated.View>
 
                 {/* Player B */}
-                <Animated.View style={[estilos_robot.player_overlay, { opacity: opacidad_B }]}>
-                    <VideoView player={playerB} nativeControls={false} style={estilo_robot} />
+                <Animated.View style={[estilos_robot.player_wrap, { opacity: opacidad_B, height: estilo_caja.height }]}>
+                    <VideoView player={playerB} nativeControls={false} style={estilo_video} />
                 </Animated.View>
+
             </View>
         </View>
     );
