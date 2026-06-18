@@ -18,7 +18,7 @@ const estilos_robot = StyleSheet.create({
     // ── Texto flotante sobre el robot ─────────────────────────────
     caja_texto: {
         alignItems: "center",
-        paddingTop: 20,
+        paddingTop: 2,
     },
     texto: {
         width: "50%",
@@ -30,25 +30,38 @@ const estilos_robot = StyleSheet.create({
     // ── Cajas del video del robot ──────────────────────────────────
     caja_robot: {
         height: height * 0.4,
+        width: '100%',
         overflow: 'hidden',
         alignItems: 'center',
         justifyContent: 'center',
+        position: 'relative',
     },
     caja_robot_pequeno: {
-        height: height * 0.15,
+        height: height * 0.18,
+        width: '100%',
         overflow: 'hidden',
         alignItems: 'center',
         justifyContent: 'center',
+        position: 'relative',
+    },
+
+    // ── Overlay de cada player (posicion absoluta dentro de la caja) ────
+    player_overlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
     },
 
     // ── Tamaños del video ──────────────────────────────────────────
     robot: {
-        width: "150%",
-        height: height * 0.8,
+        width: '100%',
+        height: height * 0.55,
     },
     robot_pequeno: {
-        width: "50%",
-        height: height * 0.5,
+        width: '35%',
+        height: height * 0.15,
     }
 
 })

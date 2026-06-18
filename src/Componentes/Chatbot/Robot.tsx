@@ -6,10 +6,10 @@ import Texto from "../Compartidos/Texto";
 
 // ─── Constantes ───────────────────────────────────────────────
 const VIDEO_TRANSFORMACION   = require('../../Animaciones/transformacion.mp4');
-const DURACION_TRANSFORMACION = 2500;  // ms que dura transformacion.mp4
-const TIEMPO_VOLVER_DEFAULT   = 8000;  // ms antes de volver a idle
-const DURACION_CROSSFADE      = 400;   // ms del fade entre videos
-const ROTACION_DEFAULT_MS     = 10000; // ms entre rotacion de idle
+const DURACION_TRANSFORMACION = 2500;
+const TIEMPO_VOLVER_DEFAULT   = 8000;
+const DURACION_CROSSFADE      = 400;
+const ROTACION_DEFAULT_MS     = 10000;
 
 // ─── Videos por intencion ─────────────────────────────────────
 const videos_por_intencion: Record<string, any[]> = {
@@ -71,14 +71,11 @@ const Robot = ({ cambiar_tamano, intencion }: any) => {
 
     const [frase, setFrase] = useState(frases[0]);
 
-    // Cual player esta "activo" visualmente (0 o 1)
     const activo = useRef<0 | 1>(0);
 
-    // Opacidades animadas para el crossfade
     const opacidad_A = useRef(new Animated.Value(1)).current;
     const opacidad_B = useRef(new Animated.Value(0)).current;
 
-    // Dos players: A siempre visible al inicio
     const playerA = useVideoPlayer(
         require('../../Animaciones/animaciones normal/esperar_1.mp4'),
         p => { p.loop = true; p.play(); }
@@ -116,7 +113,7 @@ const Robot = ({ cambiar_tamano, intencion }: any) => {
         if (!montado.current) return;
 
         const siguiente: 0 | 1 = activo.current === 0 ? 1 : 0;
-        const player_siguiente = siguiente === 0 ? playerA : playerB;
+        const player_siguiente  = siguiente === 0 ? playerA : playerB;
         const opacidad_siguiente = siguiente === 0 ? opacidad_A : opacidad_B;
         const opacidad_saliente  = siguiente === 0 ? opacidad_B : opacidad_A;
 
@@ -126,7 +123,6 @@ const Robot = ({ cambiar_tamano, intencion }: any) => {
             player_siguiente.play();
         } catch (e) {}
 
-        // Fade: el siguiente sube, el saliente baja
         Animated.parallel([
             Animated.timing(opacidad_siguiente, {
                 toValue: 1,
@@ -139,7 +135,6 @@ const Robot = ({ cambiar_tamano, intencion }: any) => {
                 useNativeDriver: true,
             }),
         ]).start(() => {
-            // Pausar el player que quedo atras para no gastar recursos
             try {
                 const player_saliente = siguiente === 0 ? playerB : playerA;
                 player_saliente.pause();
@@ -222,12 +217,12 @@ const Robot = ({ cambiar_tamano, intencion }: any) => {
 
             <View style={estilo_caja}>
                 {/* Player A */}
-                <Animated.View style={[{ position: 'absolute', width: '100%', height: '100%' }, { opacity: opacidad_A }]}>
+                <Animated.View style={[estilos_robot.player_overlay, { opacity: opacidad_A }]}>
                     <VideoView player={playerA} nativeControls={false} style={estilo_robot} />
                 </Animated.View>
 
                 {/* Player B */}
-                <Animated.View style={[{ position: 'absolute', width: '100%', height: '100%' }, { opacity: opacidad_B }]}>
+                <Animated.View style={[estilos_robot.player_overlay, { opacity: opacidad_B }]}>
                     <VideoView player={playerB} nativeControls={false} style={estilo_robot} />
                 </Animated.View>
             </View>
