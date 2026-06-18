@@ -1,20 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View } from "react-native";
+import { Animated, View } from "react-native";
 import { VideoView, useVideoPlayer } from 'expo-video';
 import estilos_robot from "../../Estilos/Chatbot/robot_css";
 import Texto from "../Compartidos/Texto";
 
-const VIDEO_TRANSFORMACION = require('../../Animaciones/transformacion.mp4');
-const DURACION_TRANSFORMACION = 2500; // ms que dura el video de transformacion
+// ─── Constantes ───────────────────────────────────────────────
+const VIDEO_TRANSFORMACION   = require('../../Animaciones/transformacion.mp4');
+const DURACION_TRANSFORMACION = 2500;  // ms que dura transformacion.mp4
+const TIEMPO_VOLVER_DEFAULT   = 8000;  // ms antes de volver a idle
+const DURACION_CROSSFADE      = 400;   // ms del fade entre videos
+const ROTACION_DEFAULT_MS     = 10000; // ms entre rotacion de idle
 
-const frases = [
-    "¿Qué quieres cocinar hoy?",
-    "¿Tienes hambre? ¡Te ayudo!",
-    "¿Qué hay en tu nevera?",
-    "¿Algo rico para hoy?",
-    "¿Qué se te antoja?",
-];
-
+// ─── Videos por intencion ─────────────────────────────────────
 const videos_por_intencion: Record<string, any[]> = {
     "feliz":      [
         require('../../Animaciones/animaciones chef/feliz_1.mp4'),
@@ -29,25 +26,15 @@ const videos_por_intencion: Record<string, any[]> = {
         require('../../Animaciones/animaciones chef/enojado_1.mp4'),
         require('../../Animaciones/animaciones chef/enojado_2.mp4'),
     ],
-    "hambre":     [
-        require('../../Animaciones/animaciones chef/hablar_1.mp4'),
-    ],
+    "hambre":     [require('../../Animaciones/animaciones chef/hablar_1.mp4')],
     "receta":     [
         require('../../Animaciones/animaciones chef/hablar_2.mp4'),
         require('../../Animaciones/animaciones chef/hablar_3.mp4'),
     ],
-    "rapido":     [
-        require('../../Animaciones/animaciones chef/hablar_4.mp4'),
-    ],
-    "saludable":  [
-        require('../../Animaciones/animaciones chef/hablar_5.mp4'),
-    ],
-    "dulce":      [
-        require('../../Animaciones/animaciones chef/hablar_1.mp4'),
-    ],
-    "salado":     [
-        require('../../Animaciones/animaciones chef/hablar_2.mp4'),
-    ],
+    "rapido":     [require('../../Animaciones/animaciones chef/hablar_4.mp4')],
+    "saludable":  [require('../../Animaciones/animaciones chef/hablar_5.mp4')],
+    "dulce":      [require('../../Animaciones/animaciones chef/hablar_1.mp4')],
+    "salado":     [require('../../Animaciones/animaciones chef/hablar_2.mp4')],
     "hola":       [
         require('../../Animaciones/animaciones normal/saludar_1.mp4'),
         require('../../Animaciones/animaciones normal/saludar_2.mp4'),
@@ -71,25 +58,51 @@ const elegir_video_aleatorio = (intencion: string | null) => {
     return opciones[Math.floor(Math.random() * opciones.length)];
 };
 
+const frases = [
+    "¿Qué quieres cocinar hoy?",
+    "¿Tienes hambre? ¡Te ayudo!",
+    "¿Qué hay en tu nevera?",
+    "¿Algo rico para hoy?",
+    "¿Qué se te antoja?",
+];
+
+// ─── Componente ───────────────────────────────────────────────
 const Robot = ({ cambiar_tamano, intencion }: any) => {
 
     const [frase, setFrase] = useState(frases[0]);
-    const cambiar_tamano_prev = useRef<boolean>(cambiar_tamano);
-    const en_transformacion = useRef(false);
 
-    const montado = useRef(true);
-    const timeout_retorno = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const timeout_transformacion = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const intervalo_default = useRef<ReturnType<typeof setInterval> | null>(null);
+    // Cual player esta "activo" visualmente (0 o 1)
+    const activo = useRef<0 | 1>(0);
 
-    const player = useVideoPlayer(require('../../Animaciones/animaciones normal/esperar_1.mp4'), p => {
-        p.loop = true;
-        p.play();
-    });
+    // Opacidades animadas para el crossfade
+    const opacidad_A = useRef(new Animated.Value(1)).current;
+    const opacidad_B = useRef(new Animated.Value(0)).current;
+
+    // Dos players: A siempre visible al inicio
+    const playerA = useVideoPlayer(
+        require('../../Animaciones/animaciones normal/esperar_1.mp4'),
+        p => { p.loop = true; p.play(); }
+    );
+    const playerB = useVideoPlayer(
+        require('../../Animaciones/animaciones normal/esperar_2.mp4'),
+        p => { p.loop = true; }
+    );
+
+    const montado              = useRef(true);
+    const en_transformacion    = useRef(false);
+    const cambiar_tamano_prev  = useRef<boolean>(cambiar_tamano);
+    const timeout_retorno      = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const timeout_transf       = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const intervalo_default    = useRef<ReturnType<typeof setInterval> | null>(null);
 
     useEffect(() => {
         montado.current = true;
-        return () => { montado.current = false; };
+        return () => {
+            montado.current = false;
+            if (timeout_retorno.current)   clearTimeout(timeout_retorno.current);
+            if (timeout_transf.current)    clearTimeout(timeout_transf.current);
+            if (intervalo_default.current) clearInterval(intervalo_default.current);
+        };
     }, []);
 
     useEffect(() => {
@@ -98,108 +111,125 @@ const Robot = ({ cambiar_tamano, intencion }: any) => {
         }
     }, [cambiar_tamano]);
 
-    // Detectar cuando cambia_tamano pasa de false → true para reproducir transformacion
+    // ── Funcion principal: crossfade hacia un nuevo video ────────
+    const reproducir = (video: any, loop = true) => {
+        if (!montado.current) return;
+
+        const siguiente: 0 | 1 = activo.current === 0 ? 1 : 0;
+        const player_siguiente = siguiente === 0 ? playerA : playerB;
+        const opacidad_siguiente = siguiente === 0 ? opacidad_A : opacidad_B;
+        const opacidad_saliente  = siguiente === 0 ? opacidad_B : opacidad_A;
+
+        try {
+            player_siguiente.replace(video);
+            player_siguiente.loop = loop;
+            player_siguiente.play();
+        } catch (e) {}
+
+        // Fade: el siguiente sube, el saliente baja
+        Animated.parallel([
+            Animated.timing(opacidad_siguiente, {
+                toValue: 1,
+                duration: DURACION_CROSSFADE,
+                useNativeDriver: true,
+            }),
+            Animated.timing(opacidad_saliente, {
+                toValue: 0,
+                duration: DURACION_CROSSFADE,
+                useNativeDriver: true,
+            }),
+        ]).start(() => {
+            // Pausar el player que quedo atras para no gastar recursos
+            try {
+                const player_saliente = siguiente === 0 ? playerB : playerA;
+                player_saliente.pause();
+            } catch (e) {}
+        });
+
+        activo.current = siguiente;
+    };
+
+    // ── Rotacion de videos idle ──────────────────────────────────
+    const iniciar_rotacion_default = () => {
+        if (intervalo_default.current) clearInterval(intervalo_default.current);
+        intervalo_default.current = setInterval(() => {
+            if (!montado.current) return;
+            reproducir(elegir_video_aleatorio(null), true);
+        }, ROTACION_DEFAULT_MS);
+    };
+
+    // ── Transicion al enviar mensaje ─────────────────────────────
     useEffect(() => {
         const anterior = cambiar_tamano_prev.current;
         cambiar_tamano_prev.current = cambiar_tamano;
 
-        // Solo disparar transformacion cuando pasa de modo normal → modo chat (false → true)
         if (!anterior && cambiar_tamano && !en_transformacion.current) {
             en_transformacion.current = true;
 
-            if (timeout_retorno.current) clearTimeout(timeout_retorno.current);
+            if (timeout_retorno.current)   clearTimeout(timeout_retorno.current);
             if (intervalo_default.current) clearInterval(intervalo_default.current);
-            if (timeout_transformacion.current) clearTimeout(timeout_transformacion.current);
+            if (timeout_transf.current)    clearTimeout(timeout_transf.current);
 
-            try {
-                player.replace(VIDEO_TRANSFORMACION);
-                player.loop = false;
-                player.play();
-            } catch (e) {}
+            reproducir(VIDEO_TRANSFORMACION, false);
 
-            // Despues de la duracion de la transformacion, volver al flujo normal
-            timeout_transformacion.current = setTimeout(() => {
+            timeout_transf.current = setTimeout(() => {
                 en_transformacion.current = false;
                 if (!montado.current) return;
-                // Si hay intencion activa la aplica, si no vuelve a default
-                try {
-                    const video = intencion
-                        ? elegir_video_aleatorio(intencion)
-                        : elegir_video_aleatorio(null);
-                    player.replace(video);
-                    player.loop = true;
-                    player.play();
-                } catch (e) {}
-
+                const video = elegir_video_aleatorio(intencion ?? null);
+                reproducir(video, true);
                 if (!intencion) iniciar_rotacion_default();
             }, DURACION_TRANSFORMACION);
         }
     }, [cambiar_tamano]);
 
-    const TIEMPO_VOLVER_DEFAULT = 8000;
-
+    // ── Cambio de intencion ──────────────────────────────────────
     useEffect(() => {
         if (!montado.current) return;
-        // Si estamos en medio de la transformacion, no interrumpir
         if (en_transformacion.current) return;
 
-        if (timeout_retorno.current) clearTimeout(timeout_retorno.current);
+        if (timeout_retorno.current)   clearTimeout(timeout_retorno.current);
         if (intervalo_default.current) clearInterval(intervalo_default.current);
 
         if (intencion) {
-            try {
-                player.replace(elegir_video_aleatorio(intencion));
-                player.loop = true;
-                player.play();
-            } catch (e) {}
+            reproducir(elegir_video_aleatorio(intencion), true);
 
             timeout_retorno.current = setTimeout(() => {
                 if (!montado.current) return;
-                try {
-                    player.replace(elegir_video_aleatorio(null));
-                    player.loop = true;
-                    player.play();
-                } catch (e) {}
+                reproducir(elegir_video_aleatorio(null), true);
                 iniciar_rotacion_default();
             }, TIEMPO_VOLVER_DEFAULT);
-
         } else {
             iniciar_rotacion_default();
         }
 
         return () => {
-            if (timeout_retorno.current) clearTimeout(timeout_retorno.current);
+            if (timeout_retorno.current)   clearTimeout(timeout_retorno.current);
             if (intervalo_default.current) clearInterval(intervalo_default.current);
         };
     }, [intencion]);
 
-    const iniciar_rotacion_default = () => {
-        if (intervalo_default.current) clearInterval(intervalo_default.current);
-        intervalo_default.current = setInterval(() => {
-            if (!montado.current) return;
-            try {
-                player.replace(elegir_video_aleatorio(null));
-                player.play();
-            } catch (e) {}
-        }, 10000);
-    };
+    // ── Render ───────────────────────────────────────────────────
+    const estilo_robot = cambiar_tamano ? estilos_robot.robot_pequeno : estilos_robot.robot;
+    const estilo_caja  = cambiar_tamano ? estilos_robot.caja_robot_pequeno : estilos_robot.caja_robot;
 
     return (
         <View>
-            {cambiar_tamano === true ?
-            (null) :
-            (
+            {!cambiar_tamano && (
                 <View style={estilos_robot.caja_texto}>
                     <Texto style={estilos_robot.texto}>{frase}</Texto>
                 </View>
             )}
 
-            <View style={cambiar_tamano === true ? estilos_robot.caja_robot_pequeno : estilos_robot.caja_robot}>
-                <VideoView
-                    player={player}
-                    nativeControls={false}
-                    style={cambiar_tamano ? estilos_robot.robot_pequeno : estilos_robot.robot}
-                />
+            <View style={estilo_caja}>
+                {/* Player A */}
+                <Animated.View style={[{ position: 'absolute', width: '100%', height: '100%' }, { opacity: opacidad_A }]}>
+                    <VideoView player={playerA} nativeControls={false} style={estilo_robot} />
+                </Animated.View>
+
+                {/* Player B */}
+                <Animated.View style={[{ position: 'absolute', width: '100%', height: '100%' }, { opacity: opacidad_B }]}>
+                    <VideoView player={playerB} nativeControls={false} style={estilo_robot} />
+                </Animated.View>
             </View>
         </View>
     );
