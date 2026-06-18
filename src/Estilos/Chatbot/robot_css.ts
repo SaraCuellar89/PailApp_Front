@@ -30,12 +30,12 @@ const estilos_robot = StyleSheet.create({
     // ── Caja que apila los dos players ────────────────────────────
     caja_robot: {
         width: width,
-        height: height * 0.45,   // ← era 0.32
+        height: height * 0.52,   // ← 0.45 + 15%
         alignSelf: 'center',
     },
     caja_robot_pequeno: {
-        width: width * 0.55,     // ← era width completo
-        height: height * 0.22,   // ← era 0.18
+        width: width * 0.63,     // ← 0.55 + 15%
+        height: height * 0.25,   // ← 0.22 + 15%
         alignSelf: 'center',
     },
 
@@ -53,11 +53,11 @@ const estilos_robot = StyleSheet.create({
     // ── Tamaños del video ──────────────────────────────────────────
     robot: {
         width: width,
-        height: height * 0.45,   // ← igual que la caja
+        height: height * 0.52,   // ← igual que caja
     },
     robot_pequeno: {
-        width: width * 0.55,     // ← era 0.35
-        height: height * 0.22,   // ← igual que la caja
+        width: width * 0.63,     // ← igual que caja
+        height: height * 0.25,
     }
 
 })
