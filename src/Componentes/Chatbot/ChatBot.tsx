@@ -78,6 +78,7 @@ type ChatBotProps = {
   initialMessage?: string;
   initialVoiceMode?: boolean;
   onIntencion?: (intencion: string | null) => void;
+  onRespuesta?: (texto: string) => void;          // ← nuevo
   onUsageChange?: (usage: ChatbotUsage) => void;
   setCambiar_tamano?: (value: boolean) => void;
 };
@@ -89,6 +90,7 @@ export default function ChatBot({
   initialMessage,
   initialVoiceMode = false,
   onIntencion,
+  onRespuesta,                                    // ← nuevo
   onUsageChange,
   setCambiar_tamano,
 }: ChatBotProps) {
@@ -107,6 +109,7 @@ export default function ChatBot({
     initialMessage,
     initialVoiceMode,
     onIntencion,
+    onRespuesta,                                  // ← nuevo
     onUsageChange,
     setCambiar_tamano,
   });
@@ -172,7 +175,6 @@ export default function ChatBot({
                   {/* IMAGEN: bloque de imagen del plato */}
                   {mensaje.role === "assistant" && mensaje.imageUrl ? (
                     <Image
-                      // key unico que cambia cuando llega la imagen -> fuerza re-render
                       key={`img-${mensaje.id}-${mensaje.imageUrl}`}
                       source={{ uri: mensaje.imageUrl }}
                       style={{
