@@ -1,14 +1,15 @@
 const intentAliases: Record<string, string[]> = {
-  feliz: ["feliz", "alegre", "contento", "contenta", "genial", "bien"],
-  triste: ["triste", "mal", "desanimado", "desanimada", "llorar"],
-  hambre: ["hambre", "hambriento", "antojo", "comer"],
-  receta: ["receta", "cocinar", "preparar", "ingrediente", "ingredientes"],
-  rapido: ["rapido", "rapida", "facil", "pronto", "minutos"],
-  saludable: ["saludable", "sano", "sana", "ligero", "ensalada"],
-  dulce: ["dulce", "postre", "galleta", "brownie", "chocolate"],
-  salado: ["salado", "snack", "papas", "queso"],
-  hola: ["hola", "buenas", "saludos", "hey"],
-  gracias: ["gracias", "agradezco", "perfecto"],
+  feliz:     ["feliz", "alegre", "contento", "contenta", "genial", "bien", "excelente", "perfecto", "buenisimo"],
+  triste:    ["triste", "mal", "desanimado", "desanimada", "llorar", "deprimido", "deprimida"],
+  enojado:   ["enojado", "molesto", "molesta", "fastidio", "rabia", "odio", "no me gusta", "pesimo", "horrible"],
+  hambre:    ["hambre", "hambriento", "antojo", "comer", "tengo ganas"],
+  receta:    ["receta", "cocinar", "preparar", "ingrediente", "ingredientes", "como hago", "como preparo"],
+  rapido:    ["rapido", "rapida", "facil", "pronto", "minutos", "sencillo", "rapido de hacer"],
+  saludable: ["saludable", "sano", "sana", "ligero", "ensalada", "bajo en calorias", "fitness"],
+  dulce:     ["dulce", "postre", "galleta", "brownie", "chocolate", "torta", "pastel"],
+  salado:    ["salado", "snack", "papas", "queso", "cracker"],
+  hola:      ["hola", "buenas", "saludos", "hey", "buenos dias", "buenas tardes", "buenas noches"],
+  gracias:   ["gracias", "agradezco", "perfecto", "genial gracias", "muchas gracias"],
 };
 
 const normalize = (text: string) =>
