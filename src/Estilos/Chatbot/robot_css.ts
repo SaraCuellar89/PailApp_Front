@@ -27,28 +27,33 @@ const estilos_robot = StyleSheet.create({
         fontFamily: "JetBrainsMono_700Bold"
     },
 
-    // ── Caja que apila los dos players uno encima del otro ────────────
+    // ── Caja que apila los dos players ────────────────────────────
     caja_robot: {
         width: width,
-        height: height * 0.32,   // ← bajado de 0.4 para reducir lag
+        height: height * 0.32,
+        alignSelf: 'center',
     },
     caja_robot_pequeno: {
         width: width,
         height: height * 0.18,
+        alignSelf: 'center',
     },
 
-    // ── Cada player apilado con position absolute ────────────────────
+    // ── Overlay absoluto de cada player ───────────────────────────
     player_wrap: {
         position: 'absolute',
         top: 0,
         left: 0,
-        width: width,
+        right: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 
     // ── Tamaños del video ──────────────────────────────────────────
     robot: {
         width: width,
-        height: height * 0.32,   // ← igual que la caja
+        height: height * 0.32,
     },
     robot_pequeno: {
         width: width * 0.35,
