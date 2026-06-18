@@ -5,6 +5,7 @@ import Navbar from "../../Componentes/Navegacion/Navbar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colores } from "../../Estilos/Global/estilos_global";
 import estilos_publicaciones from "../../Estilos/Publicaciones/publicaciones_css";
+import estilos_robot from "../../Estilos/Chatbot/robot_css";
 import Robot from "../../Componentes/Chatbot/Robot";
 import ChatBot from "../../Componentes/Chatbot/ChatBot";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -81,7 +82,8 @@ export default function Chatbot({navigation, route}: any) {
         />
       </View>
 
-      <View style={{ backgroundColor: colores.color_2 }}>
+      {/* Contenedor del robot — posición y alineación en robot_css.ts → caja_robot_pantalla */}
+      <View style={estilos_robot.caja_robot_pantalla}>
         <Robot 
           cambiar_tamano={cambiar_tamano} 
           intencion={intencion} 

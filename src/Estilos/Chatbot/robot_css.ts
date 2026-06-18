@@ -1,5 +1,5 @@
 /**
- * Modulo de estilos asociado a componentes reutilizables de la interfaz.
+ * Modulo de estilos asociado al componente Robot y su contenedor en pantalla.
  */
 
 import { StyleSheet, Dimensions } from "react-native";
@@ -9,8 +9,13 @@ const { height, width } = Dimensions.get('window');
 
 const estilos_robot = StyleSheet.create({
 
-    // --------- Estilos de las publicaciones ---------
+    // ── Contenedor del robot dentro de la pantalla Chatbot ────────
+    caja_robot_pantalla: {
+        backgroundColor: colores.color_2,
+        alignItems: 'center',
+    },
 
+    // ── Texto flotante sobre el robot ─────────────────────────────
     caja_texto: {
         alignItems: "center",
         paddingTop: 20,
@@ -21,6 +26,8 @@ const estilos_robot = StyleSheet.create({
         fontSize: 20,
         fontFamily: "JetBrainsMono_700Bold"
     },
+
+    // ── Cajas del video del robot ──────────────────────────────────
     caja_robot: {
         height: height * 0.4,
         overflow: 'hidden',
@@ -33,6 +40,8 @@ const estilos_robot = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+
+    // ── Tamaños del video ──────────────────────────────────────────
     robot: {
         width: "150%",
         height: height * 0.8,
@@ -41,7 +50,6 @@ const estilos_robot = StyleSheet.create({
         width: "50%",
         height: height * 0.5,
     }
-
 
 })
 
