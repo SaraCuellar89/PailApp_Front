@@ -31,13 +31,12 @@ const obtenerIdUsuario = (usuario: any) =>
 
 export default function Chatbot({navigation, route}: any) {
 
-   // ================= Datos del usuario por un contexto difinido =================
+  // ================= Datos del usuario por un contexto definido =================
   const authContext = useContext(AuthContext);
   if (!authContext) throw new Error("AuthContext no está disponible");
   const { usuario } = authContext;
 
-
-  // ================= Funciones y estados para obtener la cantidad de notificaciones =================
+  // ================= Notificaciones =================
   const [cantidad_notificaciones, setCantidad_notificaciones] = useState(0);
 
   useFocusEffect(
@@ -50,43 +49,41 @@ export default function Chatbot({navigation, route}: any) {
         const data = await res.json();
         if(data.success === true){
           setCantidad_notificaciones(data.data.info_notificaciones.length);
-        }
-        else{
+        } else {
           setCantidad_notificaciones(0);
         }
-      }
-
+      };
       Obtener_Notificaciones();
     }, [])
   );
 
-
   const [cambiar_tamano, setCambiar_tamano] = useState(false);
-  const [intencion, setIntencion] = useState<string | null>(null);
-  const [chatUsage, setChatUsage] = useState<ChatbotUsage>(initialUsage);
+  const [intencion, setIntencion]           = useState<string | null>(null);
+  const [respuesta_bot, setRespuesta_bot]   = useState<string | null>(null); // ← nuevo
+  const [chatUsage, setChatUsage]           = useState<ChatbotUsage>(initialUsage);
   const idUsuario = obtenerIdUsuario(usuario);
-
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#000000" }}>
       <View style={{ backgroundColor: colores.color_2 }}>
-        <Header_pailapp 
+        <Header_pailapp
           cantidad_notificaciones={cantidad_notificaciones}
         />
       </View>
 
       <View style={{ backgroundColor: colores.color_2, alignItems: "center" }}>
         <ChatbotUsageBar
-            progress={chatUsage.progress}
-            remainingInteractions={chatUsage.remainingInteractions}
+          progress={chatUsage.progress}
+          remainingInteractions={chatUsage.remainingInteractions}
         />
       </View>
 
-      {/* Contenedor del robot — posición y alineación en robot_css.ts → caja_robot_pantalla */}
+      {/* Contenedor del robot */}
       <View style={estilos_robot.caja_robot_pantalla}>
-        <Robot 
-          cambiar_tamano={cambiar_tamano} 
-          intencion={intencion} 
+        <Robot
+          cambiar_tamano={cambiar_tamano}
+          intencion={intencion}
+          respuesta={respuesta_bot}   // ← nuevo: dispara la cola de animaciones
         />
       </View>
 
@@ -95,18 +92,19 @@ export default function Chatbot({navigation, route}: any) {
         contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-end' }}
         keyboardShouldPersistTaps="handled"
         enableOnAndroid={true}
-        scrollEnabled={false}  
+        scrollEnabled={false}
         extraScrollHeight={80}
       >
         <View style={estilos_publicaciones.container}>
-          <ChatBot 
+          <ChatBot
             avatarUsuario={usuario?.avatar ?? null}
             idUsuario={idUsuario}
             tokenUsuario={usuario?.token}
             initialMessage={route?.params?.mensajeInicial}
             initialVoiceMode={Boolean(route?.params?.initialVoiceMode)}
-            setCambiar_tamano={setCambiar_tamano} 
+            setCambiar_tamano={setCambiar_tamano}
             onIntencion={setIntencion}
+            onRespuesta={setRespuesta_bot}  // ← nuevo: recibe el texto de la respuesta
             onUsageChange={setChatUsage}
           />
         </View>
