@@ -14,6 +14,7 @@ type UseChatbotConversationProps = {
   initialMessage?: string;
   initialVoiceMode?: boolean;
   onIntencion?: (intencion: string | null) => void;
+  onRespuesta?: (texto: string) => void;  // ← nuevo: texto completo de la respuesta
   onUsageChange?: (usage: ChatbotUsage) => void;
   setCambiar_tamano?: (value: boolean) => void;
 };
@@ -23,6 +24,7 @@ export const useChatbotConversation = ({
   initialMessage,
   initialVoiceMode = false,
   onIntencion,
+  onRespuesta,
   onUsageChange,
   setCambiar_tamano,
 }: UseChatbotConversationProps) => {
@@ -190,6 +192,9 @@ export const useChatbotConversation = ({
 
         onIntencion?.(inferChatbotIntent(`${mensaje} ${respuestaFinal}`));
 
+        // ← Dispara la cola de animaciones con el texto completo
+        onRespuesta?.(respuestaFinal);
+
         // TTS en su propio try/catch
         try {
           await speakText(assistantPlaceholder.id, respuestaFinal);
@@ -223,6 +228,7 @@ export const useChatbotConversation = ({
       loading,
       messages,
       onIntencion,
+      onRespuesta,
       replaceMessageContent,
       resetTranscript,
       setCambiar_tamano,
