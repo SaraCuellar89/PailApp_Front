@@ -5,8 +5,6 @@ const { height, width } = Dimensions.get('window');
 
 const estilos_prueba_chatbot = StyleSheet.create({
 
-    // --------- Estilos de las publicaciones ---------
-
     contenedor: {
         flex: 1,
         justifyContent: "space-between",
@@ -107,12 +105,16 @@ const estilos_prueba_chatbot = StyleSheet.create({
         color: "black"
     },
 
+    // ── Input ─────────────────────────────────────────────────
     contenedor_input: {
         width: '100%',
         flexDirection: "row",
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colores.color_2
+        backgroundColor: colores.color_2,
+        paddingHorizontal: 10,
+        paddingBottom: height * 0.04,   // ← baja el input
+        paddingTop: 6,
     },
     caja_input: {
         flex: 1,
@@ -147,13 +149,13 @@ const estilos_prueba_chatbot = StyleSheet.create({
     caja_hablar: {
         flex: 1,
         height: height * 0.05,
-        overflow: "hidden",  
+        overflow: "hidden",
         alignItems: "center",
         justifyContent: "center",
     },
-    animacion_hablar: { 
-        width: "100%", 
-        height: height * 0.12,  
+    animacion_hablar: {
+        width: "100%",
+        height: height * 0.12,
         opacity: 0.5
     },
     panel_voz: {
@@ -184,7 +186,6 @@ const estilos_prueba_chatbot = StyleSheet.create({
         fontSize: 12,
         textAlign: "center"
     }
-
 
 })
 

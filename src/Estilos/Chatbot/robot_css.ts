@@ -30,14 +30,14 @@ const estilos_robot = StyleSheet.create({
     // ── Caja que apila los dos players uno encima del otro ────────────
     caja_robot: {
         width: width,
-        height: height * 0.4,
+        height: height * 0.32,   // ← bajado de 0.4 para reducir lag
     },
     caja_robot_pequeno: {
         width: width,
         height: height * 0.18,
     },
 
-    // ── Cada player ocupa toda la caja, apilados con position absolute ──
+    // ── Cada player apilado con position absolute ────────────────────
     player_wrap: {
         position: 'absolute',
         top: 0,
@@ -48,7 +48,7 @@ const estilos_robot = StyleSheet.create({
     // ── Tamaños del video ──────────────────────────────────────────
     robot: {
         width: width,
-        height: height * 0.4,
+        height: height * 0.32,   // ← igual que la caja
     },
     robot_pequeno: {
         width: width * 0.35,
