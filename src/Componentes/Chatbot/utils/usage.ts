@@ -1,6 +1,6 @@
 import { ChatMessage, ChatbotUsage } from "../types";
 
-export const MAX_SESSION_TOKENS = 6000;
+export const MAX_SESSION_TOKENS    = 3600; // 8 interacciones × 450 tokens
 export const TOKENS_PER_INTERACTION = 450;
 
 export const clamp = (value: number, min: number, max: number) =>
