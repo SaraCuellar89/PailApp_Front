@@ -17,9 +17,9 @@ import { ChatbotUsage } from "../../Componentes/Chatbot/types";
 
 const initialUsage: ChatbotUsage = {
   usedTokens: 0,
-  remainingTokens: 6000,
+  remainingTokens: 3600,          // ← era 6000
   progress: 0,
-  remainingInteractions: 13,
+  remainingInteractions: 8,       // ← era 13
 };
 
 const obtenerIdUsuario = (usuario: any) =>
@@ -59,7 +59,7 @@ export default function Chatbot({navigation, route}: any) {
 
   const [cambiar_tamano, setCambiar_tamano] = useState(false);
   const [intencion, setIntencion]           = useState<string | null>(null);
-  const [respuesta_bot, setRespuesta_bot]   = useState<string | null>(null); // ← nuevo
+  const [respuesta_bot, setRespuesta_bot]   = useState<string | null>(null);
   const [chatUsage, setChatUsage]           = useState<ChatbotUsage>(initialUsage);
   const idUsuario = obtenerIdUsuario(usuario);
 
@@ -83,7 +83,7 @@ export default function Chatbot({navigation, route}: any) {
         <Robot
           cambiar_tamano={cambiar_tamano}
           intencion={intencion}
-          respuesta={respuesta_bot}   // ← nuevo: dispara la cola de animaciones
+          respuesta={respuesta_bot}
         />
       </View>
 
@@ -104,7 +104,7 @@ export default function Chatbot({navigation, route}: any) {
             initialVoiceMode={Boolean(route?.params?.initialVoiceMode)}
             setCambiar_tamano={setCambiar_tamano}
             onIntencion={setIntencion}
-            onRespuesta={setRespuesta_bot}  // ← nuevo: recibe el texto de la respuesta
+            onRespuesta={setRespuesta_bot}
             onUsageChange={setChatUsage}
           />
         </View>
