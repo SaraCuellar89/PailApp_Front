@@ -111,10 +111,7 @@ const estilos_prueba_chatbot = StyleSheet.create({
         flexDirection: "row",
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colores.color_2,
-        paddingHorizontal: 10,
-        paddingBottom: height * 0.04,   // ← baja el input
-        paddingTop: 6,
+        backgroundColor: colores.color_2
     },
     caja_input: {
         flex: 1,

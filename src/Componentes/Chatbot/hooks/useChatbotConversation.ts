@@ -89,7 +89,12 @@ export const useChatbotConversation = ({
       stopListening();
     }
     setVoiceMode(false);
-  }, [isListening, stopListening]);
+
+    if (messages.length > 1) {
+      setCambiar_tamano?.(true);
+    }
+  }, [isListening, stopListening, messages, setCambiar_tamano]);
+
 
   const startVoiceMode = useCallback(async () => {
     const started = await startListening();

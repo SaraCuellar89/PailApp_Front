@@ -144,7 +144,7 @@ export default function ChatBot({
 
   return (
     <View style={estilos_prueba_chatbot.contenedor}>
-      {mostrar_conversacion ? (
+      {mostrar_conversacion && !chatbot.voiceMode ?(
         <ScrollView
           ref={scrollRef}
           style={[estilos_prueba_chatbot.caja_chat, { height: height * 0.3 }]}
