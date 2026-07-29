@@ -58,7 +58,7 @@ export default function Login({ navigation, route }: any) {
       const { correo, contrasena } = form;
       if (!correo || !contrasena) return Mensaje_Toast.error("Todos los campos son obligatorios");
 
-      const res = await fetch('http://35.174.135.238/usuarios/iniciar_sesion', {
+      const res = await fetch('https://pail-app-backend.vercel.app/usuarios/iniciar_sesion', {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
@@ -79,7 +79,7 @@ export default function Login({ navigation, route }: any) {
       if (token_fcm) {
         await AsyncStorage.setItem('fcm_token', token_fcm); 
 
-        await fetch('http://35.174.135.238/tokenFCM/guardar', {
+        await fetch('https://pail-app-backend.vercel.app/tokenFCM/guardar', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ export default function Login({ navigation, route }: any) {
 
       if (!idToken) return Mensaje_Toast.info('Error al obtener token de Google');
 
-      const res = await fetch('http://35.174.135.238/usuarios/iniciar_sesion_google', {
+      const res = await fetch('https://pail-app-backend.vercel.app/usuarios/iniciar_sesion_google', {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
@@ -137,7 +137,7 @@ export default function Login({ navigation, route }: any) {
       if (token_fcm) {
         await AsyncStorage.setItem('fcm_token', token_fcm); 
         
-        await fetch('http://35.174.135.238/tokenFCM/guardar', {
+        await fetch('https://pail-app-backend.vercel.app/tokenFCM/guardar', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

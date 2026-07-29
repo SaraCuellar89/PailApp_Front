@@ -23,7 +23,7 @@ export function useReaccionar ({corazon_inicial, total_reacciones, SetNotificaci
 
     const Reaccionar = async (id_publicacion: number) => {
         try {
-            const res = await fetch(`http://35.174.135.238/reacciones/reaccionar/${id_publicacion}`, {
+            const res = await fetch(`https://pail-app-backend.vercel.app/reacciones/reaccionar/${id_publicacion}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${usuario.token}`

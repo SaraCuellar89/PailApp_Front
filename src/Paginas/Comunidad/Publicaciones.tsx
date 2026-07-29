@@ -71,7 +71,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
   // Funcion para la informacion del plato
   const Obtener_Info_Plato = async () => {
     try {
-      const res = await fetch(`http://35.174.135.238/publicaciones/una/${id_publicacion}`, {
+      const res = await fetch(`https://pail-app-backend.vercel.app/publicaciones/una/${id_publicacion}`, {
         method: 'GET',
         headers: { 'Authorization': `Bearer ${usuario.token}` }
       });
@@ -125,7 +125,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
       const ahora = new Date();
       const fecha_creacion = ahora.toISOString().slice(0, 19).replace("T", " ");
       
-      const res = await fetch(`http://35.174.135.238/comentarios/subir/${id_publicacion}`, {
+      const res = await fetch(`https://pail-app-backend.vercel.app/comentarios/subir/${id_publicacion}`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
       // Validaciones
       if(!nuevo_comentario.trim()) return Mensaje_Toast.error("El comentario no puede estar vacio");
 
-      const res = await fetch(`http://35.174.135.238/comentarios/editar/${id_comentario}`, {
+      const res = await fetch(`https://pail-app-backend.vercel.app/comentarios/editar/${id_comentario}`, {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json',
@@ -186,7 +186,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
 
   const Eliminar_Comentario = async () => {
     try {
-      const res = await fetch(`http://35.174.135.238/comentarios/eliminar/${id_comentario}`, {
+      const res = await fetch(`https://pail-app-backend.vercel.app/comentarios/eliminar/${id_comentario}`, {
         method: "DELETE",
         headers: {
             'Authorization': `Bearer ${usuario.token}`
@@ -226,7 +226,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
       const ahora = new Date();
       const fecha_creacion = ahora.toISOString().slice(0, 19).replace("T", " ");
       
-      const res = await fetch(`http://35.174.135.238/respuestas/contestar/${id_comentario}`, {
+      const res = await fetch(`https://pail-app-backend.vercel.app/respuestas/contestar/${id_comentario}`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -257,7 +257,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
       // Validaciones
       if(!nueva_respuesta.trim()) return Mensaje_Toast.error("La respuesta no puede estar vacia");
 
-      const res = await fetch(`http://35.174.135.238/respuestas/editar/${id_respuesta}`, {
+      const res = await fetch(`https://pail-app-backend.vercel.app/respuestas/editar/${id_respuesta}`, {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json',
@@ -286,7 +286,7 @@ export default function DetallePublicacion({ route, navigation }: any) {
 
   const Eliminar_Respuesta = async () => {
     try {
-      const res = await fetch(`http://35.174.135.238/respuestas/eliminar/${id_respuesta}`, {
+      const res = await fetch(`https://pail-app-backend.vercel.app/respuestas/eliminar/${id_respuesta}`, {
         method: "DELETE",
         headers: {
             'Authorization': `Bearer ${usuario.token}`

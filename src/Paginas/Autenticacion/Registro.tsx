@@ -80,7 +80,7 @@ export default function Registro({ navigation }: any) {
       if (contrasena !== confirmacion_contrasena) return Mensaje_Toast.error("Las contraseñas no coinciden");
 
       // Envio de los datos
-      const res = await fetch('http://35.174.135.238/usuarios/registrar', {
+      const res = await fetch('https://pail-app-backend.vercel.app/usuarios/registrar', {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
@@ -112,7 +112,7 @@ export default function Registro({ navigation }: any) {
 
       if (!idToken) return Mensaje_Toast.info('Error al obtener token de Google');
 
-      const res = await fetch('http://35.174.135.238/usuarios/iniciar_sesion_google', {
+      const res = await fetch('https://pail-app-backend.vercel.app/usuarios/iniciar_sesion_google', {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
@@ -133,7 +133,7 @@ export default function Registro({ navigation }: any) {
       if (token_fcm) {
         await AsyncStorage.setItem('fcm_token', token_fcm); 
         
-        await fetch('http://35.174.135.238/tokenFCM/guardar', {
+        await fetch('https://pail-app-backend.vercel.app/tokenFCM/guardar', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -69,7 +69,7 @@ export default function MisPlatoss({ navigation }: any) {
   
   const Obtener_Todos_Platos = async () => {
     try {
-      const res = await fetch(`http://35.174.135.238/guardados/listar`, {
+      const res = await fetch(`https://pail-app-backend.vercel.app/guardados/listar`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${usuario.token}`
@@ -166,6 +166,7 @@ export default function MisPlatoss({ navigation }: any) {
                       guardado_inicial={p.usuario_ya_guardo}
 
                       Mostrar_Imagen={Mostrar_Imagen}
+                      Setnotificacion_guardado={() => Mostrar_Notificacion("¡Plato guardado!")}
                     />
 
                     <TouchableOpacity style={estilos_publicaciones.btn_ingredientes}onPress={() => navigation.navigate('Lista_Ingredientes', { id_publicacion: p.id_publicacion, nombre_publicacion: p.titulo })}>

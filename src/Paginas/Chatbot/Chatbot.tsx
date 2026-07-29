@@ -41,7 +41,7 @@ export default function Chatbot({navigation, route}: any) {
   useFocusEffect(
     useCallback(() => {
       const Obtener_Notificaciones = async () => {
-        const res = await fetch(`http://35.174.135.238/notificaciones/todas`, {
+        const res = await fetch(`https://pail-app-backend.vercel.app/notificaciones/todas`, {
           method: 'GET',
           headers: { 'Authorization': `Bearer ${usuario.token}` }
         });

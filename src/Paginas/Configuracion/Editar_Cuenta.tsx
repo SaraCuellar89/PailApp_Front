@@ -99,7 +99,7 @@ export default function Editar_Cuenta({ navigation }: any) {
       if (alturaNum < 130 || alturaNum > 250) return Mensaje_Toast.error("Altura fuera de rango válida (130 - 250 cm)");
 
       // Envio de los datos
-      const res = await fetch('http://35.174.135.238/usuarios/editar_cuenta', {
+      const res = await fetch('https://pail-app-backend.vercel.app/usuarios/editar_cuenta', {
         method: "PUT",
         headers: {
           'Content-Type': 'application/json',

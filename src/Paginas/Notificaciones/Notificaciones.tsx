@@ -33,7 +33,7 @@ const Notificaciones = ({navigation}: any) => {
         try {
             setCargando(true);
 
-            const res = await fetch(`http://35.174.135.238/notificaciones/todas`, {
+            const res = await fetch(`https://pail-app-backend.vercel.app/notificaciones/todas`, {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${usuario.token}` }
             });
@@ -66,7 +66,7 @@ const Notificaciones = ({navigation}: any) => {
     // ================= Funciones y estados para eliminar una notificacion =================
     const Eliminar_Notificacion = async (id_notificacion: number) => {
         try {
-            const res = await fetch(`http://35.174.135.238/notificaciones/eliminar_una/${id_notificacion}`, {
+            const res = await fetch(`https://pail-app-backend.vercel.app/notificaciones/eliminar_una/${id_notificacion}`, {
                 method: "DELETE",
                 headers: { 'Authorization': `Bearer ${usuario.token}` }
             });

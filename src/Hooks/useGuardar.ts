@@ -23,7 +23,7 @@ export function useGuardar ({guardado_inicial, antes_desguardar, Setnotificacion
 
     const Ejecutar_Desguardado = async (id_publicacion: number) => {
         try {
-            const res = await fetch(`http://35.174.135.238/guardados/guardar/${id_publicacion}`, {
+            const res = await fetch(`https://pail-app-backend.vercel.app/guardados/guardar/${id_publicacion}`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${usuario.token}` }
             });

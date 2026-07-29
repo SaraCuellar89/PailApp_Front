@@ -36,7 +36,7 @@ export default function Editar_Contrasena({ navigation }: any) {
       if (contrasena_nueva.trim().length < 5)
         return Mensaje_Toast.error("La contraseña debe tener al menos 5 caracteres");
 
-      const res = await fetch('http://35.174.135.238/usuarios/editar_contrasena', {
+      const res = await fetch('https://pail-app-backend.vercel.app/usuarios/editar_contrasena', {
         method: "PUT",
         headers: {
           'Content-Type': 'application/json',

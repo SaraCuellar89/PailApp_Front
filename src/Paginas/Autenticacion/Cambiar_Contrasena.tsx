@@ -49,7 +49,7 @@ const Cambiar_Contrasena = ({navigation}: any) => {
             if (contrasena.length < 5) return Mensaje_Toast.error("La contraseña debe tener minimo 5 caracteres");
             if (contrasena !== confirmacion_contrasena) return Mensaje_Toast.error("Las contraseñas no coinciden");
 
-            const res = await fetch('http://35.174.135.238/usuarios/restablecer_contrasena', {
+            const res = await fetch('https://pail-app-backend.vercel.app/usuarios/restablecer_contrasena', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -97,8 +97,8 @@ const Descripcion = ({route, navigation}: Props) => {
 
             // ----- Enviar datos a la bbdd-----
             const url = es_edicion
-            ? `http://35.174.135.238/publicaciones/editar/${plato.id_publicacion}`
-            : `http://35.174.135.238/publicaciones/subir`;
+            ? `https://pail-app-backend.vercel.app/publicaciones/editar/${plato.id_publicacion}`
+            : `https://pail-app-backend.vercel.app/publicaciones/subir`;
 
             const res = await fetch(url, {
                 method: es_edicion ? "PUT" : "POST",

@@ -30,7 +30,7 @@ const Correo_Recuperacion = ({navigation}: any) => {
             if (!correo) return Mensaje_Toast.error("Llene el campo solicitado");
             if (!emailRegex.test(correo)) return Mensaje_Toast.error("Correo invalido");
 
-            const res = await fetch('http://35.174.135.238/usuarios/contrasena_olvidada', {
+            const res = await fetch('https://pail-app-backend.vercel.app/usuarios/contrasena_olvidada', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -26,7 +26,7 @@ const Lista_Ingredientes = ({ route, navigation }: any) => {
     useEffect(() => {
         const Obtener_Ingredientes  = async () => {
             try {
-                const res = await fetch(`http://35.174.135.238/ingredientes/todos/${id_publicacion}`, {
+                const res = await fetch(`https://pail-app-backend.vercel.app/ingredientes/todos/${id_publicacion}`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${usuario.token}`

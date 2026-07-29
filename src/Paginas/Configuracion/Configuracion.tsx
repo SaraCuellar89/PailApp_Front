@@ -52,7 +52,7 @@ export default function Configuracion({navigation, route}: any) {
         const { token } = JSON.parse(usuario!);
 
         if (fcm_token) {
-            await fetch('http://35.174.135.238/tokenFCM/eliminar', {
+            await fetch('https://pail-app-backend.vercel.app/tokenFCM/eliminar', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ export default function Configuracion({navigation, route}: any) {
   // ================= Funciones y estados para eliminar la cuenta =================
   const Eliminar_Cuenta = async () => {
     try {
-      const res = await fetch(`http://35.174.135.238/usuarios/eliminar_cuenta`, {
+      const res = await fetch(`https://pail-app-backend.vercel.app/usuarios/eliminar_cuenta`, {
         method: "DELETE",
         headers: {
             'Authorization': `Bearer ${usuario.token}`

@@ -62,7 +62,7 @@ const Datos_Adicionales = ({ navigation }: any) => {
             if (alturaNum < 130 || alturaNum > 250) return Mensaje_Toast.error("Altura fuera de rango válida (130 - 250 cm)");
             
 
-            const res = await fetch('http://35.174.135.238/usuarios/registrar_datos_adicionales', {
+            const res = await fetch('https://pail-app-backend.vercel.app/usuarios/registrar_datos_adicionales', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

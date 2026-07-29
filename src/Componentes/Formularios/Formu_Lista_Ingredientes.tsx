@@ -98,7 +98,7 @@ const Formu_Lista_Ingredientes = ({ ingredientes_iniciales = [], id_publicacion 
         try {
             if (!id_ingrediente) return;
         
-            const res = await fetch(`http://35.174.135.238/ingredientes/marcar/${id_ingrediente}`, {
+            const res = await fetch(`https://pail-app-backend.vercel.app/ingredientes/marcar/${id_ingrediente}`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${usuario.token}` }
             });
@@ -119,7 +119,7 @@ const Formu_Lista_Ingredientes = ({ ingredientes_iniciales = [], id_publicacion 
                 ? [...items, { texto: lineaActiva.trim(), marcado: false }]
                 : items;
 
-            const res = await fetch(`http://35.174.135.238/ingredientes/agregar/${id_publicacion}`, {
+            const res = await fetch(`https://pail-app-backend.vercel.app/ingredientes/agregar/${id_publicacion}`, {
                 method: 'POST',
                 headers: { 
                     'Authorization': `Bearer ${usuario.token}`,

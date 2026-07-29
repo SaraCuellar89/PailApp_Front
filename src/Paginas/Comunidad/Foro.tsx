@@ -61,7 +61,7 @@ export default function Foro({ navigation, route }: any) {
     useCallback(() => {
       const Obtener_Todos_Platos = async () => {
         try {
-          const res = await fetch(`http://35.174.135.238/filtros/${filtro}`, {
+          const res = await fetch(`https://pail-app-backend.vercel.app/filtros/${filtro}`, {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${usuario.token}` },
           });

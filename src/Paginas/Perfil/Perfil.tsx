@@ -68,7 +68,7 @@ const Perfil = ({ navigation, route }: any) => {
         useCallback(() => {
             const Obtener_Todos_Mis_Platos = async () => {
                 try {
-                    const res = await fetch('http://35.174.135.238/publicaciones/todas_usuario', {
+                    const res = await fetch('https://pail-app-backend.vercel.app/publicaciones/todas_usuario', {
                         method: 'GET',
                         headers: {
                         'Authorization': `Bearer ${usuario.token}`
@@ -104,7 +104,7 @@ const Perfil = ({ navigation, route }: any) => {
 
     const Eliminar_Publicacion = async (id:number) => {
         try {
-            const res = await fetch(`http://35.174.135.238/publicaciones/eliminar/${id}`, {
+            const res = await fetch(`https://pail-app-backend.vercel.app/publicaciones/eliminar/${id}`, {
             method: "DELETE",
             headers: {
                 'Authorization': `Bearer ${usuario.token}`
